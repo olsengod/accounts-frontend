@@ -12,8 +12,11 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "jsonwebtoken": "^8.3.0",
     "local-storage": "^1.4.2",
     "nuxt": "^1.4.2",
+    "sha256": "^0.2.0",
+    "vee-validate": "^2.1.0-beta.9",
     "vuetify": "^1.2.4"
   },
   "devDependencies": {

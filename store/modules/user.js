@@ -1,3 +1,5 @@
+import ls from 'local-storage'
+
 const state = {
   user: {
     accessToken: null,
@@ -8,14 +10,28 @@ const state = {
 }
 
 const mutations = {
-  SET_AUTH (state, value) {
+  SET_IS_AUTHENTICATED (state, value) {
     state.user.isAuthenticated = value
+  },
+  SET_ACCESS_TOKEN (state, value) {
+    state.user.accessToken = value
+  },
+  SET_REFRESH_TOKEN (state, value) {
+    state.user.refreshToken = value
+  },
+  SET_EXPIRES_IN (state, value) {
+    state.user.expireIn = value
   }
 }
 
 const actions = {
-  set_auth ({commit}, {value}) {
-    commit('SET_AUTH', value)
+  setTokens ({commit}, {data}) {
+    commit('SET_IS_AUTHENTICATED', true)
+    commit('SET_ACCESS_TOKEN', data.accessToken)
+    commit('SET_REFRESH_TOKEN', data.refreshToken)
+    commit('SET_EXPIRES_IN', data.expireIn)
+    ls.set('cererisAccountAccessToken', data.accessToken)
+    ls.set('cererisAccountRefreshToken', data.refreshToken)
   }
 }
 

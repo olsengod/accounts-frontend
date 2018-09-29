@@ -1,3 +1,3 @@
 module.exports = {
-  backendURL: 'http://localhost:8080'
+  backendURL: 'https://accounts-dev.cereris.org'
 }
