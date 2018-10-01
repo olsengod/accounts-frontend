@@ -1,3 +1,11 @@
 {
-  "test": "Tyomic Lalka"
+  "test": "Tyomic Lalka",
+  "errors": {
+    "error13": "Account not activated. Please confirm your email or phone.",
+    "error35": "Email already in use.",
+    "error41": "Email or password are incorrect."
+  },
+  "informationMessages": {
+    "completeRegistrationWithEmail": "To complete the registration, please click on the link in the email that was sent to {email}"
+  }
 }

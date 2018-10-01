@@ -15,7 +15,11 @@ module.exports = {
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
     ]
   },
-  plugins: ['~/plugins/vuetify.js', '~/plugins/i18n.js'],
+  plugins: [
+    '~/plugins/vuetify.js',
+    '~/plugins/i18n.js',
+    '~/plugins/vee-validate.js'
+  ],
   css: [
     '~/assets/style/app.styl'
   ],
@@ -28,7 +32,11 @@ module.exports = {
   */
   build: {
     vendor: [
-      '~/plugins/vuetify.js'
+      '~/plugins/vuetify.js',
+      'axios',
+      'jsonwebtoken',
+      'local-storage',
+      'sha256'
     ],
     extractCSS: true,
     /*

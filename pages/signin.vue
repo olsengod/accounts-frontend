@@ -106,19 +106,19 @@
               }
             })
             this.$store.dispatch('user/setTokens', { data: signinResponse.data.data })
-            this.$store.dispatch('user/setUser', { data: userResponse.data.data })
+            this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
             this.$router.push('/')
             return
           }
 
           // signinResponse.status === 400, so now need to process errors
           for (let i = 0; i < signinResponse.data.data.length; i++) {
-            if ([10, 13, 41].includes(signinResponse.data.data[i])) {
-              this.setNotification(true, signinResponse.data.data[i], 'warning')
+            if ([13, 41].includes(signinResponse.data.data[i])) {
+              this.setNotification(true, this.$t('errors.error' + signinResponse.data.data[i]), 'warning')
               return
             }
           }
-          this.$nuxt.error({ statusCode: 500 })
+          this.$nuxt.error({ statusCode: 500, responses: [signinResponse, userResponse] })
         } catch (error) {
           this.$nuxt.error({ statusCode: 500, error })
         }

@@ -47,16 +47,16 @@
 </style>
 
 <script>
-  // import axios from 'axios'
-  // import sha256 from 'sha256'
-  // import httpCfg from '../config/http'
+  import axios from 'axios'
+  import httpCfg from '../config/http'
+  import languageCfg from '../config/language'
 
   export default {
     layout: 'empty',
     data: function () {
       return {
         email: '',
-        language: '',
+        language: languageCfg.default,
         notification: {
           is: false,
           text: '',
@@ -66,54 +66,41 @@
     },
     methods: {
       async signup () {
-        this.$store.dispatch('user/setUser', { data: {data: {}} })
-      //   try {
-      //     this.setNotification(false)
-      //     if (!await this.$validator.validateAll()) {
-      //       return
-      //     }
+        try {
+          this.setNotification(false)
 
-      //     let signinResponse
-      //     let userResponse
+          if (!await this.$validator.validateAll()) {
+            return
+          }
 
-      //     signinResponse = await axios({
-      //       method: 'post',
-      //       url: httpCfg.backendURL + '/api/v1/users/signin/email',
-      //       data: {
-      //         email: this.email,
-      //         password: sha256(this.password)
-      //       },
-      //       validateStatus: function (status) {
-      //         return status === 200 || status === 400
-      //       }
-      //     })
+          let signupResponse = await axios({
+            method: 'post',
+            url: httpCfg.backendURL + '/api/v1/users/signup/email',
+            data: {
+              email: this.email,
+              language: this.language
+            },
+            validateStatus: function (status) {
+              return status === 200 || status === 400
+            }
+          })
 
-      //     if (signinResponse.status === 200) {
-      //       userResponse = await axios({
-      //         method: 'get',
-      //         url: httpCfg.backendURL + '/api/v1/users/current',
-      //         headers: {'authorization': signinResponse.data.data.accessToken},
-      //         validateStatus: function (status) {
-      //           return status === 200
-      //         }
-      //       })
-      //       this.$store.dispatch('user/setTokens', { data: signinResponse.data.data })
-      //       this.$store.dispatch('user/setUser', { data: userResponse.data.data })
-      //       this.$router.push('/')
-      //       return
-      //     }
+          if (signupResponse.status === 200) {
+            this.setNotification(true, this.$t('informationMessages.completeRegistrationWithEmail', { email: this.email }), 'info')
+            return
+          }
 
-      //     // signinResponse.status === 400, so now need to process errors
-      //     for (let i = 0; i < signinResponse.data.data.length; i++) {
-      //       if ([10, 13, 41].includes(signinResponse.data.data[i])) {
-      //         this.setNotification(true, signinResponse.data.data[i], 'warning')
-      //         return
-      //       }
-      //     }
-      //     this.$nuxt.error({ statusCode: 500 })
-      //   } catch (error) {
-      //     this.$nuxt.error({ statusCode: 500, error })
-      //   }
+          // signupResponse.status === 400, so now need to process errors
+          for (let i = 0; i < signupResponse.data.data.length; i++) {
+            if ([35].includes(signupResponse.data.data[i])) {
+              this.setNotification(true, this.$t('errors.error' + signupResponse.data.data[i]), 'warning')
+              return
+            }
+          }
+          this.$nuxt.error({ statusCode: 500, responses: [signupResponse] })
+        } catch (error) {
+          this.$nuxt.error({ statusCode: 500, error })
+        }
       },
       setNotification (is, text, level) {
         this.notification.is = is

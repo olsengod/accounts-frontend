@@ -1,5 +1,6 @@
 import ls from 'local-storage'
-import i18n from '../../plugins/i18n'
+import languageCfg from '../../config/language'
+import { Validator } from 'vee-validate'
 
 const state = {
   user: {
@@ -15,7 +16,7 @@ const state = {
       lastLogin: null,
       state: null,
       data: {
-        language: null
+        language: languageCfg.default
       }
     }
   }
@@ -49,8 +50,10 @@ const mutations = {
   SET_STATE (state, value) {
     state.user.data.state = value
   },
-  SET_LANGUAGE (state, value) {
+  SET_LANGUAGE (state, value, i18n) {
     state.user.data.data.language = value
+    i18n.locale = value
+    Validator.localize(value, languageCfg.veeValidateMessages[value])
   }
 }
 
@@ -63,14 +66,14 @@ const actions = {
     ls.set('cererisAccountAccessToken', data.accessToken)
     ls.set('cererisAccountRefreshToken', data.refreshToken)
   },
-  setUser ({commit}, {data}) {
-    console.log(i18n)
+  setUser ({commit}, {data, i18n}) {
+    console.log(i18n.locale)
     if (data.email) commit('SET_EMAIL', data.email)
     if (data.username) commit('SET_USERNAME', data.username)
     if (data.registerAt) commit('SET_REGISTER_AT', data.registerAt)
     if (data.lastLogin) commit('SET_LAST_LOGIN', data.lastLogin)
     if (data.state) commit('SET_STATE', data.state)
-    if (data.data.language) commit('SET_LANGUAGE', data.data.language)
+    if (data.data.language) commit('SET_LANGUAGE', data.data.language, i18n)
   }
 }
 

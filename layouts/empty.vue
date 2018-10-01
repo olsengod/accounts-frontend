@@ -1,12 +1,12 @@
 <template>
   <v-app dark>
-    {{ $t('test') }}
-    <v-btn style="width:200px" v-on:click='changeLang'>{{$i18n.locale}}</v-btn>
+<!--     {{ $t('test') }}
+    <v-btn style="width:200px" v-on:click='changeLang'>{{$i18n.locale}}</v-btn> -->
     <nuxt />
   </v-app>
 </template>
 
-<script>
+<!-- <script>
   export default {
     methods: {
       changeLang () {
@@ -14,4 +14,4 @@
       }
     }
   }
-</script>
+</script> -->

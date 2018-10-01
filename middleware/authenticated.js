@@ -4,7 +4,7 @@ import errors from '../config/errors'
 import httpCfg from '../config/http'
 import jwt from 'jsonwebtoken'
 
-export default async function ({ store, redirect }) {
+export default async function ({ app, store, redirect }) {
   try {
     if (store.getters['user/isAuthenticated']) {
       return
@@ -42,7 +42,7 @@ export default async function ({ store, redirect }) {
         refreshToken,
         expiresIn: jwt.decode(accessToken).exp
       }})
-      store.dispatch('user/setUser', { data: userResponse.data.data })
+      store.dispatch('user/setUser', { data: userResponse.data.data, i18n: app.i18n })
       return
     }
 
@@ -65,7 +65,7 @@ export default async function ({ store, redirect }) {
       })
 
       store.dispatch('user/setTokens', { data: tokenResponse.data.data })
-      store.dispatch('user/setUser', { data: userResponse.data.data })
+      store.dispatch('user/setUser', { data: userResponse.data.data, i18n: app.i18n })
       return
     }
 

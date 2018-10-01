@@ -4,7 +4,7 @@
     <h1 v-else>Внутренняя ошибка сервера</h1>
     <div>
       {{error.error}}
-      {{error.response}}
+      {{error.responses}}
     </div>
     <nuxt-link to="/">Вернуться на главную</nuxt-link>
   </div>
@@ -13,6 +13,6 @@
 <script>
 export default {
   layout: 'empty',
-  props: ['error']
+  props: ['error', 'responses']
 }
 </script>
