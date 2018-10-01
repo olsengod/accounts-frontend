@@ -41,8 +41,9 @@
               </v-form>
             </v-card-text>
             <v-card-actions>
+              <nuxt-link to="/signup">Регистрация</nuxt-link>
               <v-spacer></v-spacer>
-              <v-btn v-on:click='signin'>Login</v-btn>
+              <v-btn v-on:click='signin'>Вход</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -80,7 +81,10 @@
             return
           }
 
-          let response = await axios({
+          let signinResponse
+          let userResponse
+
+          signinResponse = await axios({
             method: 'post',
             url: httpCfg.backendURL + '/api/v1/users/signin/email',
             data: {
@@ -92,18 +96,29 @@
             }
           })
 
-          if (response.status === 200) {
-            this.$store.dispatch('user/setTokens', { data: response.data })
+          if (signinResponse.status === 200) {
+            userResponse = await axios({
+              method: 'get',
+              url: httpCfg.backendURL + '/api/v1/users/current',
+              headers: {'authorization': signinResponse.data.data.accessToken},
+              validateStatus: function (status) {
+                return status === 200
+              }
+            })
+            this.$store.dispatch('user/setTokens', { data: signinResponse.data.data })
+            this.$store.dispatch('user/setUser', { data: userResponse.data.data })
             this.$router.push('/')
             return
           }
-          for (let i = 0; i < response.data.data.length; i++) {
-            if ([10, 13, 41].includes(response.data.data[i])) {
-              this.setNotification(true, response.data.data[i], 'warning')
+
+          // signinResponse.status === 400, so now need to process errors
+          for (let i = 0; i < signinResponse.data.data.length; i++) {
+            if ([10, 13, 41].includes(signinResponse.data.data[i])) {
+              this.setNotification(true, signinResponse.data.data[i], 'warning')
               return
             }
           }
-          this.$nuxt.error({ statusCode: 500, response })
+          this.$nuxt.error({ statusCode: 500 })
         } catch (error) {
           this.$nuxt.error({ statusCode: 500, error })
         }

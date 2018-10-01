@@ -13,6 +13,6 @@
 <script>
 export default {
   layout: 'empty',
-  props: ['error', 'response']
+  props: ['error']
 }
 </script>

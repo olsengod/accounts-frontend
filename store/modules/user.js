@@ -1,11 +1,23 @@
 import ls from 'local-storage'
+import i18n from '../../plugins/i18n'
 
 const state = {
   user: {
     accessToken: null,
     refreshToken: null,
     expireIn: null,
-    isAuthenticated: false
+    isAuthenticated: false,
+    data: {
+      email: null,
+      username: null,
+      phone: null,
+      registerAt: null,
+      lastLogin: null,
+      state: null,
+      data: {
+        language: null
+      }
+    }
   }
 }
 
@@ -21,6 +33,24 @@ const mutations = {
   },
   SET_EXPIRES_IN (state, value) {
     state.user.expireIn = value
+  },
+  SET_EMAIL (state, value) {
+    state.user.data.email = value
+  },
+  SET_USERNAME (state, value) {
+    state.user.data.username = value
+  },
+  SET_REGISTER_AT (state, value) {
+    state.user.data.registerAt = value
+  },
+  SET_LAST_LOGIN (state, value) {
+    state.user.data.lastLogin = value
+  },
+  SET_STATE (state, value) {
+    state.user.data.state = value
+  },
+  SET_LANGUAGE (state, value) {
+    state.user.data.data.language = value
   }
 }
 
@@ -32,6 +62,15 @@ const actions = {
     commit('SET_EXPIRES_IN', data.expireIn)
     ls.set('cererisAccountAccessToken', data.accessToken)
     ls.set('cererisAccountRefreshToken', data.refreshToken)
+  },
+  setUser ({commit}, {data}) {
+    console.log(i18n)
+    if (data.email) commit('SET_EMAIL', data.email)
+    if (data.username) commit('SET_USERNAME', data.username)
+    if (data.registerAt) commit('SET_REGISTER_AT', data.registerAt)
+    if (data.lastLogin) commit('SET_LAST_LOGIN', data.lastLogin)
+    if (data.state) commit('SET_STATE', data.state)
+    if (data.data.language) commit('SET_LANGUAGE', data.data.language)
   }
 }
 

@@ -2,7 +2,6 @@ import ls from 'local-storage'
 import axios from 'axios'
 import errors from '../config/errors'
 import httpCfg from '../config/http'
-import { refreshTokens } from '../util/tokens'
 import jwt from 'jsonwebtoken'
 
 export default async function ({ store, redirect }) {
@@ -17,7 +16,10 @@ export default async function ({ store, redirect }) {
       return redirect('/signin')
     }
 
-    let response = await axios({
+    let tokenResponse
+    let userResponse
+
+    tokenResponse = await axios({
       method: 'post',
       url: httpCfg.backendURL + '/api/v1/tokens/check-access-token',
       headers: {'authorization': accessToken},
@@ -26,17 +28,44 @@ export default async function ({ store, redirect }) {
       }
     })
 
-    if (response.status === 200) {
+    if (tokenResponse.status === 200) {
+      userResponse = await axios({
+        method: 'get',
+        url: httpCfg.backendURL + '/api/v1/users/current',
+        headers: {'authorization': accessToken},
+        validateStatus: function (status) {
+          return status === 200
+        }
+      })
       store.dispatch('user/setTokens', { data: {
         accessToken,
         refreshToken,
         expiresIn: jwt.decode(accessToken).exp
       }})
+      store.dispatch('user/setUser', { data: userResponse.data.data })
       return
     }
 
-    if (response.status === 400 && response.data === [errors.ACCESS_TOKEN_EXPIRED]) {
-      await refreshTokens(refreshToken)
+    if (tokenResponse.status === 400 && tokenResponse.data.data === [errors.ACCESS_TOKEN_EXPIRED]) {
+      tokenResponse = await axios({
+        method: 'post',
+        url: httpCfg.backendURL + '/api/v1/tokens/refresh',
+        data: { refreshToken },
+        validateStatus: function (status) {
+          return status === 200
+        }
+      })
+      userResponse = await axios({
+        method: 'get',
+        url: httpCfg.backendURL + '/api/v1/users/current',
+        headers: {'authorization': tokenResponse.data.accessToken},
+        validateStatus: function (status) {
+          return status === 200
+        }
+      })
+
+      store.dispatch('user/setTokens', { data: tokenResponse.data.data })
+      store.dispatch('user/setUser', { data: userResponse.data.data })
       return
     }
 
