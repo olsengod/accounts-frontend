@@ -59,6 +59,7 @@
   import axios from 'axios'
   import sha256 from 'sha256'
   import httpCfg from '../config/http'
+  import errors from '../config/errors'
 
   export default {
     layout: 'empty',
@@ -113,7 +114,7 @@
 
           // signinResponse.status === 400, so now need to process errors
           for (let i = 0; i < signinResponse.data.data.length; i++) {
-            if ([13, 41].includes(signinResponse.data.data[i])) {
+            if ([errors.ACCOUNT_NOT_ACTIVE, errors.EMAIL_OR_PASSWORD_IS_WRONG].includes(signinResponse.data.data[i])) {
               this.setNotification(true, this.$t('errors.error' + signinResponse.data.data[i]), 'warning')
               return
             }

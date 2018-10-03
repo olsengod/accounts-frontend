@@ -59,7 +59,6 @@ const mutations = {
 
 const actions = {
   setTokens ({commit}, {data}) {
-    commit('SET_IS_AUTHENTICATED', true)
     commit('SET_ACCESS_TOKEN', data.accessToken)
     commit('SET_REFRESH_TOKEN', data.refreshToken)
     commit('SET_EXPIRES_IN', data.expireIn)
@@ -80,6 +79,9 @@ const actions = {
 const getters = {
   isAuthenticated: state => {
     return state.user.isAuthenticated
+  },
+  state: state => {
+    return state.user.data.state
   }
 }
 

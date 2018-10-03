@@ -2,6 +2,7 @@ import ls from 'local-storage'
 import axios from 'axios'
 import errors from '../config/errors'
 import httpCfg from '../config/http'
+import userCfg from '../config/user'
 import jwt from 'jsonwebtoken'
 
 export default async function ({ app, store, redirect }) {
@@ -43,6 +44,9 @@ export default async function ({ app, store, redirect }) {
         expiresIn: jwt.decode(accessToken).exp
       }})
       store.dispatch('user/setUser', { data: userResponse.data.data, i18n: app.i18n })
+      if (userResponse.data.data.state === userCfg.states.ACTIVE) {
+        store.commit('user/SET_IS_AUTHENTICATED', true)
+      }
       return
     }
 
@@ -66,6 +70,9 @@ export default async function ({ app, store, redirect }) {
 
       store.dispatch('user/setTokens', { data: tokenResponse.data.data })
       store.dispatch('user/setUser', { data: userResponse.data.data, i18n: app.i18n })
+      if (userResponse.data.data.state === userCfg.states.ACTIVE) {
+        store.commit('user/SET_IS_AUTHENTICATED', true)
+      }
       return
     }
 

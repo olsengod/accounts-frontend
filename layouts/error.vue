@@ -3,6 +3,7 @@
     <h1 v-if="error.statusCode === 404">Страница не найдена</h1>
     <h1 v-else>Внутренняя ошибка сервера</h1>
     <div>
+      {{error}}
       {{error.error}}
       {{error.responses}}
     </div>

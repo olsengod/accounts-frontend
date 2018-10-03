@@ -50,6 +50,7 @@
   import axios from 'axios'
   import httpCfg from '../config/http'
   import languageCfg from '../config/language'
+  import errors from '../config/errors'
 
   export default {
     layout: 'empty',
@@ -92,7 +93,7 @@
 
           // signupResponse.status === 400, so now need to process errors
           for (let i = 0; i < signupResponse.data.data.length; i++) {
-            if ([35].includes(signupResponse.data.data[i])) {
+            if ([errors.EMAIL_ALREADY_IN_USE].includes(signupResponse.data.data[i])) {
               this.setNotification(true, this.$t('errors.error' + signupResponse.data.data[i]), 'warning')
               return
             }

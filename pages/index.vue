@@ -6,6 +6,6 @@
 
 <script>
   export default {
-    middleware: 'authenticated'
+    middleware: ['autologin', 'authenticated']
   }
 </script>
