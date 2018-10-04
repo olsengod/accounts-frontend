@@ -87,6 +87,7 @@
           })
 
           if (signupResponse.status === 200) {
+            // TODO: здесь вместо уведомления нужно будет сделать redirect на страницу с просьбой проверить почту
             this.setNotification(true, this.$t('informationMessages.completeRegistrationWithEmail', { email: this.email }), 'info')
             return
           }

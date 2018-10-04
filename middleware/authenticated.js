@@ -13,7 +13,8 @@ export default async function ({ app, store, redirect }) {
 
     let accessToken = ls.get('cererisAccountAccessToken')
     let refreshToken = ls.get('cererisAccountRefreshToken')
-    if (!accessToken || !refreshToken) {
+    let expiresIn = ls.get('cererisExpiresIn')
+    if (!accessToken || !refreshToken || !expiresIn) {
       return redirect('/signin')
     }
 
@@ -41,7 +42,7 @@ export default async function ({ app, store, redirect }) {
       store.dispatch('user/setTokens', { data: {
         accessToken,
         refreshToken,
-        expiresIn: jwt.decode(accessToken).exp
+        expiresIn: expiresIn
       }})
       store.dispatch('user/setUser', { data: userResponse.data.data, i18n: app.i18n })
       if (userResponse.data.data.state === userCfg.states.ACTIVE) {
