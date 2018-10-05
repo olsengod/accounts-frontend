@@ -5,77 +5,79 @@
         <canvas id="matr"></canvas>
       </v-layout>
       <v-layout align-center justify-center class="main-layout">
-        <v-scale-transition mode="out-in">
-          <v-alert
-            v-if="notification.is"
-            v-model="notification.is"
-            dismissible
-            outline
-            :type="notification.level">
-            {{ notification.text }}
-          </v-alert>
-        </v-scale-transition>
-        <v-card class="card elevation-12">
-          <img
-            style="margin-top: 15px"
-            height="130px"
-            src="cereris-logo.png">
-          <v-card-title class="justify-center" style="margin-top: 10px; padding: 0">
-            <div>
-              <span style="font-weight: 400; font-size: 18pt; color: rgb(63, 28, 49)">{{ $t('signin.returnMes') }}</span>
-            </div>
-          </v-card-title>
-          <v-card-text style="padding-left: 20px; padding-right: 20px;">
-            <v-form>
-              <v-text-field
-                color="rgb(56, 150, 29)"
-                prepend-icon="alternate_email"
-                label="Email"
-                :label="$t('signin.email')"
-                type="text"
-                v-validate="'required|email'"
-                data-vv-name="email"
-                :error-messages="errors.collect('email')"
-                v-model="email">                    
-              </v-text-field>
-              <v-text-field
-                color="rgb(56, 150, 29)"
-                prepend-icon="lock"
-                :label="$t('signin.password')"
-                type="password"
-                v-validate="'required|min:5|max:20'"
-                data-vv-name="password"
-                :error-messages="errors.collect('password')"
-                v-model="password"
-              ></v-text-field>
-            </v-form>
-          </v-card-text>
-          <v-card-actions style="padding-left: 20px; padding-right: 20px;">
-            <v-layout row wrap align-center justify-center>
-              <v-btn
-                class="enterBtn"
-                v-on:click='signin' 
-                color="rgb(56, 150, 29)">
-                {{ $t('signin.continueBtn') }}
-                <v-icon right dark style="margin-left: 3px">forward</v-icon>
-              </v-btn>
-              
-              <nuxt-link style="text-decoration: none" to="/forgetPassword">
+        <v-layout align-center justify-center column>
+          <v-scale-transition mode="out-in">
+            <v-alert
+              v-if="notification.is"
+              v-model="notification.is"
+              dismissible
+              :type="notification.level">
+              {{ notification.text }}
+            </v-alert>
+          </v-scale-transition>
+          <v-card class="card elevation-12">
+            <img
+              style="margin-top: 15px"
+              height="130px"
+              src="cereris-logo.png">
+            <v-card-title class="justify-center" style="margin-top: 10px; padding: 0">
+              <div>
+                <span style="font-weight: 400; font-size: 18pt; color: rgb(63, 28, 49)">{{ $t('signin.returnMes') }}</span>
+              </div>
+            </v-card-title>
+            <v-card-text style="padding-left: 20px; padding-right: 20px;">
+              <v-form>
+                <v-text-field
+                  color="rgb(56, 150, 29)"
+                  prepend-icon="alternate_email"
+                  label="Email"
+                  :label="$t('signin.email')"
+                  type="text"
+                  v-validate="'required|email'"
+                  data-vv-name="email"
+                  :error-messages="errors.collect('email')"
+                  v-model="email">                    
+                </v-text-field>
+                <v-text-field
+                  color="rgb(56, 150, 29)"
+                  prepend-icon="lock"
+                  :label="$t('signin.password')"
+                  type="password"
+                  v-validate="'required|min:5|max:20'"
+                  data-vv-name="password"
+                  :error-messages="errors.collect('password')"
+                  v-model="password"
+                ></v-text-field>
+              </v-form>
+            </v-card-text>
+            <v-card-actions style="padding-left: 20px; padding-right: 20px;">
+              <v-layout row wrap align-center justify-center>
                 <v-btn
-                  class="switchBtn"
-                  flat
-                  color="rgb(56, 150, 29)">{{ $t('signin.forgetPassword') }}</v-btn>
-              </nuxt-link>
-              <v-spacer class="space"></v-spacer>
-              <nuxt-link style="text-decoration: none" to="/signup">
-                <v-btn
-                  class="switchBtn"
-                  flat 
-                  color="rgb(56, 150, 29)">{{ $t('signin.isRegistered') }}</v-btn>
-              </nuxt-link>
-            </v-layout>
-          </v-card-actions>
-        </v-card>
+                  class="enterBtn"
+                  v-on:click='signin' 
+                  color="rgb(56, 150, 29)">
+                  {{ $t('signin.continueBtn') }}
+                  <v-icon right dark style="margin-left: 3px">forward</v-icon>
+                </v-btn>
+                <v-layout wrap>
+                  <nuxt-link style="text-decoration: none" to="/forgetPassword">
+                    <v-btn
+                      class="switchBtn"
+                      flat
+                      color="rgb(56, 150, 29)">{{ $t('signin.forgetPassword') }}</v-btn>
+                  </nuxt-link>
+                  <v-spacer class="space"></v-spacer>
+                  <nuxt-link style="text-decoration: none" to="/signup">
+                    <v-btn
+                      class="switchBtn"
+                      flat 
+                      color="rgb(56, 150, 29)">{{ $t('signin.isRegistered') }}</v-btn>
+                  </nuxt-link>
+                </v-layout>
+              </v-layout>
+            </v-card-actions>
+          </v-card>
+        </v-layout>
       </v-layout>
     </v-container>
   </v-content>
@@ -205,8 +207,7 @@
   @media only screen and (max-width: 350px){ 
     .switchBtn{
       width: 100%;
-      margin-top: 5px;
-      margin-right: 20px;
+      /*margin: 15px;*/
     }
 
     .space{
