@@ -10,7 +10,10 @@
   "signin": {
   	"returnMes": "Welcome!",
   	"isRegistered": "Register",
-  	"continueBtn": "Sign in"
+  	"continueBtn": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "forgetPassword": "Forget password?"
   },
   "errors": {
     "error13": "Account not activated. Please confirm your email or phone.",

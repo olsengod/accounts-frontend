@@ -3,7 +3,6 @@ import axios from 'axios'
 import errors from '../config/errors'
 import httpCfg from '../config/http'
 import userCfg from '../config/user'
-import jwt from 'jsonwebtoken'
 
 export default async function ({ app, store, redirect }) {
   try {
