@@ -1,5 +1,17 @@
 {
-  "test": "Tyomic Lalka",
+  "test": "Tyomic Boss",
+  "signup": {
+  	"createAccount": "Create new account",
+  	"isRegistered": "Already registered",
+  	"continueBtn": "Continue",
+  	"lang": "Language",
+  	"email": "Email"
+  },
+  "signin": {
+  	"returnMes": "Welcome!",
+  	"isRegistered": "Register",
+  	"continueBtn": "Sign in"
+  },
   "errors": {
     "error13": "Account not activated. Please confirm your email or phone.",
     "error35": "Email already in use.",

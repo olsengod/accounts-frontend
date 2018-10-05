@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
 <!--     {{ $t('test') }}
     <v-btn style="width:200px" v-on:click='changeLang'>{{$i18n.locale}}</v-btn> -->
     <nuxt />
