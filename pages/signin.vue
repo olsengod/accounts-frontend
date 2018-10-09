@@ -1,20 +1,18 @@
 <template>
   <v-content>
-    <v-container fluid fill-height class="main-container">
-      <v-layout class="matrix">
-        <canvas id="matr"></canvas>
-      </v-layout>
-      <v-layout align-center justify-center class="main-layout">
-        <v-layout align-center justify-center column>
-          <v-scale-transition mode="out-in">
-            <v-alert
-              v-if="notification.is"
-              v-model="notification.is"
-              dismissible
-              :type="notification.level">
-              {{ notification.text }}
-            </v-alert>
-          </v-scale-transition>
+    <v-container fluid fill-height align-center justify-center>
+      <v-layout align-center justify-center column class="main-layout">
+        <v-scale-transition mode="out-in">
+          <v-alert
+            class="alert"
+            v-if="notification.is"
+            v-model="notification.is"
+            dismissible
+            :type="notification.level">
+            {{ notification.text }}
+          </v-alert>
+        </v-scale-transition>
+        <v-layout align-center justify-center class="card-layout">
           <v-card class="card elevation-12">
             <img
               style="margin-top: 15px"
@@ -51,29 +49,33 @@
               </v-form>
             </v-card-text>
             <v-card-actions style="padding-left: 20px; padding-right: 20px;">
-              <v-layout row wrap align-center justify-center>
-                <v-btn
-                  class="enterBtn"
-                  v-on:click='signin' 
-                  color="rgb(56, 150, 29)">
-                  {{ $t('signin.continueBtn') }}
-                  <v-icon right dark style="margin-left: 3px">forward</v-icon>
-                </v-btn>
-                <v-layout wrap>
+              <v-layout wrap align-center justify-center>
+                <v-flex xs12>
+                  <v-btn
+                    class="enterBtn"
+                    v-on:click='signin' 
+                    color="rgb(56, 150, 29)">
+                    {{ $t('signin.continueBtn') }}
+                    <v-icon right dark style="margin-left: 3px">forward</v-icon>
+                  </v-btn>
+                </v-flex>
+                <v-flex xs12 sm6 style="padding-top: 10px">
                   <nuxt-link style="text-decoration: none" to="/forgetPassword">
                     <v-btn
-                      class="switchBtn"
+                      class="passLink"
                       flat
                       color="rgb(56, 150, 29)">{{ $t('signin.forgetPassword') }}</v-btn>
                   </nuxt-link>
+                </v-flex>
                   <v-spacer class="space"></v-spacer>
+                <v-flex xs12 sm6 style="padding-top: 10px">
                   <nuxt-link style="text-decoration: none" to="/signup">
                     <v-btn
                       class="switchBtn"
                       flat 
                       color="rgb(56, 150, 29)">{{ $t('signin.isRegistered') }}</v-btn>
                   </nuxt-link>
-                </v-layout>
+                </v-flex>
               </v-layout>
             </v-card-actions>
           </v-card>
@@ -162,28 +164,35 @@
 </script>
 
 <style scoped>
-  .main-container{
-    position: absolute;
-    width: 100%;
-    padding: 0;
-  }
 
   .main-layout{
-    position: absolute;
+    max-width: 400px;
+  }
+
+  .card-layout{
+    position: relative;
     width: 100%;
+    max-height: 517px;
   }
 
   .card{
     text-align: center;
     background-color: rgba(255, 255, 255, 0.7);
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     padding-top: 40px;
-    width: 395px;
+    width: 100%;
   }
 
   .enterBtn{
     width: 100%;
     color: rgb(255, 255, 255)
+  }
+
+  .passLink{
+    margin-top: 5px;
+    width: 100%;
+    padding: 0; 
+    font-size: 9pt
   }
 
   .switchBtn{
@@ -197,17 +206,17 @@
     display: inline;
   }
 
-  /*@media only screen and (max-width: 350px){ 
-    .switchBtn{
+  @media only screen and (max-width: 599px){ 
+    .card-layout{
+      position: relative;
       width: 100%;
-      margin-right: 10px
+      max-height: 558px;
     }
-  }*/
+  }
 
-  @media only screen and (max-width: 350px){ 
+  @media only screen and (max-width: 332px){ 
     .switchBtn{
       width: 100%;
-      /*margin: 15px;*/
     }
 
     .space{

@@ -1,7 +1,7 @@
 <template>
   <v-content>
-    <v-container fluid fill-height class="main-container">
-      <v-layout align-center justify-center class="main-layout" column>
+    <v-container fluid fill-height align-center justify-center>
+      <v-layout align-center justify-center column class="main-layout">
         <v-scale-transition mode="out-in">
           <v-alert
             v-if="notification.is"
@@ -12,66 +12,68 @@
             {{ notification.text }}
           </v-alert>
         </v-scale-transition>
-        <v-card class="card elevation-12">
-          <img
-            height="130px"
-            src="cereris-logo.png">
-          <v-card-title class="justify-center" style="margin-top: 10px; padding: 0">
-            <div>
-              <span style="font-weight: 400; font-size: 18pt; color: rgb(63, 28, 49)">{{ $t('signup.createAccount') }}</span>
-            </div>
-          </v-card-title>
-          <v-card-text style="padding-left: 20px; padding-right: 20px;">
-            <v-form>
-              <v-text-field
-                style="color: rgb(60, 176, 30)"
+        <v-layout align-center justify-center class="card-layout">
+          <v-card class="card elevation-12">
+            <img
+              height="130px"
+              src="cereris-logo.png">
+            <v-card-title class="justify-center" style="margin-top: 10px; padding: 0">
+              <div>
+                <span style="font-weight: 400; font-size: 18pt; color: rgb(63, 28, 49)">{{ $t('signup.createAccount') }}</span>
+              </div>
+            </v-card-title>
+            <v-card-text style="padding-left: 20px; padding-right: 20px; padding-top: 20px">
+              <v-form>
+                <v-text-field
+                  style="color: rgb(60, 176, 30)"
+                  color="rgb(56, 150, 29)"
+                  prepend-icon="alternate_email"
+                  :label="$t('signup.email')"
+                  type="text"
+                  v-validate="'required|email'"
+                  data-vv-name="email"
+                  :error-messages="errors.collect('email')"
+                  v-model="Email"
+                ></v-text-field>
+              </v-form>
+              <v-select
                 color="rgb(56, 150, 29)"
-                prepend-icon="alternate_email"
-                :label="$t('signup.email')"
-                type="text"
-                v-validate="'required|email'"
-                data-vv-name="email"
-                :error-messages="errors.collect('email')"
-                v-model="Email"
-              ></v-text-field>
-            </v-form>
-            <v-select
-              color="rgb(56, 150, 29)"
-              prepend-icon="language"
-              :items="languages"
-              v-model="language"
-              :label="$t('signup.lang')"
-              @change="changeLang()">
-            </v-select>
-          </v-card-text>
-          <v-card-actions style="padding-left: 20px; padding-right: 20px">
-            <v-layout row wrap align-center justify-center>
-              <nuxt-link style="text-decoration: none" to="/signin">
+                prepend-icon="language"
+                :items="languages"
+                v-model="language"
+                :label="$t('signup.lang')"
+                @change="changeLang()">
+              </v-select>
+            </v-card-text>
+            <v-card-actions style="padding-left: 20px; padding-right: 20px">
+              <v-layout row wrap align-center justify-center>
+                <nuxt-link style="text-decoration: none" to="/signin">
+                  <v-btn
+                    class="switchBtn"
+                    flat 
+                    color="rgb(56, 150, 29)" 
+                    style="margin-right: 10px; padding: 0; font-size: 9pt">{{ $t('signup.isRegistered') }}</v-btn>
+                </nuxt-link>
+                <v-spacer class="space"></v-spacer>
                 <v-btn
-                  class="switchBtn"
-                  flat 
+                  class="enterBtn"
+                  v-on:click='signup' 
                   color="rgb(56, 150, 29)" 
-                  style="margin-right: 10px; padding: 0; font-size: 9pt">{{ $t('signup.isRegistered') }}</v-btn>
-              </nuxt-link>
-              <v-spacer class="space"></v-spacer>
-              <v-btn
-                class="enterBtn"
-                v-on:click='signup' 
-                color="rgb(56, 150, 29)" 
-                style="color: rgb(255, 255, 255)">
-                {{ $t('signup.continueBtn') }}
-                <v-icon right dark style="margin-left: 5px">forward</v-icon>
-              </v-btn>
-              <nuxt-link style="text-decoration: none" to="/signin">
-                <v-btn
-                  class="switchBtnMob"
-                  flat 
-                  color="rgb(56, 150, 29)" 
-                  style="margin-right: 10px; padding: 0; font-size: 9pt">{{ $t('signup.isRegistered') }}</v-btn>
-              </nuxt-link>
-            </v-layout>
-          </v-card-actions>            
-        </v-card>
+                  style="color: rgb(255, 255, 255)">
+                  {{ $t('signup.continueBtn') }}
+                  <v-icon right dark style="margin-left: 5px">forward</v-icon>
+                </v-btn>
+                <nuxt-link style="text-decoration: none" to="/signin">
+                  <v-btn
+                    class="switchBtnMob"
+                    flat 
+                    color="rgb(56, 150, 29)" 
+                    style="margin-right: 10px; padding: 0; font-size: 9pt">{{ $t('signup.isRegistered') }}</v-btn>
+                </nuxt-link>
+              </v-layout>
+            </v-card-actions>            
+          </v-card>
+        </v-layout>
       </v-layout>
     </v-container>
   </v-content>
@@ -157,41 +159,23 @@
 </script>
 
 <style scoped>
-  .main-container{
-    position: absolute;
-    width: 100%;
-    padding: 0;
-  }
-
   .main-layout{
-    position: absolute;
-    width: 100%;
-    text-align: center;
+    max-width: 400px;
   }
 
-  .canvas#matr{
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
+  .card-layout{
+    position: relative;
     width: 100%;
-    margin: auto;
-  }
-
-  .matrix{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    z-index: 0;
+    max-height: 517px;
   }
 
   .card{
     text-align: center;
     background-color: rgba(255, 255, 255, 0.7);
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     padding-top: 40px;
-    width: 395px;
+    /*width: 395px;*/
+    width: 100%;
   }
 
   .switchBtn,
@@ -199,7 +183,24 @@
     display: inline;
   }
 
-  @media only screen and (max-width: 400px){ 
+  @media only screen and (max-width: 599px){ 
+    .card-layout{
+      position: relative;
+      width: 100%;
+      max-height: 558px;
+    }
+  }
+
+  .switchBtnMob {display: none;}
+
+  @media only screen and (max-width: 430px){ 
+    .switchBtnMob{
+      width: 100%;
+      display: inline;
+      /*margin-top: 5px*/
+      margin-top: 10px
+    }
+
     .enterBtn{
       width: 100%;
     }
@@ -207,16 +208,6 @@
     .switchBtn,
     .space{
       display: none;
-    }
-  }
-
-  .switchBtnMob {display: none;}
-
-  @media only screen and (max-width: 400px){ 
-    .switchBtnMob{
-      width: 100%;
-      display: inline;
-      margin-top: 5px
     }
   }
 </style>

@@ -8,7 +8,7 @@
   	"email": "Email"
   },
   "signin": {
-  	"returnMes": "Welcome!",
+  	"returnMes": "Welcome back!",
   	"isRegistered": "Register",
   	"continueBtn": "Sign in",
     "email": "Email",
