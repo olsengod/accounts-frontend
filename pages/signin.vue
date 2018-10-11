@@ -53,7 +53,7 @@
                 <v-flex xs12>
                   <v-btn
                     class="enterBtn"
-                    v-on:click='signin' 
+                    @click='signin' 
                     color="rgb(56, 150, 29)">
                     {{ $t('signin.continueBtn') }}
                     <v-icon right dark style="margin-left: 3px">forward</v-icon>
@@ -167,6 +167,10 @@
 
   .main-layout{
     max-width: 400px;
+  }
+
+  .alert{
+    width: 100%;
   }
 
   .card-layout{

@@ -4,10 +4,10 @@
       <v-layout align-center justify-center column class="main-layout">
         <v-scale-transition mode="out-in">
           <v-alert
+            class="alert"
             v-if="notification.is"
             v-model="notification.is"
             dismissible
-            outline
             :type="notification.level">
             {{ notification.text }}
           </v-alert>
@@ -33,7 +33,7 @@
                   v-validate="'required|email'"
                   data-vv-name="email"
                   :error-messages="errors.collect('email')"
-                  v-model="Email"
+                  v-model="email"
                 ></v-text-field>
               </v-form>
               <v-select
@@ -57,7 +57,7 @@
                 <v-spacer class="space"></v-spacer>
                 <v-btn
                   class="enterBtn"
-                  v-on:click='signup' 
+                  @click='signup' 
                   color="rgb(56, 150, 29)" 
                   style="color: rgb(255, 255, 255)">
                   {{ $t('signup.continueBtn') }}
@@ -91,7 +91,7 @@
     data: function () {
       return {
         lang: '',
-        Email: '',
+        email: '',
         language: languageCfg.all[this.$i18n.locale],
         notification: {
           is: false,
@@ -115,7 +115,7 @@
             url: httpCfg.backendURL + '/api/v1/users/signup/email',
             data: {
               email: this.email,
-              language: this.language
+              language: this.$i18n.locale
             },
             validateStatus: function (status) {
               return status === 200 || status === 400
@@ -163,10 +163,14 @@
     max-width: 400px;
   }
 
+  .alert{
+    width: 100%;
+  }
+
   .card-layout{
     position: relative;
     width: 100%;
-    max-height: 517px;
+    max-height: 455px;
   }
 
   .card{
@@ -183,17 +187,17 @@
     display: inline;
   }
 
-  @media only screen and (max-width: 599px){ 
+  /*@media only screen and (max-width: 599px){ 
     .card-layout{
       position: relative;
       width: 100%;
-      max-height: 558px;
+      max-height: 455px;
     }
-  }
+  }*/
 
   .switchBtnMob {display: none;}
 
-  @media only screen and (max-width: 430px){ 
+  @media only screen and (max-width: 431px){ 
     .switchBtnMob{
       width: 100%;
       display: inline;
@@ -208,6 +212,20 @@
     .switchBtn,
     .space{
       display: none;
+    }
+
+    .card-layout{
+      position: relative;
+      width: 100%;
+      max-height: 501px;
+    }
+  }
+
+  @media only screen and (max-width: 324px){ 
+    .card-layout{
+      position: relative;
+      width: 100%;
+      max-height: 537px;
     }
   }
 </style>
