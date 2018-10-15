@@ -15,7 +15,7 @@ build production bundle:
     - npm run build
   artifacts:
     paths:
-      - dist/
+      - .nuxt/dist/
   only:
     - master
 
@@ -29,7 +29,7 @@ build development bundle:
     - npm run build
   artifacts:
     paths:
-      - dist/
+      - .nuxt/dist/
   only:
     - develop
 
