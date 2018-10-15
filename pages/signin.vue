@@ -98,6 +98,8 @@
   import sha256 from 'sha256'
   import httpCfg from '../config/http'
   import errors from '../config/errors'
+  import languageCfg from '../config/language'
+  import { Validator } from 'vee-validate'
 
   export default {
     layout: 'empty',
