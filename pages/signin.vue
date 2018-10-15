@@ -24,6 +24,14 @@
               </div>
             </v-card-title>
             <v-card-text style="padding-left: 20px; padding-right: 20px;">
+              <v-select
+                color="rgb(56, 150, 29)"
+                prepend-icon="language"
+                :items="languages"
+                v-model="language"
+                :label="$t('signup.lang')"
+                @change="changeLang()">
+              </v-select>
               <v-form>
                 <v-text-field
                   color="rgb(56, 150, 29)"
@@ -97,6 +105,8 @@
       return {
         email: '',
         password: '',
+        language: languageCfg.all[this.$i18n.locale],
+        languages: Object.values(languageCfg.all),
         notification: {
           is: false,
           text: '',
@@ -158,6 +168,15 @@
         this.notification.is = is
         this.notification.text = text
         this.notification.level = level
+      },
+      changeLang () {
+        let all = Object.keys(languageCfg.all)
+        for (let i = 0; i < Object.values(languageCfg.all).length; i++) {
+          if (languageCfg.all[all[i]] === this.language) {
+            this.$i18n.locale = all[i]
+            Validator.localize(all[i], languageCfg.veeValidateMessages[all[i]])
+          }
+        }
       }
     }
   }
