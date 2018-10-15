@@ -5,33 +5,33 @@ stages:
   - release
   - deploy
 
-build production bundle:
-  stage: build
-  image: node:9-alpine
-  variables:
-    NODE_ENV: "production"
-  script:
-    - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - .nuxt/dist/
-  only:
-    - master
-
-build development bundle:
-  stage: build
-  image: node:alpine
-  variables:
-    NODE_ENV: "test"
-  script:
-    - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - .nuxt/dist/
-  only:
-    - develop
+# build production bundle:
+#   stage: build
+#   image: node:9-alpine
+#   variables:
+#     NODE_ENV: "production"
+#   script:
+#     - npm install
+#     - npm run build
+#   artifacts:
+#     paths:
+#       - .nuxt/dist/
+#   only:
+#     - master
+#
+# build development bundle:
+#   stage: build
+#   image: node:alpine
+#   variables:
+#     NODE_ENV: "test"
+#   script:
+#     - npm install
+#     - npm run build
+#   artifacts:
+#     paths:
+#       - .nuxt/dist/
+#   only:
+#     - develop
 
 make docker image:
   stage: release

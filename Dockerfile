@@ -1,4 +1,10 @@
-FROM nginx:stable-alpine
+FROM node:alpine
 
-COPY config/nginx.conf /etc/nginx/conf.d/default.conf
-COPY .nuxt/dist /usr/share/nginx/html/
+MAINTAINER LLC CERERIS <software@cereris.org>
+
+COPY package.json ./
+RUN npm install --only=production
+COPY . .
+ENV NODE_ENV production
+RUN npm run build
+CMD ["sh", "-c", "npm run start"]
