@@ -1,9 +1,38 @@
 {
-  "test": "Tyomic Lalka",
+  "test": "Tyomic Boss",
+  "signup": {
+  	"createAccount": "Create new account",
+  	"isRegistered": "Already registered",
+  	"continueBtn": "Continue",
+  	"lang": "Language",
+  	"email": "Email"
+  },
+  "signin": {
+  	"returnMes": "Welcome back!",
+  	"isRegistered": "Register",
+  	"continueBtn": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "forgetPassword": "Forget password?"
+  },
+  "signup_completion": {
+    "completeRegistration": "Complete registration",
+    "password": "Password",
+    "confirm": "Confirm password",
+    "continueBtn": "Continue"
+  },
+  "signup_checkMail": {
+    "message": "To complete the registration, check your mail and follow the link"
+  },
   "errors": {
     "error13": "Account not activated. Please confirm your email or phone.",
     "error35": "Email already in use.",
     "error41": "Email or password are incorrect."
+  },
+  "errorPage": {
+    "pageNotFound": "Page not found",
+    "internalError": "Internal server error",
+    "returnHome": "Home"
   },
   "informationMessages": {
     "completeRegistrationWithEmail": "To complete the registration, please click on the link in the email that was sent to {email}"

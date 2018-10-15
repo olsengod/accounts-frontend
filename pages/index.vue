@@ -5,7 +5,15 @@
 </template>
 
 <script>
-  export default {
-    middleware: ['autologin', 'authenticated']
+	import { mapState } from 'vuex'
+export default {
+  layout: 'default',
+  middleware: ['autologin', 'authenticated'],
+  created () {
+    console.log(this.user.state)
+  },
+  computed: {
+    ...mapState(['user'])
   }
+}
 </script>
