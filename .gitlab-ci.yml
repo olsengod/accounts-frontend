@@ -1,0 +1,82 @@
+image: alpine
+
+stages:
+  - build
+  - release
+  - deploy
+
+build production bundle:
+  stage: build
+  image: node:9-alpine
+  variables:
+    NODE_ENV: "production"
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - master
+
+build development bundle:
+  stage: build
+  image: node:alpine
+  variables:
+    NODE_ENV: "test"
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - develop
+
+make docker image:
+  stage: release
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker login --username gitlab-ci-token --password $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build -t registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME .
+    - docker push registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME
+    - echo "Build release success!!!"
+  only:
+    - master
+    - develop
+
+development:
+  stage: deploy
+  image: cereris/kubernetes-deploy
+  services:
+    - docker:dind
+  script:
+    - mkdir -p /root/.ssh/
+    - ssh-keyscan $KUBERNETES_HOST >> ~/.ssh/known_hosts
+    - mkdir -p ~/.kube
+    - sshpass -p $KUBERNETES_PASSWORD scp $KUBERNETES_USER@$KUBERNETES_HOST:~/.kube/config ~/.kube/config
+    - envsubst < deploy/development.template > deploy/development.yaml
+    - cat deploy/development.yaml
+    - kubectl --kubeconfig=/root/.kube/config --server="https://$KUBERNETES_HOST:6443" --insecure-skip-tls-verify apply -f deploy/development.yaml
+    - echo "Development deploy!!!"
+  only:
+    - develop
+
+production:
+  stage: deploy
+  image: cereris/kubernetes-deploy
+  services:
+    - docker:dind
+  script:
+    - mkdir -p /root/.ssh/
+    - ssh-keyscan $KUBERNETES_HOST >> ~/.ssh/known_hosts
+    - mkdir -p ~/.kube
+    - sshpass -p $KUBERNETES_PASSWORD scp $KUBERNETES_USER@$KUBERNETES_HOST:~/.kube/config ~/.kube/config
+    - envsubst < deploy/production.template > deploy/production.yaml
+    - cat deploy/production.yaml
+    - kubectl --kubeconfig=/root/.kube/config --server="https://$KUBERNETES_HOST:6443" --insecure-skip-tls-verify apply -f deploy/production.yaml
+    - echo "Development deploy!!!"
+  only:
+    - master

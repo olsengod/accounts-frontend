@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${CI_PROJECT_NAME}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlabregistry
+  namespace: ${CI_PROJECT_NAME}
+data:
+  .dockerconfigjson: ew0KCSJhdXRocyI6IHsNCgkJInJlZ2lzdHJ5LmdpdGxhYi5jb20iOiB7DQoJCQkiYXV0aCI6ICJaMmwwYkdGaUxXTnBMWFJ2YTJWdU9qRlhXRXRyT0ZOVU5qVmtVMnAyZFVVNGRHZG0iDQoJCX0NCgl9DQp9
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${CI_PROJECT_NAME}-dev
+  namespace: ${CI_PROJECT_NAME}
+  labels:
+    application: ${CI_PROJECT_NAME}-dev
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+  selector:
+    application: ${CI_PROJECT_NAME}-dev
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: ${CI_PROJECT_NAME}-dev-deployment
+  namespace: ${CI_PROJECT_NAME}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      application: ${CI_PROJECT_NAME}-dev
+  template:
+    metadata:
+      labels:
+        application: ${CI_PROJECT_NAME}-dev
+      annotations:
+        revision: ${CI_COMMIT_SHA}
+    spec:
+      nodeSelector:
+        zone: dev
+      containers:
+        - name: ${CI_PROJECT_NAME}-dev
+          image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:develop
+          imagePullPolicy: Always
+          env:
+          - name: IS_DEV
+            value: "true"
+      imagePullSecrets:
+        - name: gitlabregistry
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ${CI_PROJECT_NAME}-dev-ingress
+  namespace: ${CI_PROJECT_NAME}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: ${CI_PROJECT_NAME}-dev.cereris.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ${CI_PROJECT_NAME}-dev
+          servicePort: 80
