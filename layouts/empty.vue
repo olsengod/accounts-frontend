@@ -3,8 +3,6 @@
     <v-layout class="matrix">
       <canvas id="matr"></canvas>
     </v-layout>
-<!--     {{ $t('test') }}
-    <v-btn style="width:200px" v-on:click='changeLang'>{{$i18n.locale}}</v-btn> -->
     <nuxt />
   </v-app>
 </template>
@@ -12,12 +10,6 @@
 <script>
   import matrix from '@/assets/scripts/matrix'
   export default {
-    methods: {
-      // changeLang () {
-      //   this.$i18n.locale = (this.$i18n.locale === 'ru') ? 'en' : 'ru'
-      // }
-    },
-
     mounted () {
       matrix()
     }
