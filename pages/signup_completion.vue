@@ -78,11 +78,11 @@
 </template>
 
 <script>
-  // import axios from 'axios'
-  // import sha256 from 'sha256'
-  // import httpCfg from '../config/http'
-  // import errors from '../config/errors'
-  // import { Validator } from 'vee-validate'
+  import axios from 'axios'
+  import sha256 from 'sha256'
+  import httpCfg from '../config/http'
+  import errors from '../config/errors'
+  import { Validator } from 'vee-validate'
 
   export default {
     layout: 'empty',
@@ -101,51 +101,53 @@
     },
     methods: {
       async signup_completion () {
-        // try {
-      //     this.setNotification(false)
-        this.$validator.validateAll()
+        try {
+          this.setNotification(false)
+          if (!await this.$validator.validateAll()) {
+            return
+          }
+
+          let signupResponse
+          let userResponse
+
+          signupResponse = await axios({
+            method: 'patch',
+            url: httpCfg.backendURL + '/api/v1/users/current',
+            data: {
+              password: sha256(this.password)
+            },
+            validateStatus: function (status) {
+              return status === 200 || status === 400
+            }
+          })
+
+          if (signupResponse.status === 200) {
+            userResponse = await axios({
+              method: 'get',
+              url: httpCfg.backendURL + '/api/v1/users/current',
+              headers: {'authorization': signupResponse.data.data.accessToken},
+              validateStatus: function (status) {
+                return status === 200
+              }
+            })
+            this.$store.dispatch('user/setTokens', { data: signupResponse.data.data })
+            this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
+            this.$router.push('/')
+            return
+          }
+
+          // signinResponse.status === 400, so now need to process errors
+          for (let i = 0; i < signinResponse.data.data.length; i++) {
+            if ([errors.ACCOUNT_NOT_ACTIVE, errors.EMAIL_OR_PASSWORD_IS_WRONG].includes(signinResponse.data.data[i])) {
+              this.setNotification(true, this.$t('errors.error' + signinResponse.data.data[i]), 'warning')
+              return
+            }
+          }
+          this.$nuxt.error({ statusCode: 500, responses: [signinResponse, userResponse] })
+        } catch (error) {
+          this.$nuxt.error({ statusCode: 500, error })
+        }
       },
-      //     let signinResponse
-      //     let userResponse
-
-      //     signinResponse = await axios({
-      //       method: 'post',
-      //       url: httpCfg.backendURL + '/api/v1/users/signup/password',
-      //       data: {
-      //         password: sha256(this.password)
-      //       },
-      //       validateStatus: function (status) {
-      //         return status === 200 || status === 400
-      //       }
-      //     })
-
-      //     if (signinResponse.status === 200) {
-      //       userResponse = await axios({
-      //         method: 'get',
-      //         url: httpCfg.backendURL + '/api/v1/users/current',
-      //         headers: {'authorization': signinResponse.data.data.accessToken},
-      //         validateStatus: function (status) {
-      //           return status === 200
-      //         }
-      //       })
-      //       this.$store.dispatch('user/setTokens', { data: signinResponse.data.data })
-      //       this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
-      //       this.$router.push('/')
-      //       return
-      //     }
-
-      //     // signinResponse.status === 400, so now need to process errors
-      //     for (let i = 0; i < signinResponse.data.data.length; i++) {
-      //       if ([errors.ACCOUNT_NOT_ACTIVE, errors.EMAIL_OR_PASSWORD_IS_WRONG].includes(signinResponse.data.data[i])) {
-      //         this.setNotification(true, this.$t('errors.error' + signinResponse.data.data[i]), 'warning')
-      //         return
-      //       }
-      //     }
-      //     this.$nuxt.error({ statusCode: 500, responses: [signinResponse, userResponse] })
-      //   } catch (error) {
-      //     this.$nuxt.error({ statusCode: 500, error })
-      //   }
-      // },
       setNotification (is, text, level) {
         this.notification.is = is
         this.notification.text = text

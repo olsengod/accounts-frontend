@@ -24,6 +24,15 @@
   "signup_checkMail": {
     "message": "To complete the registration, check your mail and follow the link"
   },
+  "index": {
+    "logout": "Logout",
+    "title": "ACCOUNTS",
+    "user": "User name",
+    "surname": "Surname",
+    "name": "Name",
+    "patronymic": "Patronymic",
+    "save": "Save"
+  },
   "errors": {
     "error13": "Account not activated. Please confirm your email or phone.",
     "error35": "Email already in use.",

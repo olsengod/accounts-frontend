@@ -1,129 +1,92 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
-      :mini-variant.sync="miniVariant"
-      :clipped="clipped"
       v-model="drawer"
       fixed
-      app
-    >
-      <v-list>
-        <v-list-tile
-          router
-          :to="item.to"
-          :key="i"
-          v-for="(item, i) in items"
-          exact
-        >
+      app>
+      <v-toolbar flat class="transparent">
+        <v-list class="pa-0">
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <img src="https://randomuser.me/api/portraits/men/85.jpg">
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>Kozhevnikouv Pёtr</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-toolbar>
+      <v-list class="pt-0" dense>
+        <v-divider></v-divider>
+        <v-list-tile @click="">
           <v-list-tile-action>
-            <v-icon v-html="item.icon"></v-icon>
+            <v-icon>person</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"></v-list-tile-title>
+            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar fixed app :clipped-left="clipped">
-      <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>web</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>remove</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+    <v-toolbar class="toolbar" app>
+      <v-toolbar-side-icon @click="switchNav()"></v-toolbar-side-icon>
+      <img
+        src="@/static/cereris-logo.png"
+        alt="Logo" 
+        height="25px"
+        style="cursor: pointer">
+      <v-toolbar-title
+        class="title hidden-xs-only"
+        @click="$vuetify.goTo(0, {offset: 0})">{{ $t('index.title') }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>menu</v-icon>
-      </v-btn>
+      <v-toolbar-items>
+        <v-btn 
+          class="menu hidden-sm-and-down"
+          flat
+          :style="{ color: $vuetify.theme.textTheme +'' }">
+          {{ $t('index.logout') }}
+        </v-btn>
+      </v-toolbar-items> 
     </v-toolbar>
     <v-content>
       <v-container>
-        <v-layout class="matrix">
-          <canvas id="matr"></canvas>
-        </v-layout>
         <nuxt />
       </v-container>
     </v-content>
-    <v-navigation-drawer
-      temporary
-      :right="right"
-      v-model="rightDrawer"
-      fixed
-    >
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon light>compare_arrows</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer :fixed="fixed" app>
-      <span>&copy; 2017</span>
-    </v-footer>
   </v-app>
 </template>
 
 <script>
-  import matrix from '@/assets/scripts/matrix'
+  // import { mapState } from 'vuex'
   // var matrix = require('@/assets/scripts/matrix.js')
 
   export default {
     data () {
       return {
-        clipped: false,
-        drawer: true,
-        fixed: false,
-        items: [
-          { icon: 'apps', title: 'Welcome', to: '/' },
-          { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
-        ],
-        miniVariant: false,
-        right: true,
-        rightDrawer: false,
-        title: 'Vuetify.js'
+        drawer: false,
+        // menuItems: [
+        //   { title: 'Home', icon: 'dashboard' },
+        //   { title: 'About', icon: 'question_answer' }
+        // ]
       }
     },
 
-    mounted () {
-      matrix()
+    methods: {
+      switchNav () {
+        // this.$store.dispatch('navDrawer/switch')
+        this.drawer = !this.drawer
+      }
+    },
+
+    computed: {
+      // ...mapState(['navDrawer'])
     }
   }
 </script>
 
 <style scoped>
-  .canvas#matr{
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    width: 100%;
-    margin: auto;
-  }
-
-  .matrix{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    z-index: 0;
+  .title {
+    font-weight: 400;
+    
   }
 </style>
