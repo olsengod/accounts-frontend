@@ -2,16 +2,6 @@
   <v-content>
     <v-container fluid fill-height align-center justify-center>
       <v-layout align-center justify-center column class="main-layout">
-        <v-scale-transition mode="out-in">
-          <v-alert
-            class="alert"
-            v-if="notification.is"
-            v-model="notification.is"
-            dismissible
-            :type="notification.level">
-            {{ notification.text }}
-          </v-alert>
-        </v-scale-transition>
         <v-layout align-center justify-center class="card-layout">
           <v-card class="card elevation-12">
             <img
@@ -26,11 +16,9 @@
               <v-layout wrap align-center justify-center>
                 <v-flex xs12>
                   <nuxt-link style="text-decoration: none; width: 100%" to="/signup">
-                    <v-btn
-                      dark
-                      @click="signup_completion"
+                    <v-btn dark
                       class="continueBtn"
-                      color="rgb(56, 150, 29)">{{ $t('signup_completion.continueBtn') }}
+                      color="rgb(56, 150, 29)">{{ $t('signup_checkMail.returnBtn') }}
                     </v-btn>
                   </nuxt-link>
                 </v-flex>
@@ -51,28 +39,7 @@
   // import { Validator } from 'vee-validate'
 
   export default {
-    layout: 'empty',
-    data: function () {
-      return {
-        password: '',
-        confirmPassword: '',
-        isPasswordVisible: false,
-        isPasswordVisible2: false,
-        notification: {
-          is: false,
-          text: '',
-          level: ''
-        }
-      }
-    },
-
-    methods: {
-      setNotification (is, text, level) {
-        this.notification.is = is
-        this.notification.text = text
-        this.notification.level = level
-      }
-    }
+    layout: 'empty'
   }
 </script>
 

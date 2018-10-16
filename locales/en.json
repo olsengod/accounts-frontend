@@ -22,7 +22,8 @@
     "continueBtn": "Continue"
   },
   "signup_checkMail": {
-    "message": "To complete the registration, check your mail and follow the link"
+    "message": "To complete the registration, check your mail and follow the link",
+    "returnBtn": "Home"
   },
   "index": {
     "logout": "Logout",
