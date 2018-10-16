@@ -63,11 +63,7 @@
   export default {
     data () {
       return {
-        drawer: false,
-        // menuItems: [
-        //   { title: 'Home', icon: 'dashboard' },
-        //   { title: 'About', icon: 'question_answer' }
-        // ]
+        drawer: false
       }
     },
 

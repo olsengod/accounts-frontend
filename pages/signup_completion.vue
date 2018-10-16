@@ -82,7 +82,7 @@
   import sha256 from 'sha256'
   import httpCfg from '../config/http'
   import errors from '../config/errors'
-  import { Validator } from 'vee-validate'
+  // import { Validator } from 'vee-validate'
 
   export default {
     layout: 'empty',
@@ -137,13 +137,17 @@
           }
 
           // signinResponse.status === 400, so now need to process errors
-          for (let i = 0; i < signinResponse.data.data.length; i++) {
-            if ([errors.ACCOUNT_NOT_ACTIVE, errors.EMAIL_OR_PASSWORD_IS_WRONG].includes(signinResponse.data.data[i])) {
-              this.setNotification(true, this.$t('errors.error' + signinResponse.data.data[i]), 'warning')
+          for (let i = 0; i < signupResponse.data.data.length; i++) {
+            if ([errors.WRONG_PASSWORD_LENGTH].includes(signupResponse.data.data[i])) {
+              this.setNotification(true, this.$t('errors.error' + signupResponse.data.data[i]), 'warning')
+              return
+            }
+            if ([errors.PASSWORD_IS_NOT_A_STRING].includes(signupResponse.data.data[i])) {
+              // ?
               return
             }
           }
-          this.$nuxt.error({ statusCode: 500, responses: [signinResponse, userResponse] })
+          this.$nuxt.error({ statusCode: 500, responses: [signupResponse, userResponse] })
         } catch (error) {
           this.$nuxt.error({ statusCode: 500, error })
         }
