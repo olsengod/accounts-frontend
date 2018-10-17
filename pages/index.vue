@@ -127,7 +127,7 @@
                   <!-- <nuxt-link style="text-decoration: none; width: 100%" to="/signup"> -->
                   <v-btn
                     dark
-                    @click="signupCompletion()"
+                    @click="signup_completion()"
                     class="continueBtn"
                     color="rgb(56, 150, 29)">{{ $t('signup_completion.continueBtn') }}
                   </v-btn>
@@ -146,7 +146,7 @@
 // import { mapState } from 'vuex'
 export default {
   layout: 'default',
-  middleware: ['autologin', 'authenticated'],
+  // middleware: ['autologin', 'authenticated'],
   data () {
     return {
       userName: '',
@@ -161,7 +161,7 @@ export default {
     }
   },
   methods: {
-    async signupCompletion () {
+    async signup_completion () {
       // try {
       //   this.setNotification(false)
       //   if (!await this.$validator.validateAll()) {
