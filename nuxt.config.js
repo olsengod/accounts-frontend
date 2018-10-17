@@ -13,7 +13,7 @@ module.exports = {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
-      { rel: 'stylesheet', href: '@/assets/font-awesome/css/all.css' }
+      // { rel: 'stylesheet', href: '@/assets/font-awesome/css/all.css' }
     ]
   },
   plugins: [
@@ -24,10 +24,18 @@ module.exports = {
   css: [
     '~/assets/style/app.styl'
   ],
+  axios: {
+    proxy: true // Can be also an object with default options
+  },
+  proxy: {
+    '/api/': 'http://api.example.com',
+    '/api2/': 'http://api.another-website.com'
+  }
   /*
   ** Customize the progress bar color
   */
   loading: { color: '#3B8070' },
+  mode: 'spa',
   /*
   ** Build configuration
   */
