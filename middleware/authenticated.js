@@ -5,7 +5,7 @@ import httpCfg from '../config/http'
 import userCfg from '../config/user'
 
 export default async function ({ app, store, redirect }) {
-  if (!process.server) {
+  // if (!process.server) {
     try {
       if (store.getters['user/isAuthenticated']) {
         return
@@ -83,5 +83,5 @@ export default async function ({ app, store, redirect }) {
       console.log(err)
       // redirect('/signin')
     }
-  }
+  // }
 }

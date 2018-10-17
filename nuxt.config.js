@@ -24,13 +24,13 @@ module.exports = {
   css: [
     '~/assets/style/app.styl'
   ],
-  axios: {
-    proxy: true // Can be also an object with default options
-  },
-  proxy: {
-    '/api/': 'http://api.example.com',
-    '/api2/': 'http://api.another-website.com'
-  }
+  // axios: {
+  //   proxy: true // Can be also an object with default options
+  // },
+  // proxy: {
+  //   '/api/': 'http://api.example.com',
+  //   '/api2/': 'http://api.another-website.com'
+  // },
   /*
   ** Customize the progress bar color
   */
