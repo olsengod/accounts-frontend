@@ -135,7 +135,7 @@
 // import { mapState } from 'vuex'
 export default {
   layout: 'default',
-  // middleware: ['autologin', 'authenticated'],
+  middleware: ['autologin', 'authenticated'],
   data () {
     return {
       userName: '',
