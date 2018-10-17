@@ -65,7 +65,7 @@
         </v-btn>
       </v-flex>
     </v-layout>
-    <v-dialog v-model="dialog" persistent hide-overlay max-width="400">
+    <v-dialog v-model="signupCompletion" persistent hide-overlay max-width="400">
       <v-layout align-center justify-center column class="main-layout">
         <v-layout align-center justify-center class="card-layout">
           <v-card class="card elevation-12">
