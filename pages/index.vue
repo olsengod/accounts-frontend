@@ -67,16 +67,6 @@
     </v-layout>
     <v-dialog v-model="dialog" persistent hide-overlay max-width="400">
       <v-layout align-center justify-center column class="main-layout">
-        <v-scale-transition mode="out-in">
-          <v-alert
-            class="alert"
-            v-if="notification.is"
-            v-model="notification.is"
-            dismissible
-            :type="notification.level">
-            {{ notification.text }}
-          </v-alert>
-        </v-scale-transition>
         <v-layout align-center justify-center class="card-layout">
           <v-card class="card elevation-12">
             <img
@@ -127,7 +117,6 @@
                   <!-- <nuxt-link style="text-decoration: none; width: 100%" to="/signup"> -->
                   <v-btn
                     dark
-                    @click="signup_completion()"
                     class="continueBtn"
                     color="rgb(56, 150, 29)">{{ $t('signup_completion.continueBtn') }}
                   </v-btn>
@@ -146,7 +135,7 @@
 // import { mapState } from 'vuex'
 export default {
   layout: 'default',
-  middleware: ['autologin', 'authenticated'],
+  // middleware: ['autologin', 'authenticated'],
   data () {
     return {
       userName: '',
@@ -161,67 +150,62 @@ export default {
     }
   },
   methods: {
-    async signup_completion () {
-      // try {
-      //   this.setNotification(false)
-      //   if (!await this.$validator.validateAll()) {
-      //     return
-      //   }
+  // async signup_completion () {
+    // try {
+    //   this.setNotification(false)
+    //   if (!await this.$validator.validateAll()) {
+    //     return
+    //   }
 
-      //   let signupResponse
-      //   let userResponse
+    //   let signupResponse
+    //   let userResponse
 
-      //   signupResponse = await axios({
-      //     method: 'patch',
-      //     url: httpCfg.backendURL + '/api/v1/users/current',
-      //     data: {
-      //       password: sha256(this.password)
-      //     },
-      //     validateStatus: function (status) {
-      //       return status === 200 || status === 400
-      //     }
-      //   })
+    //   signupResponse = await axios({
+    //     method: 'patch',
+    //     url: httpCfg.backendURL + '/api/v1/users/current',
+    //     data: {
+    //       password: sha256(this.password)
+    //     },
+    //     validateStatus: function (status) {
+    //       return status === 200 || status === 400
+    //     }
+    //   })
 
-      //   if (signupResponse.status === 200) {
-      //     userResponse = await axios({
-      //       method: 'get',
-      //       url: httpCfg.backendURL + '/api/v1/users/current',
-      //       headers: {'authorization': signupResponse.data.data.accessToken},
-      //       validateStatus: function (status) {
-      //         return status === 200
-      //       }
-      //     })
-      //     this.$store.dispatch('user/setTokens', { data: signupResponse.data.data })
-      //     this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
-      //     this.$router.push('/')
-      //     return
-      //   }
+    //   if (signupResponse.status === 200) {
+    //     userResponse = await axios({
+    //       method: 'get',
+    //       url: httpCfg.backendURL + '/api/v1/users/current',
+    //       headers: {'authorization': signupResponse.data.data.accessToken},
+    //       validateStatus: function (status) {
+    //         return status === 200
+    //       }
+    //     })
+    //     this.$store.dispatch('user/setTokens', { data: signupResponse.data.data })
+    //     this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
+    //     this.$router.push('/')
+    //     return
+    //   }
 
-      //   // signinResponse.status === 400, so now need to process errors
-      //   for (let i = 0; i < signupResponse.data.data.length; i++) {
-      //     if ([errors.WRONG_PASSWORD_LENGTH].includes(signupResponse.data.data[i])) {
-      //       this.setNotification(true, this.$t('errors.error' + signupResponse.data.data[i]), 'warning')
-      //       return
-      //     }
-      //     if ([errors.PASSWORD_IS_NOT_A_STRING].includes(signupResponse.data.data[i])) {
-      //       // ?
-      //       return
-      //     }
-      //   }
-      //   this.$nuxt.error({ statusCode: 500, responses: [signupResponse, userResponse] })
-      // } catch (error) {
-      //   this.$nuxt.error({ statusCode: 500, error })
-      // }
-    },
-    setNotification (is, text, level) {
-      this.notification.is = is
-      this.notification.text = text
-      this.notification.level = level
-    }
+    //   // signinResponse.status === 400, so now need to process errors
+    //   for (let i = 0; i < signupResponse.data.data.length; i++) {
+    //     if ([errors.WRONG_PASSWORD_LENGTH].includes(signupResponse.data.data[i])) {
+    //       this.setNotification(true, this.$t('errors.error' + signupResponse.data.data[i]), 'warning')
+    //       return
+    //     }
+    //     if ([errors.PASSWORD_IS_NOT_A_STRING].includes(signupResponse.data.data[i])) {
+    //       // ?
+    //       return
+    //     }
+    //   }
+    //   this.$nuxt.error({ statusCode: 500, responses: [signupResponse, userResponse] })
+    // } catch (error) {
+    //   this.$nuxt.error({ statusCode: 500, error })
+    // }
+  // },
   },
   created () {
-    console.log(this.store.getters['user/state'])
-    switch (this.store.getters['user/state']) {
+    console.log(this.$store.getters['user/state'])
+    switch (this.$store.getters['user/state']) {
       case 'active':
         break
       case 'registered':
