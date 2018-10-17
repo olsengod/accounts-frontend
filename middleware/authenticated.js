@@ -78,6 +78,7 @@ export default async function ({ app, store, redirect }) {
 
     redirect('/signin')
   } catch (err) {
-    redirect('/signin')
+    console.log(err)
+    // redirect('/signin')
   }
 }
