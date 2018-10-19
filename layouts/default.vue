@@ -41,8 +41,7 @@
         @click="$vuetify.goTo(0, {offset: 0})">{{ menuItem }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn 
-          class="menu hidden-sm-and-down"
+        <v-btn
           flat
           @click="signout"
           :style="{ color: $vuetify.theme.textTheme +'' }">
