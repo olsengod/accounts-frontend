@@ -167,9 +167,10 @@ export default {
       try {
         this.setNotification(false)
         if (!await this.$validator.validateAll('passwordForm')) {
+          console.log('ERR VALIDATE')
           return
         }
-
+        console.log('REQUEST')
         let updateUserResponse
         let userResponse
 
