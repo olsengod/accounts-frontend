@@ -65,7 +65,7 @@
         </v-btn>
       </v-flex>
     </v-layout>
-    <v-dialog v-model="signupCompletion" persistent hide-overlay max-width="400">
+    <v-dialog v-model="signupCompletion" persistent full-width max-width="400">
       <v-layout align-center justify-center column class="main-layout">
         <v-layout align-center justify-center class="card-layout">
           <v-card class="card elevation-12">
@@ -81,7 +81,7 @@
               </div>
             </v-card-title>
             <v-card-text style="padding-left: 20px; padding-right: 20px;">
-              <v-form>
+              <v-form data-vv-scope="passwordForm">
                 <v-text-field
                   ref="password"
                   color="rgb(56, 150, 29)"
@@ -90,7 +90,7 @@
                   type="password"
                   v-validate="'required|min:5|max:20'"
                   data-vv-name="password"
-                  :error-messages="errors.collect('password')"
+                  :error-messages="errors.collect('passwordForm.password')"
                   :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
                   @click:append="() => (isPasswordVisible = !isPasswordVisible)"
                   :type="isPasswordVisible ? 'text' : 'password'"
@@ -103,7 +103,7 @@
                   type="password"
                   v-validate="'required|confirmed:password'"
                   data-vv-name="confirm-password"
-                  :error-messages="errors.collect('confirm-password')"
+                  :error-messages="errors.collect('passwordForm.confirm-password')"
                   :append-icon="isPasswordVisible2 ? 'visibility' : 'visibility_off'"
                   @click:append ="() => (isPasswordVisible2 = !isPasswordVisible2)"
                   :type="isPasswordVisible2 ? 'text' : 'password'"
@@ -116,6 +116,7 @@
                 <v-flex xs12>
                   <!-- <nuxt-link style="text-decoration: none; width: 100%" to="/signup"> -->
                   <v-btn
+                    @click="signup_completion()"
                     dark
                     class="continueBtn"
                     color="rgb(56, 150, 29)">{{ $t('signup_completion.continueBtn') }}
@@ -133,6 +134,9 @@
 
 <script>
 // import { mapState } from 'vuex'
+import axios from 'axios'
+import sha256 from 'sha256'
+import httpCfg from '../config/http'
 export default {
   layout: 'default',
   middleware: ['autologin', 'authenticated'],
@@ -143,75 +147,88 @@ export default {
       name: '',
       patronymic: '',
       signupCompletion: false,
+      password: '',
+      confirmPassword: '',
+      isPasswordVisible: false,
+      isPasswordVisible2: false,
       items: [
         { icon: 'apps', title: 'Welcome', to: '/' },
         { icon: 'bubble_chart', title: 'Inspire', to: '/signup' }
-      ]
+      ],
+      notification: {
+        is: false,
+        text: '',
+        level: ''
+      }
     }
   },
   methods: {
-  // async signup_completion () {
-    // try {
-    //   this.setNotification(false)
-    //   if (!await this.$validator.validateAll()) {
-    //     return
-    //   }
+    async signup_completion () {
+      try {
+        this.setNotification(false)
+        if (!await this.$validator.validateAll('passwordForm')) {
+          return
+        }
 
-    //   let signupResponse
-    //   let userResponse
+        let updateUserResponse
+        let userResponse
 
-    //   signupResponse = await axios({
-    //     method: 'patch',
-    //     url: httpCfg.backendURL + '/api/v1/users/current',
-    //     data: {
-    //       password: sha256(this.password)
-    //     },
-    //     validateStatus: function (status) {
-    //       return status === 200 || status === 400
-    //     }
-    //   })
+        console.log(this.$store.getters['user/accessToken'])
 
-    //   if (signupResponse.status === 200) {
-    //     userResponse = await axios({
-    //       method: 'get',
-    //       url: httpCfg.backendURL + '/api/v1/users/current',
-    //       headers: {'authorization': signupResponse.data.data.accessToken},
-    //       validateStatus: function (status) {
-    //         return status === 200
-    //       }
-    //     })
-    //     this.$store.dispatch('user/setTokens', { data: signupResponse.data.data })
-    //     this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
-    //     this.$router.push('/')
-    //     return
-    //   }
+        updateUserResponse = await axios({
+          method: 'patch',
+          url: httpCfg.backendURL + '/api/v1/users/current',
+          headers: {'authorization': this.$store.getters['user/accessToken']},
+          data: {
+            password: sha256(this.password)
+          },
+          validateStatus: function (status) {
+            return status === 200 || status === 400
+          }
+        })
+        console.log(updateUserResponse.data.data)
 
-    //   // signinResponse.status === 400, so now need to process errors
-    //   for (let i = 0; i < signupResponse.data.data.length; i++) {
-    //     if ([errors.WRONG_PASSWORD_LENGTH].includes(signupResponse.data.data[i])) {
-    //       this.setNotification(true, this.$t('errors.error' + signupResponse.data.data[i]), 'warning')
-    //       return
-    //     }
-    //     if ([errors.PASSWORD_IS_NOT_A_STRING].includes(signupResponse.data.data[i])) {
-    //       // ?
-    //       return
-    //     }
-    //   }
-    //   this.$nuxt.error({ statusCode: 500, responses: [signupResponse, userResponse] })
-    // } catch (error) {
-    //   this.$nuxt.error({ statusCode: 500, error })
-    // }
-  // },
+        if (updateUserResponse.status === 200) {
+          console.log('PATCH 200')
+          userResponse = await axios({
+            method: 'get',
+            url: httpCfg.backendURL + '/api/v1/users/current',
+            headers: {'authorization': this.$store.getters['user/accessToken']},
+            validateStatus: function (status) {
+              return status === 200
+            }
+          })
+          this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
+          this.$router.push('/')
+          return
+        }
+
+        this.$nuxt.error({ statusCode: 500, responses: [updateUserResponse, userResponse] })
+      } catch (error) {
+        console.log(error)
+        this.$nuxt.error({ statusCode: 500, error })
+      }
+    },
+    setNotification (is, text, level) {
+      this.notification.is = is
+      this.notification.text = text
+      this.notification.level = level
+    },
+    validateForm () {
+
+    }
   },
   created () {
-    console.log(this.$store.getters['user/state'])
     switch (this.$store.getters['user/state']) {
       case 'active':
+        console.log('ACTIVE')
         break
       case 'registered':
+        console.log('REGISTERED')
         this.signupCompletion = true
         break
       case 'deleted':
+        console.log('DELETED')
         this.$router.push('/error.vue')
         break
     }
@@ -235,7 +252,7 @@ export default {
 
   .card{
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.7);
+    /*background-color: rgba(255, 255, 255, 0.7);*/
     padding-bottom: 10px;
     padding-top: 40px;
     width: 100%;

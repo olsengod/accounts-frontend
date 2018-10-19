@@ -14,7 +14,7 @@
       <nuxt-link to="/">Вернуться на главную</nuxt-link>
     </div> -->
     <v-container fluid fill-height align-center justify-center style="z-index: 1">
-      <v-layout align-center justify-center column class="main-layout">
+      <v-layout align-center justify-center column class="main-layout" xs12 sm6>
         <v-layout align-center justify-center class="card-layout">
           <v-card class="card elevation-12">
             <v-toolbar justify-center align-center style="text-align: center; align-items: center;" class="error">
@@ -32,7 +32,7 @@
               </v-toolbar-title>
             </v-toolbar>
             <v-card-text style="padding-left: 20px; padding-right: 20px; padding-top: 20px">
-              <div style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
+              <div style="font-weight: 300; font-size: 12pt; color: rgb(63, 28, 49); width: 500px; height: auto">
                 {{error}}
               </div>
             </v-card-text>
@@ -75,5 +75,10 @@ export default {
     bottom: 0;
     width: 100%;
     z-index: 0;
+  }
+
+  .card{
+    max-width: 100%;
+    /*height: auto*/
   }
 </style>

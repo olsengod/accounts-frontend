@@ -148,6 +148,8 @@
                 return status === 200
               }
             })
+
+            signinResponse.data.data.redirect = this.$router.push
             this.$store.dispatch('user/setTokens', { data: signinResponse.data.data })
             this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
             this.$router.push('/')

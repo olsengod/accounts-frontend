@@ -11,14 +11,15 @@
               <img src="https://randomuser.me/api/portraits/men/85.jpg">
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title>Kozhevnikouv Pёtr</v-list-tile-title>
+              <v-list-tile-title v-if="user!== null">{{user}}</v-list-tile-title>
+              <v-list-tile-title v-else>Username</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
       </v-toolbar>
       <v-list class="pt-0" dense>
         <v-divider></v-divider>
-        <v-list-tile @click="">
+        <v-list-tile @click="menuItem = $t('index.title')">
           <v-list-tile-action>
             <v-icon>person</v-icon>
           </v-list-tile-action>
@@ -37,7 +38,7 @@
         style="cursor: pointer">
       <v-toolbar-title
         class="title hidden-xs-only"
-        @click="$vuetify.goTo(0, {offset: 0})">{{ $t('index.title') }}</v-toolbar-title>
+        @click="$vuetify.goTo(0, {offset: 0})">{{ menuItem }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn 
@@ -57,13 +58,14 @@
 </template>
 
 <script>
-  // import { mapState } from 'vuex'
+  import { mapState } from 'vuex'
   // var matrix = require('@/assets/scripts/matrix.js')
 
   export default {
     data () {
       return {
-        drawer: false
+        drawer: false,
+        menuItem: ''
       }
     },
 
@@ -75,14 +77,16 @@
     },
 
     computed: {
-      // ...mapState(['navDrawer'])
+      ...mapState(['user'])
     }
+    // created () {
+    //   console.log('USER ', this.$store.state.user)
+    // }
   }
 </script>
 
 <style scoped>
   .title {
-    font-weight: 400;
-    
+    font-weight: 400;    
   }
 </style>

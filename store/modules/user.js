@@ -1,12 +1,14 @@
 import ls from 'local-storage'
 import languageCfg from '../../config/language'
+import axios from 'axios'
+import httpCfg from '@/config/http'
 import { Validator } from 'vee-validate'
 
 const state = {
   user: {
     accessToken: null,
     refreshToken: null,
-    expireIn: null,
+    expiresIn: null,
     isAuthenticated: false,
     data: {
       email: null,
@@ -33,7 +35,7 @@ const mutations = {
     state.user.refreshToken = value
   },
   SET_EXPIRES_IN (state, value) {
-    state.user.expireIn = value
+    state.user.expiresIn = value
   },
   SET_EMAIL (state, value) {
     state.user.data.email = value
@@ -50,29 +52,45 @@ const mutations = {
   SET_STATE (state, value) {
     state.user.data.state = value
   },
-  SET_LANGUAGE (state, value, i18n) {
-    state.user.data.data.language = value
-    i18n.locale = value
-    Validator.localize(value, languageCfg.veeValidateMessages[value])
+  SET_LANGUAGE (state, data) {
+    state.user.data.data.language = data.value
+    data.i18n.locale = data.value
+    Validator.localize(data.value, languageCfg.veeValidateMessages[data.value])
   }
 }
 
 const actions = {
-  setTokens ({commit}, {data}) {
+  setTokens ({commit, dispatch}, {data}) {
     commit('SET_ACCESS_TOKEN', data.accessToken)
     commit('SET_REFRESH_TOKEN', data.refreshToken)
-    commit('SET_EXPIRES_IN', data.expireIn)
+    commit('SET_EXPIRES_IN', data.expiresIn)
     ls.set('cererisAccountAccessToken', data.accessToken)
     ls.set('cererisAccountRefreshToken', data.refreshToken)
+    setTimeout(function () {
+      axios({
+        method: 'post',
+        url: httpCfg.backendURL + '/api/v1/tokens/refresh',
+        data: { refreshToken: state.user.refreshToken },
+        validateStatus: function (status) {
+          return status === 200
+        }
+      }).then((tokenResponse) => {
+        tokenResponse.data.data.redirect = data.redirect
+        dispatch('setTokens', { data: tokenResponse.data.data })
+      }).catch((err) => {
+        data.redirect('/signin')
+        console.log(err)
+      })
+    }, 3540000)// (data.expiresIn - 60) * 1000)
   },
   setUser ({commit}, {data, i18n}) {
-    console.log(i18n.locale)
+    // console.log('set user', i18n.locale)
     if (data.email) commit('SET_EMAIL', data.email)
     if (data.username) commit('SET_USERNAME', data.username)
     if (data.registerAt) commit('SET_REGISTER_AT', data.registerAt)
     if (data.lastLogin) commit('SET_LAST_LOGIN', data.lastLogin)
     if (data.state) commit('SET_STATE', data.state)
-    if (data.data.language) commit('SET_LANGUAGE', data.data.language, i18n)
+    if (data.data.language) commit('SET_LANGUAGE', { value: data.data.language, i18n })
   }
 }
 
@@ -82,6 +100,9 @@ const getters = {
   },
   state: state => {
     return state.user.data.state
+  },
+  accessToken: state => {
+    return state.user.accessToken
   }
 }
 

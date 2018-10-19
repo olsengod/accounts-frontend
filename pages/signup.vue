@@ -146,6 +146,7 @@
         this.notification.level = level
       },
       changeLang () {
+        console.log(this.$i18n)
         let all = Object.keys(languageCfg.all)
         for (let i = 0; i < Object.values(languageCfg.all).length; i++) {
           if (languageCfg.all[all[i]] === this.language) {
