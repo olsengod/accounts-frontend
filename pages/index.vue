@@ -163,6 +163,7 @@ export default {
   },
   methods: {
     async signup_completion () {
+      console.log('Set password')
       try {
         this.setNotification(false)
         if (!await this.$validator.validateAll('passwordForm')) {
@@ -171,8 +172,6 @@ export default {
 
         let updateUserResponse
         let userResponse
-
-        console.log(this.$store.getters['user/accessToken'])
 
         updateUserResponse = await axios({
           method: 'patch',
@@ -185,10 +184,8 @@ export default {
             return status === 200 || status === 400
           }
         })
-        console.log(updateUserResponse.data.data)
 
         if (updateUserResponse.status === 200) {
-          console.log('PATCH 200')
           userResponse = await axios({
             method: 'get',
             url: httpCfg.backendURL + '/api/v1/users/current',
@@ -204,7 +201,6 @@ export default {
 
         this.$nuxt.error({ statusCode: 500, responses: [updateUserResponse, userResponse] })
       } catch (error) {
-        console.log(error)
         this.$nuxt.error({ statusCode: 500, error })
       }
     },
@@ -232,9 +228,6 @@ export default {
         break
     }
   }
-  // computed: {
-  //   ...mapState(['user'])
-  // }
 }
 </script>
 
