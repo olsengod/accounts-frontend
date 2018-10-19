@@ -104,9 +104,9 @@
                   v-validate="'required|confirmed:password'"
                   data-vv-name="confirm-password"
                   :error-messages="errors.collect('passwordForm.confirm-password')"
-                  :append-icon="isPasswordVisible2 ? 'visibility' : 'visibility_off'"
-                  @click:append ="() => (isPasswordVisible2 = !isPasswordVisible2)"
-                  :type="isPasswordVisible2 ? 'text' : 'password'"
+                  :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
+                  @click:append ="() => (isPasswordVisible = !isPasswordVisible)"
+                  :type="isPasswordVisible ? 'text' : 'password'"
                   v-model="confirmPassword">                    
                 </v-text-field>
               </v-form>
@@ -150,7 +150,6 @@ export default {
       password: '',
       confirmPassword: '',
       isPasswordVisible: false,
-      isPasswordVisible2: false,
       items: [
         { icon: 'apps', title: 'Welcome', to: '/' },
         { icon: 'bubble_chart', title: 'Inspire', to: '/signup' }
