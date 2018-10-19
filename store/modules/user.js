@@ -56,6 +56,25 @@ const mutations = {
     state.user.data.data.language = data.value
     data.i18n.locale = data.value
     Validator.localize(data.value, languageCfg.veeValidateMessages[data.value])
+  },
+  RESET_USER (state) {
+    state.user = {
+      accessToken: null,
+      refreshToken: null,
+      expiresIn: null,
+      isAuthenticated: false,
+      data: {
+        email: null,
+        username: null,
+        phone: null,
+        registerAt: null,
+        lastLogin: null,
+        state: null,
+        data: {
+          language: languageCfg.default
+        }
+      }
+    }
   }
 }
 
@@ -92,6 +111,9 @@ const actions = {
     if (data.state) commit('SET_STATE', data.state)
     if (data.data.language) commit('SET_LANGUAGE', { value: data.data.language, i18n })
   }
+  // resetUser ({commit}) {
+  //   commit('RESET_USER')
+  // }
 }
 
 const getters = {
@@ -103,6 +125,9 @@ const getters = {
   },
   accessToken: state => {
     return state.user.accessToken
+  },
+  username: state => {
+    return state.user.data.email
   }
 }
 

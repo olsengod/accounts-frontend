@@ -165,6 +165,7 @@
           }
           this.$nuxt.error({ statusCode: 500, responses: [signinResponse, userResponse] })
         } catch (error) {
+          console.log(error)
           this.$nuxt.error({ statusCode: 500, error })
         }
       },
@@ -199,7 +200,7 @@
   .card-layout{
     position: relative;
     width: 100%;
-    max-height: 517px;
+    max-height: 585px;
   }
 
   .card{
@@ -237,7 +238,7 @@
     .card-layout{
       position: relative;
       width: 100%;
-      max-height: 558px;
+      max-height: 636px;
     }
   }
 
@@ -248,6 +249,14 @@
 
     .space{
       display: none;
+    }
+  }
+
+  @media only screen and (max-width: 317px){ 
+    .card-layout{
+      position: relative;
+      width: 100%;
+      max-height: 672px;
     }
   }
 </style>

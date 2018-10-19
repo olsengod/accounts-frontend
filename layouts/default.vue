@@ -11,7 +11,7 @@
               <img src="https://randomuser.me/api/portraits/men/85.jpg">
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title v-if="user!== null">{{user}}</v-list-tile-title>
+              <v-list-tile-title v-if="$store.getters['user/username']">{{ $store.getters['user/username'] }}</v-list-tile-title>
               <v-list-tile-title v-else>Username</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
@@ -44,6 +44,7 @@
         <v-btn 
           class="menu hidden-sm-and-down"
           flat
+          @click="signout"
           :style="{ color: $vuetify.theme.textTheme +'' }">
           {{ $t('index.logout') }}
         </v-btn>
@@ -58,14 +59,13 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  // var matrix = require('@/assets/scripts/matrix.js')
-
+  import axios from 'axios'
+  import httpCfg from '../config/http'
   export default {
     data () {
       return {
         drawer: false,
-        menuItem: ''
+        menuItem: this.$t('index.title')
       }
     },
 
@@ -73,15 +73,32 @@
       switchNav () {
         // this.$store.dispatch('navDrawer/switch')
         this.drawer = !this.drawer
-      }
-    },
+      },
+      async signout () {
+        try {
+          let signoutResponse = await axios({
+            method: 'post',
+            url: httpCfg.backendURL + '/api/v1/users/signout',
+            headers: {'authorization': this.$store.getters['user/accessToken']},
+            validateStatus: function (status) {
+              return status === 200
+            }
+          })
 
-    computed: {
-      ...mapState(['user'])
+          if (signoutResponse.status === 200) {
+            // this.$store.dispatch('user/resetUser')
+            this.$store.commit('user/RESET_USER')
+            this.$router.push('/signin')
+            return
+          }
+
+          this.$nuxt.error({ statusCode: 500, responses: signoutResponse })
+        } catch (error) {
+          console.log(error)
+          this.$nuxt.error({ statusCode: 500, error })
+        }
+      }
     }
-    // created () {
-    //   console.log('USER ', this.$store.state.user)
-    // }
   }
 </script>
 
