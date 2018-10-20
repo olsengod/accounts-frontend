@@ -167,7 +167,7 @@ export default {
       try {
         this.setNotification(false)
         console.log('VALIDATOR', this.$validator)
-        if (!await this.$validator.validateAll('passwordForm')) {
+        if (!await this.$validator.validateAll()) {
           console.log('ERR VALIDATE')
           console.log(await this.$validator.validate('passwordForm.*'))
           console.log(await this.$validator.validateAll('passwordForm'))
