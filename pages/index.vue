@@ -166,7 +166,8 @@ export default {
       console.log('Set password')
       try {
         this.setNotification(false)
-        if (!(await this.$validator.validate('passwordForm.*'))) {
+        console.log('VALIDATOR', this.$validator)
+        if (!await this.$validator.validateAll('passwordForm')) {
           console.log('ERR VALIDATE')
           console.log(await this.$validator.validate('passwordForm.*'))
           console.log(await this.$validator.validateAll('passwordForm'))
@@ -211,10 +212,10 @@ export default {
       this.notification.is = is
       this.notification.text = text
       this.notification.level = level
-    },
-    validateForm () {
-
     }
+    // validateForm () {
+
+    // }
   },
   created () {
     switch (this.$store.getters['user/state']) {
