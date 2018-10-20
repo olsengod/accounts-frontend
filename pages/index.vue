@@ -81,7 +81,7 @@
               </div>
             </v-card-title>
             <v-card-text style="padding-left: 20px; padding-right: 20px;">
-              <v-form data-vv-scope="passwordForm">
+              <v-form @submit.prevent="validateForm()" data-vv-scope="passwordForm">
                 <v-text-field
                   ref="password"
                   color="rgb(56, 150, 29)"
@@ -167,7 +167,8 @@ export default {
       try {
         this.setNotification(false)
         console.log('VALIDATOR', this.$validator)
-        if (!await this.$validator.validateAll()) {
+        // if (!await this.$validator.validateAll('passwordForm')) {
+        if (!await this.validateForm()) {
           console.log('ERR VALIDATE')
           console.log(await this.$validator.validate('passwordForm.*'))
           console.log(await this.$validator.validateAll('passwordForm'))
@@ -212,10 +213,12 @@ export default {
       this.notification.is = is
       this.notification.text = text
       this.notification.level = level
+    },
+    validateForm () {
+      this.$validator.validateAll('passwordForm').then((result) => {
+        return result
+      })
     }
-    // validateForm () {
-
-    // }
   },
   created () {
     switch (this.$store.getters['user/state']) {
