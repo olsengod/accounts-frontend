@@ -43,7 +43,7 @@
       <v-toolbar-items>
         <v-btn
           flat
-          @click="signout"
+          @click="sign_out()"
           :style="{ color: $vuetify.theme.textTheme +'' }">
           {{ $t('index.logout') }}
         </v-btn>
@@ -58,47 +58,48 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import httpCfg from '../config/http'
-  export default {
-    data () {
-      return {
-        drawer: false,
-        menuItem: this.$t('index.title')
-      }
-    },
+import signout from '@/assets/scripts/signout'
 
-    methods: {
-      switchNav () {
-        // this.$store.dispatch('navDrawer/switch')
-        this.drawer = !this.drawer
-      },
-      async signout () {
-        try {
-          let signoutResponse = await axios({
-            method: 'post',
-            url: httpCfg.backendURL + '/api/v1/users/signout',
-            headers: {'authorization': this.$store.getters['user/accessToken']},
-            validateStatus: function (status) {
-              return status === 200
-            }
-          })
-
-          if (signoutResponse.status === 200) {
-            // this.$store.dispatch('user/resetUser')
-            this.$store.commit('user/RESET_USER')
-            this.$router.push('/signin')
-            return
-          }
-
-          this.$nuxt.error({ statusCode: 500, responses: signoutResponse })
-        } catch (error) {
-          console.log(error)
-          this.$nuxt.error({ statusCode: 500, error })
-        }
-      }
+export default {
+  data () {
+    return {
+      drawer: false,
+      menuItem: this.$t('index.title')
     }
+  },
+
+  methods: {
+    switchNav () {
+      this.drawer = !this.drawer
+    },
+    sign_out () {
+      signout()
+    }
+    // async signout () {
+    //   try {
+    //     let signoutResponse = await axios({
+    //       method: 'post',
+    //       url: httpCfg.backendURL + '/api/v1/users/signout',
+    //       headers: {'authorization': this.$store.getters['user/accessToken']},
+    //       validateStatus: function (status) {
+    //         return status === 200
+    //       }
+    //     })
+
+    //     if (signoutResponse.status === 200) {
+    //       this.$store.commit('user/RESET_USER')
+    //       this.$router.push('/signin')
+    //       return
+    //     }
+
+    //     this.$nuxt.error({ statusCode: 500, responses: signoutResponse })
+    //   } catch (error) {
+    //     console.log(error)
+    //     this.$nuxt.error({ statusCode: 500, error })
+    //   }
+    // }
   }
+}
 </script>
 
 <style scoped>

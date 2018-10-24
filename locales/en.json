@@ -31,7 +31,13 @@
     "surname": "Surname",
     "name": "Name",
     "patronymic": "Patronymic",
-    "save": "Save"
+    "saveBtn": "Save",
+    "deleteBtn": "Delete account",
+    "userName": "User name",
+    "email": "Email",
+    "password": "Password",
+    "phone": "Phone number",
+    "lang": "Language"
   },
   "errors": {
     "error13": "Account not activated. Please confirm your email or phone.",
