@@ -1,9 +1,9 @@
 import axios from 'axios'
 import httpCfg from '@/config/http'
 
-export default async function ({ store, redirect }) {
+export default async function (store, router) {
   try {
-    await axios({
+    let signoutResponse = await axios({
       method: 'post',
       url: httpCfg.backendURL + '/api/v1/users/signout',
       headers: {'authorization': store.getters['user/accessToken']},
@@ -12,10 +12,14 @@ export default async function ({ store, redirect }) {
       }
     })
 
-    store.commit('user/RESET_USER')
-    redirect('/signin')
+    if (signoutResponse.status === 200) {
+      store.commit('user/RESET_USER')
+      router.push('/signin')
+      return
+    }
+    router.push('/signin')
   } catch (error) {
     console.log(error)
-    redirect('/signin')
+    router.push('/signin')
   }
 }

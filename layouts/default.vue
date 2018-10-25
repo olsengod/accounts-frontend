@@ -59,6 +59,8 @@
 
 <script>
 import signout from '@/assets/scripts/signout'
+// import axios from 'axios'
+// import httpCfg from '@/config/http'
 
 export default {
   data () {
@@ -73,9 +75,9 @@ export default {
       this.drawer = !this.drawer
     },
     sign_out () {
-      signout()
+      signout(this.$store, this.$router)
     }
-    // async signout () {
+    // async sign_out () {
     //   try {
     //     let signoutResponse = await axios({
     //       method: 'post',

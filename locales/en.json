@@ -1,5 +1,4 @@
 {
-  "test": "Tyomic Boss",
   "signup": {
   	"createAccount": "Create new account",
   	"isRegistered": "Already registered",
@@ -40,7 +39,7 @@
     "lang": "Language"
   },
   "errors": {
-    "error13": "Account not activated. Please confirm your email or phone.",
+    "error13": "Account not activated or was deleted. Please confirm your email or phone.",
     "error35": "Email already in use.",
     "error41": "Email or password are incorrect."
   },

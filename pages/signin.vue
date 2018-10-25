@@ -165,7 +165,6 @@
           }
           this.$nuxt.error({ statusCode: 500, responses: [signinResponse, userResponse] })
         } catch (error) {
-          console.log(error)
           this.$nuxt.error({ statusCode: 500, error })
         }
       },
