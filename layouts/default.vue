@@ -50,7 +50,7 @@
       </v-toolbar-items> 
     </v-toolbar>
     <v-content>
-      <v-container>
+      <v-container fluid style="padding: 0">
         <nuxt />
       </v-container>
     </v-content>

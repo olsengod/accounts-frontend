@@ -17,6 +17,7 @@ const state = {
       registerAt: null,
       lastLogin: null,
       state: null,
+      isAdmin: false,
       data: {
         language: languageCfg.default
       }
@@ -52,6 +53,9 @@ const mutations = {
   SET_STATE (state, value) {
     state.user.data.state = value
   },
+  SET_ISADMIN (state, value) {
+    state.user.data.isAdmin = value
+  },
   SET_LANGUAGE (state, data) {
     state.user.data.data.language = data.value
     data.i18n.locale = data.value
@@ -70,6 +74,7 @@ const mutations = {
         registerAt: null,
         lastLogin: null,
         state: null,
+        isAdmin: false,
         data: {
           language: languageCfg.default
         }
@@ -109,11 +114,9 @@ const actions = {
     if (data.registerAt) commit('SET_REGISTER_AT', data.registerAt)
     if (data.lastLogin) commit('SET_LAST_LOGIN', data.lastLogin)
     if (data.state) commit('SET_STATE', data.state)
+    if (data.isAdmin) commit('SET_ISADMIN', data.isAdmin)
     if (data.data.language) commit('SET_LANGUAGE', { value: data.data.language, i18n })
   }
-  // resetUser ({commit}) {
-  //   commit('RESET_USER')
-  // }
 }
 
 const getters = {
@@ -128,6 +131,9 @@ const getters = {
   },
   username: state => {
     return state.user.data.email
+  },
+  isAdmin: state => {
+    return state.user.data.isAdmin
   }
 }
 

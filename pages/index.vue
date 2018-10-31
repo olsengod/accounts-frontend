@@ -3,77 +3,67 @@
     <v-layout align-center justify-center column class="main-layout">
       <form data-vv-scope="userInfo">
         <v-flex xs12 class="inputFlex">
-          <!-- <v-form> -->
-            <v-text-field
-              class="textField"
-              color="rgb(56, 150, 29)"
-              prepend-icon="person"
-              :label="$t('index.userName')"
-              type="text"
-              v-validate="{ required: email.length === 0 }"
-              data-vv-name="userName"
-              :error-messages="errors.collect('userName')"
-              v-model="userName"
-            ></v-text-field>
-          <!-- </v-form> -->
+          <v-text-field
+            class="textField"
+            color="rgb(56, 150, 29)"
+            prepend-icon="person"
+            :label="$t('index.userName')"
+            type="text"
+            v-validate="{ required: email.length === 0 }"
+            data-vv-name="userName"
+            :error-messages="errors.collect('userName')"
+            v-model="userName"
+          ></v-text-field>
         </v-flex>
         <v-flex xs12 class="inputFlex">
-          <!-- <v-form> -->
-            <v-text-field
-              class="textField"
-              color="rgb(56, 150, 29)"
-              prepend-icon="alternate_email"
-              :label="$t('index.email')"
-              type="text"
-              v-validate="'email'"
-              data-vv-name="email"
-              :error-messages="errors.collect('email')"
-              v-model="email"
-            ></v-text-field>
-          <!-- </v-form> -->
+          <v-text-field
+            class="textField"
+            color="rgb(56, 150, 29)"
+            prepend-icon="alternate_email"
+            :label="$t('index.email')"
+            type="text"
+            v-validate="'email'"
+            data-vv-name="email"
+            :error-messages="errors.collect('email')"
+            v-model="email"
+          ></v-text-field>
         </v-flex>
         <v-flex xs12 class="inputFlex">
-          <!-- <v-form> -->
-            <v-text-field
-              class="textField"
-              color="rgb(56, 150, 29)"
-              :label="$t('index.password')"
-              prepend-icon="lock"
-              type="password"
-              v-validate="'min:5|max:20'"
-              data-vv-name="password"
-              :error-messages="errors.collect('password')"
-              v-model="passwordChange">
-            </v-text-field>
-          <!-- </v-form> -->
+          <v-text-field
+            class="textField"
+            color="rgb(56, 150, 29)"
+            :label="$t('index.password')"
+            prepend-icon="lock"
+            type="password"
+            v-validate="'min:5|max:20'"
+            data-vv-name="passwordChange"
+            :error-messages="errors.collect('passwordChange')"
+            v-model="passwordChange">
+          </v-text-field>
         </v-flex>
         <v-flex xs12 class="inputFlex">
-          <!-- <v-form> -->
-            <v-text-field
-              class="textField"
-              color="rgb(56, 150, 29)"
-              :label="$t('index.phone')"
-              prepend-icon="phone"
-              type="text"
-              v-validate="{ required: email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
-              data-vv-name="phone"
-              :error-messages="errors.collect('phone')"
-              v-model="phone">
-            </v-text-field>
-          <!-- </v-form> -->
+          <v-text-field
+            class="textField"
+            color="rgb(56, 150, 29)"
+            :label="$t('index.phone')"
+            prepend-icon="phone"
+            type="text"
+            v-validate="{ required: email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
+            data-vv-name="phone"
+            :error-messages="errors.collect('phone')"
+            v-model="phone">
+          </v-text-field>
         </v-flex>
         <v-flex xs12 class="inputFlex">
-          <!-- <v-form> -->
-            <v-select
-              class="textField"
-              color="rgb(56, 150, 29)"
-              prepend-icon="language"
-              :items="languages"
-              v-model="language"
-              :label="$t('index.lang')"
-              @change="changeLang()">
-            </v-select>
-          <!-- </v-form> -->
+          <v-select
+            class="textField"
+            color="rgb(56, 150, 29)"
+            prepend-icon="language"
+            :items="languages"
+            v-model="language"
+            :label="$t('index.lang')"
+            @change="changeLang()">
+          </v-select>
         </v-flex>
         <v-flex xs12 style="text-align: center; width: 100%">
           <v-btn
@@ -93,7 +83,7 @@
         </v-flex>
       </form>
     </v-layout>
-    <v-form data-vv-scope="passwordForm">
+    <form data-vv-scope="passwordForm">
       <v-dialog v-model="signupCompletion" persistent full-width max-width="400">
         <v-layout align-center justify-center column class="main-layout">
           <v-layout align-center justify-center class="card-layout">
@@ -135,7 +125,7 @@
                   :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
                   @click:append ="() => (isPasswordVisible = !isPasswordVisible)"
                   :type="isPasswordVisible ? 'text' : 'password'"
-                  v-model="confirmPassword">                    
+                  v-model="confirmPassword">
                 </v-text-field>
               </v-card-text>
               <v-card-actions style="padding-left: 20px; padding-right: 20px;">
@@ -154,7 +144,7 @@
           </v-layout>
         </v-layout>
       </v-dialog>
-    </v-form>
+    </form>
   </v-container>
 </template>
 
