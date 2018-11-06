@@ -25,6 +25,7 @@
                         v-validate="'required'"
                         data-vv-name="Id"
                         :error-messages="errors.collect('Id')"
+                        disabled
                         v-model="editedUser.id"
                       ></v-text-field>
                     </v-flex>
@@ -115,14 +116,14 @@
             <v-icon
               small
               class="mr-2"
-              @click="editUser(props.item)"
+              @click="editBtn(props.item)"
               color="primary"
             >
               edit
             </v-icon>
             <v-icon
               small
-              @click="deleteUser(props.item)"
+              @click="deleteBtn(props.item)"
               color="error"
             >
               cancel
@@ -130,7 +131,26 @@
           </td>
         </template>
       </v-data-table>
-    </v-layout>    
+    </v-layout>
+    <v-dialog v-model="deleteConfirm" persistent max-width="350">
+      <v-card>
+        <v-toolbar dark class="error">
+          <v-card-title class="headline">{{ this.$t('adminPage.deleteTitle') }}</v-card-title>
+        </v-toolbar>
+        <v-card-text style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
+          {{ this.$t('adminPage.deleteConfirm') }}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat @click.native="deleteConfirm = false">
+            {{ this.$t('adminPage.deleteCancel') }}
+          </v-btn>
+          <v-btn color="green darken-1" flat @click.native="deleteUser">
+            {{ this.$t('adminPage.deleteOk') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -145,9 +165,11 @@ export default {
   middleware: ['autologin', 'authenticated'],
   data () {
     return {
+      deleteConfirm: false,
       userList: [],
       pageSize: 20,
       editedIndex: -1,
+      deletedUser: {},
       dialog: false,
       headers: [
         {
@@ -185,17 +207,22 @@ export default {
       },
       state: {
         active: this.$t('adminPage.active'),
+        registered: this.$t('adminPage.registered'),
         deleted: this.$t('adminPage.deleted')
+      },
+      deleteDialog: {
+        text: '',
+        title: ''
       }
     }
   },
   methods: {
     async getUsers () {
       try {
-        // let userResponse
         let getUsersResponse = await axios({
           method: 'get',
-          url: httpCfg.backendURL + '/api/v1/users?offset=' + 0 + '&limit=' + 2,
+          url: httpCfg.backendURL + '/api/v1/users?offset=' + this.userList.length +
+            '&limit=' + (this.userList.length + this.pageSize),
           headers: {'authorization': this.$store.getters['user/accessToken']},
           validateStatus: function (status) {
             return status === 200 || status === 400
@@ -203,24 +230,18 @@ export default {
         })
 
         if (getUsersResponse.status === 200) {
+          console.log('LOL', getUsersResponse.data.data)
           for (let i = 0; i < this.pageSize; i++) {
+            if (i === getUsersResponse.data.data.length) break
             this.userList.push({
-              id: getUsersResponse.data.data.id,
-              email: getUsersResponse.data.data.email,
-              username: getUsersResponse.data.data.username,
-              phone: getUsersResponse.data.data.phone,
-              role: getUsersResponse.data.data.isAdmin ? this.role.admin : this.role.operator,
-              state: this.state[getUsersResponse.data.data.state]
+              id: getUsersResponse.data.data[i].id,
+              email: getUsersResponse.data.data[i].email,
+              username: getUsersResponse.data.data[i].username,
+              phone: getUsersResponse.data.data[i].phone,
+              role: getUsersResponse.data.data[i].isAdmin ? this.role.admin : this.role.operator,
+              state: this.state[getUsersResponse.data.data[i].state]
             })
-            // this.userList[i].id = getUsersResponse.data.data.id
-            // this.userList[i].email = getUsersResponse.data.data.email
-            // this.userList[i].username = getUsersResponse.data.data.username
-            // this.userList[i].phone = getUsersResponse.data.data.phone
-            // this.userList[i].state = getUsersResponse.data.data.state
-            // this.userList[i].role = getUsersResponse.data.data.isAdmin ? role.admin : role.operator
-            // getUsersResponse.data.data
           }
-          // this.userList.concat(getUsersResponse.data.data)
           return
         }
 
@@ -230,15 +251,59 @@ export default {
       }
     },
 
-    editUser (user) {
+    editBtn (user) {
       this.editedIndex = this.userList.indexOf(user)
       this.editedUser = Object.assign({}, user)
       this.dialog = true
     },
 
-    deleteUser (user) {
-      const index = this.userList.indexOf(user)
-      confirm('Are you sure you want to delete this user?') && this.userList.splice(index, 1)
+    deleteBtn (user) {
+      this.deletedUser = user
+      this.deleteConfirm = true
+      console.log('LIIIL')
+    },
+
+    async deleteUser () {
+      try {
+        let deleteUserResponse = await axios({
+          method: 'delete',
+          url: httpCfg.backendURL + '/api/v1/users/' + this.deletedUser.id,
+          headers: {'authorization': this.$store.getters['user/accessToken']},
+          validateStatus: function (status) {
+            return status === 200 || status === 400
+          }
+        })
+
+        if (deleteUserResponse.status === 200) {
+          this.deleteConfirm = false
+        }
+
+        this.$nuxt.error({ statusCode: 500, responses: deleteUserResponse })
+      } catch (error) {
+        this.$nuxt.error({ statusCode: 500, error })
+      }
+    },
+
+    async editUser () {
+      try {
+        let editUserResponse = await axios({
+          method: 'patch',
+          url: httpCfg.backendURL + '/api/v1/users/' + this.editedUser.id,
+          headers: {'authorization': this.$store.getters['user/accessToken']},
+          validateStatus: function (status) {
+            return status === 200 || status === 400
+          }
+        })
+
+        if (editUserResponse.status === 200) {
+          this.userList.splice(this.userList.indexOf(this.deletedUser), 1)
+          this.deleteConfirm = false
+        }
+
+        this.$nuxt.error({ statusCode: 500, responses: editUserResponse })
+      } catch (error) {
+        this.$nuxt.error({ statusCode: 500, error })
+      }
     },
 
     close () {
