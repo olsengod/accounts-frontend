@@ -6,6 +6,16 @@
         <v-spacer></v-spacer>
         <form data-vv-scope="userInfo">
           <v-dialog v-model="dialog" persistent max-width="500px">
+            <v-scale-transition mode="out-in">
+              <v-alert
+                class="notification"
+                v-if="editNotification.is"
+                v-model="editNotification.is"
+                dismissible
+                :type="editNotification.level">
+                {{ editNotification.text }}
+              </v-alert>
+            </v-scale-transition>
             <v-card>
               <v-card-title  style="margin-top: 10px; padding-right: 20px; padding-left: 20px; padding-bottom: 0">
                 <span style="font-weight: 400; font-size: 18pt; color: rgb(63, 28, 49)">
@@ -36,7 +46,7 @@
                         prepend-icon="person"
                         :label="$t('adminPage.userName')"
                         type="text"
-                        v-validate="{ required: editedUser.email.length === 0 }"
+                        v-validate="{ required: editedUser.email.length === 0, min: 5, max: 30}"
                         data-vv-name="userName"
                         :error-messages="errors.collect('userName')"
                         v-model="editedUser.username"
@@ -86,13 +96,75 @@
                         :label="$t('adminPage.state')">
                       </v-select>
                     </v-flex>
+                    <!-- <v-flex xs12 sm6 md4 class="inputFlex">
+                      <v-text-field
+                        class="textField"
+                        color="rgb(56, 150, 29)"
+                        prepend-icon="perm_identity"
+                        label="Id"
+                        type="text"
+                        disabled
+                        v-model="editedUser.id"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4 class="inputFlex">
+                      <v-text-field
+                        class="textField"
+                        color="rgb(56, 150, 29)"
+                        prepend-icon="person"
+                        :label="$t('adminPage.userName')"
+                        type="text"
+                        :rules="usernameRules"
+                        v-model="editedUser.username"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4 class="inputFlex">
+                      <v-text-field
+                        class="textField"
+                        color="rgb(56, 150, 29)"
+                        prepend-icon="alternate_email"
+                        :label="$t('adminPage.email')"
+                        type="text"
+                        :rules="emailRules"
+                        v-model="editedUser.email"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4 class="inputFlex">
+                      <v-text-field
+                        class="textField"
+                        color="rgb(56, 150, 29)"
+                        :label="$t('adminPage.phone')"
+                        prepend-icon="phone"
+                        type="text"
+                        :rules="phoneRules"
+                        v-model="editedUser.phone">
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4>
+                      <v-select
+                        color="rgb(56, 150, 29)"
+                        prepend-icon="assignment_ind"
+                        :items="Object.values(role)"
+                        v-model="editedUser.role"
+                        :label="$t('adminPage.role')">
+                      </v-select>
+                    </v-flex>
+                    <v-flex xs12 sm6 md4>
+                      <v-select
+                        color="rgb(56, 150, 29)"
+                        prepend-icon="loop"
+                        :items="Object.values(state)"
+                        v-model="editedUser.state"
+                        :label="$t('adminPage.state')">
+                      </v-select>
+                    </v-flex> -->
                   </v-layout>
                 </v-container>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="rgb(56, 150, 29)" flat @click="close">{{ this.$t('adminPage.cancel') }}</v-btn>
-                <v-btn color="rgb(56, 150, 29)" flat @click="save">{{ this.$t('adminPage.save') }}</v-btn>
+                <v-btn color="rgb(56, 150, 29)" flat @click="editUser">{{ this.$t('adminPage.save') }}</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -132,25 +204,37 @@
         </template>
       </v-data-table>
     </v-layout>
-    <v-dialog v-model="deleteConfirm" persistent max-width="350">
-      <v-card>
-        <v-toolbar dark class="error">
-          <v-card-title class="headline">{{ this.$t('adminPage.deleteTitle') }}</v-card-title>
-        </v-toolbar>
-        <v-card-text style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
-          {{ this.$t('adminPage.deleteConfirm') }}
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat @click.native="deleteConfirm = false">
-            {{ this.$t('adminPage.deleteCancel') }}
-          </v-btn>
-          <v-btn color="green darken-1" flat @click.native="deleteUser">
-            {{ this.$t('adminPage.deleteOk') }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <v-layout align-center justify-center column style="max-width: 400px">
+      <v-dialog v-model="deleteConfirm" persistent max-width="350">
+        <v-scale-transition mode="out-in">
+          <v-alert
+            class="notification"
+            v-if="deleteNotification.is"
+            v-model="deleteNotification.is"
+            dismissible
+            :type="deleteNotification.level">
+            {{ deleteNotification.text }}
+          </v-alert>
+        </v-scale-transition>
+        <v-card>
+          <v-toolbar dark class="primary">
+            <v-card-title class="headline">{{ this.$t('adminPage.deleteTitle') }}</v-card-title>
+          </v-toolbar>
+          <v-card-text style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
+            {{ this.$t('adminPage.deleteConfirm') }}
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat @click="deleteConfirm = false">
+              {{ this.$t('adminPage.deleteCancel') }}
+            </v-btn>
+            <v-btn color="green darken-1" flat @click="deleteUser">
+              {{ this.$t('adminPage.deleteOk') }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
   </v-container>
 </template>
 
@@ -171,6 +255,26 @@ export default {
       editedIndex: -1,
       deletedUser: {},
       dialog: false,
+      uneditedUser: {},
+      deleteNotification: {
+        is: false,
+        text: '',
+        level: ''
+      },
+      editNotification: {
+        is: false,
+        text: '',
+        level: ''
+      },
+      // emailRules: [
+      //   v => !!v || 'E-mail is required',
+      //   v => /.+@.+/.test(v) || 'E-mail must be valid'
+      // ],
+      // usernameRules: [
+      //   v => !!v || 'Username is required',
+      //   v => (v && v.length >= 5) || 'Username must be more than 5 characters',
+      //   v => (v && v.length < 30) || 'Username must be less than 30 characters'
+      // ],
       headers: [
         {
           text: 'Id',
@@ -230,7 +334,6 @@ export default {
         })
 
         if (getUsersResponse.status === 200) {
-          console.log('LOL', getUsersResponse.data.data)
           for (let i = 0; i < this.pageSize; i++) {
             if (i === getUsersResponse.data.data.length) break
             this.userList.push({
@@ -252,19 +355,41 @@ export default {
     },
 
     editBtn (user) {
+      this.setNotification('edit', false)
       this.editedIndex = this.userList.indexOf(user)
+      this.uneditedUser = user
       this.editedUser = Object.assign({}, user)
       this.dialog = true
     },
 
     deleteBtn (user) {
+      this.setNotification('delete', false)
       this.deletedUser = user
       this.deleteConfirm = true
-      console.log('LIIIL')
+    },
+
+    setNotification (notification, is, text, level) {
+      switch (notification) {
+        case 'edit':
+          this.editNotification.is = is
+          this.editNotification.text = text
+          this.editNotification.level = level
+          break
+        case 'delete':
+          this.deleteNotification.is = is
+          this.deleteNotification.text = text
+          this.deleteNotification.level = level
+          break
+      }
     },
 
     async deleteUser () {
       try {
+        this.setNotification('delete', false)
+        if (this.deletedUser.state === this.state.deleted) {
+          this.setNotification('delete', true, this.$t('adminPage.deleteWarning'), 'error')
+          return
+        }
         let deleteUserResponse = await axios({
           method: 'delete',
           url: httpCfg.backendURL + '/api/v1/users/' + this.deletedUser.id,
@@ -276,6 +401,7 @@ export default {
 
         if (deleteUserResponse.status === 200) {
           this.deleteConfirm = false
+          return
         }
 
         this.$nuxt.error({ statusCode: 500, responses: deleteUserResponse })
@@ -286,18 +412,35 @@ export default {
 
     async editUser () {
       try {
+        this.setNotification('edit', false)
+        if (!await this.$validator.validateAll('userInfo')) {
+          return
+        }
+
+        if (JSON.stringify(this.editedUser) === JSON.stringify(this.uneditedUser)) {
+          this.setNotification('edit', true, this.$t('adminPage.uneditedUser'), 'error')
+          return
+        }
+
         let editUserResponse = await axios({
           method: 'patch',
           url: httpCfg.backendURL + '/api/v1/users/' + this.editedUser.id,
           headers: {'authorization': this.$store.getters['user/accessToken']},
+          data: {
+            email: this.editedUser.email,
+            username: this.editedUser.username,
+            phone: this.editedUser.phone,
+            isAdmin: this.editedUser.role === this.role.admin
+          },
           validateStatus: function (status) {
             return status === 200 || status === 400
           }
         })
 
         if (editUserResponse.status === 200) {
-          this.userList.splice(this.userList.indexOf(this.deletedUser), 1)
-          this.deleteConfirm = false
+          Object.assign(this.userList[this.editedIndex], this.editedUser)
+          this.close()
+          return
         }
 
         this.$nuxt.error({ statusCode: 500, responses: editUserResponse })
@@ -307,73 +450,18 @@ export default {
     },
 
     close () {
+      this.setNotification('edit', false)
       this.dialog = false
       setTimeout(() => {
+        this.uneditedUser = {}
         this.editedUser = Object.assign({}, this.defaultUser)
         this.editedIndex = -1
       }, 300)
-    },
-
-    save () {
-      if (this.editedIndex > -1) {
-        Object.assign(this.userList[this.editedIndex], this.editedUser)
-      } else {
-        this.userList.push(this.editedUser)
-      }
-      this.close()
     }
-  },
-
-  computed: {
-    // roles () {
-    //   return Object.values(this.role)
-    // }
   },
 
   mounted () {
     this.getUsers()
-    // this.userList = [
-    //   {
-    //     id: 'Frozen Yogurt',
-    //     email: 159,
-    //     username: 6.0,
-    //     phone: 24,
-    //     role: 'operator',
-    //     state: this.$t('adminPage.active')
-    //   },
-    //   {
-    //     id: 'Froz',
-    //     email: 159,
-    //     username: 6.0,
-    //     phone: 24,
-    //     role: 'operator',
-    //     state: this.$t('adminPage.active')
-    //   },
-    //   {
-    //     id: 'Fro',
-    //     email: 159,
-    //     username: 6.0,
-    //     phone: 24,
-    //     role: 'operator',
-    //     state: this.$t('adminPage.active')
-    //   },
-    //   {
-    //     id: 'Fr',
-    //     email: 159,
-    //     username: 6.0,
-    //     phone: 24,
-    //     role: 'operator',
-    //     state: this.$t('adminPage.active')
-    //   },
-    //   {
-    //     id: 'F',
-    //     email: 159,
-    //     username: 6.0,
-    //     phone: 24,
-    //     role: 'operator',
-    //     state: this.$t('adminPage.active')
-    //   }
-    // ]
   }
 }
 </script>
@@ -383,55 +471,7 @@ export default {
     /*max-width: 400px;*/
   }
 
-  .inputFlex {
-    width: 100%;
-  }
-
-  .Btn {
-    width: 100%;
-  }
-
-  .card-layout {
-    position: relative;
-    width: 100%;
-    max-height: 517px;
-  }
-
-  .card {
-    text-align: center;
-    /*background-color: rgba(255, 255, 255, 0.7);*/
-    padding-bottom: 10px;
-    padding-top: 40px;
-    width: 100%;
-  }
-
-  .continueBtn {
-    /*margin-top: 5px;*/
-    width: 100%;
-    padding: 0; 
-    font-size: 9pt;
-    color: rgb(255, 255, 255)
-  }
-
-  a.comntinueBtn.v-btn.v-btn--router.theme--dark {
-    width: 100%;
-  }
-
-  @media only screen and (max-width: 599px) { 
-    .card-layout {
-      position: relative;
-      width: 100%;
-      max-height: 558px;
-    }
-  }
-
-  @media only screen and (max-width: 332px) { 
-    .switchBtn {
-      width: 100%;
-    }
-
-    .space {
-      display: none;
-    }
+  .notification {
+    font-size: 12pt;
   }
 </style>

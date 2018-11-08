@@ -53,7 +53,10 @@
     "deleteTitle": "Delete user",
     "deleteConfirm": "Are you sure you want to delete this user?",
     "deleteOk": "Confirm",
-    "deleteCancel": "Cancel"
+    "deleteCancel": "Cancel",
+    "warning": "Warning",
+    "deleteWarning": "This user has already been deleted!",
+    "uneditedUser": "Nothing was changed!"
   },
   "errors": {
     "error13": "Account not activated or was deleted. Please confirm your email or phone.",

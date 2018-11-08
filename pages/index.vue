@@ -100,7 +100,7 @@
                 </div>
               </v-card-title>
               <v-card-text style="padding-left: 20px; padding-right: 20px;">
-                <v-text-field
+                <!-- <v-text-field
                   ref="password"
                   color="rgb(56, 150, 29)"
                   prepend-icon="lock_open"
@@ -122,6 +122,28 @@
                   v-validate="'required|confirmed:password'"
                   data-vv-name="confirmPassword"
                   :error-messages="errors.collect('confirmPassword')"
+                  :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
+                  @click:append ="() => (isPasswordVisible = !isPasswordVisible)"
+                  :type="isPasswordVisible ? 'text' : 'password'"
+                  v-model="confirmPassword">
+                </v-text-field> -->
+                <v-text-field
+                  color="rgb(56, 150, 29)"
+                  prepend-icon="lock_open"
+                  :label="$t('signup_completion.password')"
+                  type="password"
+                  :rules="passwordRules"
+                  :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
+                  @click:append="() => (isPasswordVisible = !isPasswordVisible)"
+                  :type="isPasswordVisible ? 'text' : 'password'"
+                  v-model="password">
+                </v-text-field>
+                <v-text-field
+                  color="rgb(56, 150, 29)"
+                  prepend-icon="lock"
+                  :label="$t('signup_completion.confirm')"
+                  type="password"
+                  :rules="confirmPasswordRules"
                   :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
                   @click:append ="() => (isPasswordVisible = !isPasswordVisible)"
                   :type="isPasswordVisible ? 'text' : 'password'"
@@ -176,6 +198,14 @@ export default {
       items: [
         { icon: 'apps', title: 'Welcome', to: '/' },
         { icon: 'bubble_chart', title: 'Inspire', to: '/signup' }
+      ],
+      passwordRules: [
+        v => !!v || 'Password is required',
+        v => (v && v.length < 5 && v.length > 30) || 'Password must be less than 10 characters'
+      ],
+      confirmPasswordRules: [
+        v => !!v || 'Confirmation is required',
+        v => (v && v === this.password) || 'Must be identical to password'
       ]
     }
   },
