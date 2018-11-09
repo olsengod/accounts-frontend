@@ -83,7 +83,8 @@
         </v-flex>
       </form>
     </v-layout>
-    <form data-vv-scope="passwordForm">
+    <!-- <form data-vv-scope="passwordForm"> -->
+    <v-form ref="passwordForm" v-model="passwordForm" lazy-validation>
       <v-dialog v-model="signupCompletion" persistent full-width max-width="400">
         <v-layout align-center justify-center column class="main-layout">
           <v-layout align-center justify-center class="card-layout">
@@ -166,7 +167,8 @@
           </v-layout>
         </v-layout>
       </v-dialog>
-    </form>
+    </v-form>
+    <!-- </form> -->
   </v-container>
 </template>
 
@@ -195,13 +197,15 @@ export default {
       password: '',
       confirmPassword: '',
       isPasswordVisible: false,
+      passwordForm: true,
       items: [
         { icon: 'apps', title: 'Welcome', to: '/' },
         { icon: 'bubble_chart', title: 'Inspire', to: '/signup' }
       ],
       passwordRules: [
         v => !!v || 'Password is required',
-        v => (v && v.length < 5 && v.length > 30) || 'Password must be less than 10 characters'
+        v => (v && v.length > 5) || 'Password must be more than 5 characters',
+        v => (v && v.length < 30) || 'Password must be less than 30 characters'
       ],
       confirmPasswordRules: [
         v => !!v || 'Confirmation is required',
@@ -212,7 +216,10 @@ export default {
   methods: {
     async signup_completion () {
       try {
-        if (!await this.$validator.validateAll('passwordForm')) {
+        // if (!await this.$validator.validateAll('passwordForm')) {
+        //   return
+        // }
+        if (!await this.$refs.passwordForm.validate()) {
           return
         }
 
