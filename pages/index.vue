@@ -1,18 +1,28 @@
 <template>
   <v-container fluid fill-height align-center justify-center>
     <v-layout align-center justify-center column class="main-layout">
+      <v-scale-transition mode="out-in">
+        <v-alert
+          class="notification"
+          v-if="notification.is"
+          v-model="notification.is"
+          dismissible
+          :type="notification.level">
+          {{ notification.text }}
+        </v-alert>
+      </v-scale-transition>
       <form data-vv-scope="userInfo">
         <v-flex xs12 class="inputFlex">
           <v-text-field
             class="textField"
             color="rgb(56, 150, 29)"
             prepend-icon="person"
-            :label="$t('index.userName')"
+            :label="$t('index.username')"
             type="text"
-            v-validate="{ required: email.length === 0 }"
-            data-vv-name="userName"
-            :error-messages="errors.collect('userName')"
-            v-model="userName"
+            v-validate="{ required: editedUser.email.length === 0 }"
+            data-vv-name="username"
+            :error-messages="errors.collect('username')"
+            v-model="editedUser.username"
           ></v-text-field>
         </v-flex>
         <v-flex xs12 class="inputFlex">
@@ -25,7 +35,7 @@
             v-validate="'email'"
             data-vv-name="email"
             :error-messages="errors.collect('email')"
-            v-model="email"
+            v-model="editedUser.email"
           ></v-text-field>
         </v-flex>
         <v-flex xs12 class="inputFlex">
@@ -38,7 +48,7 @@
             v-validate="'min:5|max:20'"
             data-vv-name="passwordChange"
             :error-messages="errors.collect('passwordChange')"
-            v-model="passwordChange">
+            v-model="editedUser.passwordChange">
           </v-text-field>
         </v-flex>
         <v-flex xs12 class="inputFlex">
@@ -48,10 +58,10 @@
             :label="$t('index.phone')"
             prepend-icon="phone"
             type="text"
-            v-validate="{ required: email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
+            v-validate="{ required: editedUser.email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
             data-vv-name="phone"
             :error-messages="errors.collect('phone')"
-            v-model="phone">
+            v-model="editedUser.phone">
           </v-text-field>
         </v-flex>
         <v-flex xs12 class="inputFlex">
@@ -60,10 +70,21 @@
             color="rgb(56, 150, 29)"
             prepend-icon="language"
             :items="languages"
-            v-model="language"
+            v-model="editedUser.language"
             :label="$t('index.lang')"
             @change="changeLang()">
           </v-select>
+        </v-flex>
+        <v-flex xs12 class="inputFlex">
+          <v-text-field
+            class="textField"
+            color="rgb(56, 150, 29)"
+            :label="$t('index.role')"
+            prepend-icon="assignment_ind"
+            type="text"
+            disabled
+            v-model="editedUser.role">
+          </v-text-field>
         </v-flex>
         <v-flex xs12 style="text-align: center; width: 100%">
           <v-btn
@@ -187,21 +208,40 @@ export default {
   middleware: ['autologin', 'authenticated'],
   data () {
     return {
-      userName: '',
-      email: '',
-      passwordChange: '',
-      phone: '',
-      language: languageCfg.all[this.$i18n.locale],
+      // username: '',
+      // email: '',
+      // passwordChange: '',
+      // phone: '',
+      // language: languageCfg.all[this.$i18n.locale],
       languages: Object.values(languageCfg.all),
-      signupCompletion: false,
+      // signupCompletion: false,
       password: '',
       confirmPassword: '',
       isPasswordVisible: false,
       passwordForm: true,
+      uneditedUser: {},
+      // editedUser: {},
+      editedUser: {
+        email: '',
+        username: '',
+        passwordChange: '',
+        phone: '',
+        role: '',
+        language: languageCfg.all[this.$i18n.locale]
+      },
+      notification: {
+        is: false,
+        text: '',
+        level: ''
+      },
       items: [
         { icon: 'apps', title: 'Welcome', to: '/' },
         { icon: 'bubble_chart', title: 'Inspire', to: '/signup' }
       ],
+      role: {
+        admin: this.$t('index.admin'),
+        operator: this.$t('index.operator')
+      },
       passwordRules: [
         v => !!v || 'Password is required',
         v => (v && v.length > 5) || 'Password must be more than 5 characters',
@@ -219,7 +259,8 @@ export default {
         // if (!await this.$validator.validateAll('passwordForm')) {
         //   return
         // }
-        if (!await this.$refs.passwordForm.validate()) {
+        if (!this.$refs.passwordForm.validate()) {
+          console.log('INVALID')
           return
         }
 
@@ -247,6 +288,8 @@ export default {
           })
           this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
           this.$router.push('/')
+          this.getUserInfo()
+          console.log('Status 200 !!!')
           return
         }
 
@@ -255,14 +298,20 @@ export default {
         this.$nuxt.error({ statusCode: 500, error })
       }
     },
+    setNotification (is, text, level) {
+      this.notification.is = is
+      this.notification.text = text
+      this.notification.level = level
+    },
     changeLang () {
       let all = Object.keys(languageCfg.all)
       for (let i = 0; i < Object.values(languageCfg.all).length; i++) {
-        if (languageCfg.all[all[i]] === this.language) {
+        if (languageCfg.all[all[i]] === this.editedUser.language) {
           this.$i18n.locale = all[i]
           Validator.localize(all[i], languageCfg.veeValidateMessages[all[i]])
         }
       }
+      console.log(this.$i18n.locale)
     },
     async getUserInfo () {
       let userResponse = await axios({
@@ -273,35 +322,68 @@ export default {
           return status === 200
         }
       })
-
-      this.userName = userResponse.data.data.username
-      this.email = userResponse.data.data.email
-      this.phone = userResponse.data.data.phone
+      this.uneditedUser = {
+        email: userResponse.data.data.email,
+        username: userResponse.data.data.username,
+        passwordChange: '',
+        phone: userResponse.data.data.phone,
+        role: userResponse.data.data.isAdmin ? this.role.admin : this.role.operator,
+        language: languageCfg.all[this.$i18n.locale]
+      }
+      this.editedUser = Object.assign({}, this.uneditedUser)
+      // this.username = userResponse.data.data.username
+      // this.email = userResponse.data.data.email
+      // this.phone = userResponse.data.data.phone
     },
     async updateUser () {
       try {
+        this.setNotification(false)
         if (!await this.$validator.validateAll('userInfo')) {
           return
         }
 
+        if (JSON.stringify(this.editedUser) === JSON.stringify(this.uneditedUser)) {
+          this.setNotification(true, this.$t('index.uneditedUser'), 'error')
+          return
+        }
+        let updateUserResponse
         let userResponse
-        let updateUserResponse = await axios({
-          method: 'patch',
-          url: httpCfg.backendURL + '/api/v1/users/current',
-          headers: {'authorization': this.$store.getters['user/accessToken']},
-          data: {
-            email: this.email,
-            username: this.userName,
-            password: sha256(this.passwordChange),
-            phone: this.phone,
-            data: { language: this.$i18n.locale }
-          },
-          validateStatus: function (status) {
-            return status === 200 || status === 400
-          }
-        })
+
+        if (!this.editedUser.passwordChange) {
+          updateUserResponse = await axios({
+            method: 'patch',
+            url: httpCfg.backendURL + '/api/v1/users/current',
+            headers: {'authorization': this.$store.getters['user/accessToken']},
+            data: {
+              email: this.editedUser.email,
+              username: this.editedUser.username,
+              phone: this.editedUser.phone,
+              data: { language: this.$i18n.locale }
+            },
+            validateStatus: function (status) {
+              return status === 200 || status === 400
+            }
+          })
+        } else {
+          updateUserResponse = await axios({
+            method: 'patch',
+            url: httpCfg.backendURL + '/api/v1/users/current',
+            headers: {'authorization': this.$store.getters['user/accessToken']},
+            data: {
+              email: this.editedUser.email,
+              username: this.editedUser.username,
+              password: sha256(this.editedUser.passwordChange),
+              phone: this.editedUser.phone,
+              data: { language: this.$i18n.locale }
+            },
+            validateStatus: function (status) {
+              return status === 200 || status === 400
+            }
+          })
+        }
 
         if (updateUserResponse.status === 200) {
+          this.uneditedUser = Object.assign({}, this.editedUser)
           userResponse = await axios({
             method: 'get',
             url: httpCfg.backendURL + '/api/v1/users/current',
@@ -311,6 +393,7 @@ export default {
             }
           })
           this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
+          this.setNotification(true, this.$t('index.save'), 'success')
           return
         }
         this.$nuxt.error({ statusCode: 500, responses: [updateUserResponse, userResponse] })
@@ -339,47 +422,33 @@ export default {
         this.$nuxt.error({ statusCode: 500, error })
       }
     }
-    // async signout () {
-    //   try {
-    //     let signoutResponse = await axios({
-    //       method: 'post',
-    //       url: httpCfg.backendURL + '/api/v1/users/signout',
-    //       headers: {'authorization': this.$store.getters['user/accessToken']},
-    //       validateStatus: function (status) {
-    //         return status === 200
-    //       }
-    //     })
-
-    //     if (signoutResponse.status === 200) {
-    //       this.$store.commit('user/RESET_USER')
-    //       this.$router.push('/signin')
-    //       return
-    //     }
-
-    //     this.$nuxt.error({ statusCode: 500, responses: signoutResponse })
-    //   } catch (error) {
-    //     console.log(error)
-    //     this.$nuxt.error({ statusCode: 500, error })
-    //   }
-    // }
   },
-  created () {
-    switch (this.$store.getters['user/state']) {
-      case 'active':
-        console.log('ACTIVE')
-        break
-      case 'registered':
-        console.log('REGISTERED')
-        this.signupCompletion = true
-        break
-      case 'deleted':
-        console.log('DELETED')
-        this.$router.push('/error.vue')
-        break
+
+  computed: {
+    signupCompletion () {
+      return this.$store.getters['user/state'] === 'registered'
     }
   },
 
+  // created () {
+  //   console.log('CREATED')
+  //   switch (this.$store.getters['user/state']) {
+  //     case 'active':
+  //       console.log('ACTIVE')
+  //       break
+  //     case 'registered':
+  //       console.log('REGISTERED')
+  //       this.signupCompletion = true
+  //       break
+  //     case 'deleted':
+  //       console.log('DELETED')
+  //       this.$router.push('/error.vue')
+  //       break
+  //   }
+  // },
+
   mounted () {
+    this.setNotification(false)
     if (this.$store.getters['user/state'] === 'active') {
       this.getUserInfo()
     }
@@ -390,6 +459,11 @@ export default {
 <style scoped>
   .main-layout {
     max-width: 400px;
+  }
+
+  .notification {
+    width: 100%;
+    font-size: 12pt;
   }
 
   .inputFlex {

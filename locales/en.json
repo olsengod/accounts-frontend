@@ -28,11 +28,16 @@
     "title": "Account",
     "saveBtn": "Save",
     "deleteBtn": "Delete account",
-    "userName": "Username",
+    "username": "Username",
     "email": "Email",
     "password": "Password",
     "phone": "Phone number",
-    "lang": "Language"
+    "lang": "Language",
+    "save": "Information about account was saved.",
+    "role": "Role",
+    "admin": "Admin",
+    "operator": "Operator",
+    "uneditedUser": "Nothing was changed!"
   },
   "adminPage": {
     "userList": "User list",

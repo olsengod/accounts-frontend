@@ -5,7 +5,7 @@
         <v-toolbar-title>{{ $t('adminPage.userList') }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <form data-vv-scope="userInfo">
-          <v-dialog v-model="dialog" persistent max-width="500px">
+          <v-dialog v-model="editDialog" persistent max-width="500px">
             <v-scale-transition mode="out-in">
               <v-alert
                 class="notification"
@@ -91,7 +91,7 @@
                       <v-select
                         color="rgb(56, 150, 29)"
                         prepend-icon="loop"
-                        :items="Object.values(state)"
+                        :items="Object.values(editState)"
                         v-model="editedUser.state"
                         :label="$t('adminPage.state')">
                       </v-select>
@@ -205,7 +205,7 @@
       </v-data-table>
     </v-layout>
     <v-layout align-center justify-center column style="max-width: 400px">
-      <v-dialog v-model="deleteConfirm" persistent max-width="350">
+      <v-dialog v-model="deleteDialog" persistent max-width="350">
         <v-scale-transition mode="out-in">
           <v-alert
             class="notification"
@@ -221,11 +221,11 @@
             <v-card-title class="headline">{{ this.$t('adminPage.deleteTitle') }}</v-card-title>
           </v-toolbar>
           <v-card-text style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
-            {{ this.$t('adminPage.deleteConfirm') }}
+            {{ this.$t('adminPage.deleteDialog') }}
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" flat @click="deleteConfirm = false">
+            <v-btn color="green darken-1" flat @click="deleteDialog = false">
               {{ this.$t('adminPage.deleteCancel') }}
             </v-btn>
             <v-btn color="green darken-1" flat @click="deleteUser">
@@ -249,12 +249,12 @@ export default {
   middleware: ['autologin', 'authenticated'],
   data () {
     return {
-      deleteConfirm: false,
+      deleteDialog: false,
       userList: [],
       pageSize: 20,
       editedIndex: -1,
       deletedUser: {},
-      dialog: false,
+      editDialog: false,
       uneditedUser: {},
       deleteNotification: {
         is: false,
@@ -314,9 +314,9 @@ export default {
         registered: this.$t('adminPage.registered'),
         deleted: this.$t('adminPage.deleted')
       },
-      deleteDialog: {
-        text: '',
-        title: ''
+      editState: {
+        active: this.$t('adminPage.active'),
+        deleted: this.$t('adminPage.deleted')
       }
     }
   },
@@ -359,13 +359,13 @@ export default {
       this.editedIndex = this.userList.indexOf(user)
       this.uneditedUser = user
       this.editedUser = Object.assign({}, user)
-      this.dialog = true
+      this.editDialog = true
     },
 
     deleteBtn (user) {
       this.setNotification('delete', false)
       this.deletedUser = user
-      this.deleteConfirm = true
+      this.deleteDialog = true
     },
 
     setNotification (notification, is, text, level) {
@@ -400,7 +400,7 @@ export default {
         })
 
         if (deleteUserResponse.status === 200) {
-          this.deleteConfirm = false
+          this.deleteDialog = false
           return
         }
 
@@ -451,7 +451,7 @@ export default {
 
     close () {
       this.setNotification('edit', false)
-      this.dialog = false
+      this.editDialog = false
       setTimeout(() => {
         this.uneditedUser = {}
         this.editedUser = Object.assign({}, this.defaultUser)

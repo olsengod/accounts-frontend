@@ -138,7 +138,9 @@
               return status === 200 || status === 400
             }
           })
-
+          console.log(sha256(this.password.toString()))
+          console.log(sha256(this.password))
+          console.log(this.password)
           if (signinResponse.status === 200) {
             userResponse = await axios({
               method: 'get',
