@@ -138,9 +138,6 @@
               return status === 200 || status === 400
             }
           })
-          console.log(sha256(this.password.toString()))
-          console.log(sha256(this.password))
-          console.log(this.password)
           if (signinResponse.status === 200) {
             userResponse = await axios({
               method: 'get',
@@ -155,6 +152,7 @@
             this.$store.dispatch('user/setTokens', { data: signinResponse.data.data })
             this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
             this.$router.push('/')
+            console.log('Redirect')
             return
           }
 

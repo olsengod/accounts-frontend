@@ -14,7 +14,7 @@ export default async function ({ app, store, redirect }) {
     let refreshToken = ls.get('cererisAccountRefreshToken')
     let expiresIn = ls.get('cererisExpiresIn')
     if (!accessToken || !refreshToken || !expiresIn) {
-      // console.log('FIRST REDIRECT')
+      console.log('FIRST REDIRECT')
       return redirect('/signin')
     }
 
@@ -79,10 +79,10 @@ export default async function ({ app, store, redirect }) {
       }
       return
     }
-    // console.log('LAST REDIRECT')
+    console.log('LAST REDIRECT')
     redirect('/signin')
   } catch (err) {
-    // console.log(err)
+    console.log(err)
     redirect('/signin')
   }
 }

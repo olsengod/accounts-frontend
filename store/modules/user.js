@@ -62,6 +62,7 @@ const mutations = {
     Validator.localize(data.value, languageCfg.veeValidateMessages[data.value])
   },
   RESET_USER (state) {
+    ls.clear()
     state.user = {
       accessToken: null,
       refreshToken: null,
@@ -90,6 +91,7 @@ const actions = {
     commit('SET_EXPIRES_IN', data.expiresIn)
     ls.set('cererisAccountAccessToken', data.accessToken)
     ls.set('cererisAccountRefreshToken', data.refreshToken)
+    ls.set('cererisExpiresIn', data.expiresIn)
     setTimeout(function () {
       axios({
         method: 'post',

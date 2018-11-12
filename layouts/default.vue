@@ -19,12 +19,20 @@
       </v-toolbar>
       <v-list class="pt-0" dense>
         <v-divider></v-divider>
-        <v-list-tile @click="menuItem = $t('index.title')">
+        <v-list-tile @click="navigate('account')">
           <v-list-tile-action>
             <v-icon>person</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>{{ $t('index.title') }}</v-list-tile-title>
+            <v-list-tile-title>{{ navigation.account.title }}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile @click="navigate('users')">
+          <v-list-tile-action>
+            <v-icon>people</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>{{ navigation.users.title }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -38,13 +46,13 @@
         style="cursor: pointer">
       <v-toolbar-title
         class="title hidden-xs-only"
-        @click="$vuetify.goTo(0, {offset: 0})">{{ menuItem }}</v-toolbar-title>
+        @click="$vuetify.goTo(0, {offset: 0})">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn
           flat
           @click="sign_out()"
-          :style="{ color: $vuetify.theme.textTheme +'' }">
+          :style="{ color: $vuetify.theme.textTheme + '' }">
           {{ $t('index.logout') }}
         </v-btn>
       </v-toolbar-items> 
@@ -66,7 +74,18 @@ export default {
   data () {
     return {
       drawer: false,
-      menuItem: this.$t('index.title')
+      // menuItem: this.$t('index.account'),
+      title: this.$t('index.account'),
+      navigation: {
+        account: {
+          path: '/',
+          title: this.$t('index.account')
+        },
+        users: {
+          path: '/adminPage',
+          title: this.$t('index.users')
+        }
+      }
     }
   },
 
@@ -76,30 +95,15 @@ export default {
     },
     sign_out () {
       signout(this.$store, this.$router)
+    },
+    navigate (nav) {
+      console.log('Nav ', nav)
+      this.title = this.navigation[nav].title
+      // store.commit('user/Navigate', navigation[nav].title)
+      this.$router.push(this.navigation[nav].path)
     }
-    // async sign_out () {
-    //   try {
-    //     let signoutResponse = await axios({
-    //       method: 'post',
-    //       url: httpCfg.backendURL + '/api/v1/users/signout',
-    //       headers: {'authorization': this.$store.getters['user/accessToken']},
-    //       validateStatus: function (status) {
-    //         return status === 200
-    //       }
-    //     })
-
-    //     if (signoutResponse.status === 200) {
-    //       this.$store.commit('user/RESET_USER')
-    //       this.$router.push('/signin')
-    //       return
-    //     }
-
-    //     this.$nuxt.error({ statusCode: 500, responses: signoutResponse })
-    //   } catch (error) {
-    //     console.log(error)
-    //     this.$nuxt.error({ statusCode: 500, error })
-    //   }
-    // }
+  },
+  computed: {
   }
 }
 </script>

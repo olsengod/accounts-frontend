@@ -14,18 +14,17 @@
     "password": "Password",
     "forgetPassword": "Forget password?"
   },
-  "signup_completion": {
-    "completeRegistration": "Complete registration",
-    "password": "Password",
-    "confirm": "Confirm password",
-    "continueBtn": "Continue"
-  },
   "signup_checkMail": {
     "message": "To complete the registration, check your mail and follow the link"
   },
   "index": {
+    "completeRegistration": "Complete registration",
+    "password": "Password",
+    "confirm": "Confirm password",
+    "continueBtn": "Continue",
     "logout": "Logout",
-    "title": "Account",
+    "account": "Account",
+    "users": "Users",
     "saveBtn": "Save",
     "deleteBtn": "Delete account",
     "username": "Username",
@@ -56,7 +55,7 @@
     "cancel": "Cancel",
     "save": "Save",
     "deleteTitle": "Delete user",
-    "deleteConfirm": "Are you sure you want to delete this user?",
+    "deleteDialog": "Are you sure you want to delete this user?",
     "deleteOk": "Confirm",
     "deleteCancel": "Cancel",
     "warning": "Warning",

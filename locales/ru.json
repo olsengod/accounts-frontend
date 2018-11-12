@@ -14,18 +14,17 @@
     "password": "Пароль",
     "forgetPassword": "Забыли пароль?"
   },
-  "signup_completion": {
-    "completeRegistration": "Завершение регистрации",
-    "password": "Пароль",
-    "confirm": "Подтвердите пароль",
-    "continueBtn": "Продолжить"
-  },
   "signup_checkMail": {
     "message": "Для завершения регистрации проверьте почту и перейдите по ссылке"
   },
   "index": {
+    "completeRegistration": "Завершение регистрации",
+    "password": "Пароль",
+    "confirm": "Подтвердите пароль",
+    "continueBtn": "Продолжить",
     "logout": "Выйти",
-    "title": "Аккаунт",
+    "account": "Аккаунт",
+    "users": "Пользователи",
     "saveBtn": "Сохранить",
     "deleteBtn": "Удалить учетную запись",
     "username": "Имя пользователя",
@@ -56,7 +55,7 @@
     "cancel": "Отмена",
     "save": "Сохранить",
     "deleteTitle": "Удалить пользователя",
-    "deleteConfirm": "Вы уверены, что хотите удалить данного пользователя?",
+    "deleteDialog": "Вы уверены, что хотите удалить данного пользователя?",
     "deleteOk": "Подтвердить",
     "deleteCancel": "Отмена",
     "warning": "Внимание",

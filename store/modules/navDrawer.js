@@ -1,16 +1,23 @@
 const state = {
-  navig: false
+  navig: {
+    title: null,
+    path: null
+  }
 }
 
 const mutations = {
-  SWITCH_NAVIG (state) {
-    state.navig = !state.navig
+  SET_TITLE (state, value) {
+    state.navig.title = value
+  },
+  SET_PATH (state, value) {
+    state.navig.path = value
   }
 }
 
 const actions = {
-  switch ({commit}) {
-    commit('SWITCH_NAVIG')
+  navigate ({commit}, {data}) {
+    commit('SET_TITLE', data.title)
+    commit('SET_PATH', data.path)
   }
 }
 

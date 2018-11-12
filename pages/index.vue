@@ -1,111 +1,119 @@
 <template>
-  <v-container fluid fill-height align-center justify-center>
-    <v-layout align-center justify-center column class="main-layout">
-      <v-scale-transition mode="out-in">
-        <v-alert
-          class="notification"
-          v-if="notification.is"
-          v-model="notification.is"
-          dismissible
-          :type="notification.level">
-          {{ notification.text }}
-        </v-alert>
-      </v-scale-transition>
-      <form data-vv-scope="userInfo">
-        <v-flex xs12 class="inputFlex">
-          <v-text-field
-            class="textField"
-            color="rgb(56, 150, 29)"
-            prepend-icon="person"
-            :label="$t('index.username')"
-            type="text"
-            v-validate="{ required: editedUser.email.length === 0 }"
-            data-vv-name="username"
-            :error-messages="errors.collect('username')"
-            v-model="editedUser.username"
-          ></v-text-field>
-        </v-flex>
-        <v-flex xs12 class="inputFlex">
-          <v-text-field
-            class="textField"
-            color="rgb(56, 150, 29)"
-            prepend-icon="alternate_email"
-            :label="$t('index.email')"
-            type="text"
-            v-validate="'email'"
-            data-vv-name="email"
-            :error-messages="errors.collect('email')"
-            v-model="editedUser.email"
-          ></v-text-field>
-        </v-flex>
-        <v-flex xs12 class="inputFlex">
-          <v-text-field
-            class="textField"
-            color="rgb(56, 150, 29)"
-            :label="$t('index.password')"
-            prepend-icon="lock"
-            type="password"
-            v-validate="'min:5|max:20'"
-            data-vv-name="passwordChange"
-            :error-messages="errors.collect('passwordChange')"
-            v-model="editedUser.passwordChange">
-          </v-text-field>
-        </v-flex>
-        <v-flex xs12 class="inputFlex">
-          <v-text-field
-            class="textField"
-            color="rgb(56, 150, 29)"
-            :label="$t('index.phone')"
-            prepend-icon="phone"
-            type="text"
-            v-validate="{ required: editedUser.email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
-            data-vv-name="phone"
-            :error-messages="errors.collect('phone')"
-            v-model="editedUser.phone">
-          </v-text-field>
-        </v-flex>
-        <v-flex xs12 class="inputFlex">
-          <v-select
-            class="textField"
-            color="rgb(56, 150, 29)"
-            prepend-icon="language"
-            :items="languages"
-            v-model="editedUser.language"
-            :label="$t('index.lang')"
-            @change="changeLang()">
-          </v-select>
-        </v-flex>
-        <v-flex xs12 class="inputFlex">
-          <v-text-field
-            class="textField"
-            color="rgb(56, 150, 29)"
-            :label="$t('index.role')"
-            prepend-icon="assignment_ind"
-            type="text"
-            disabled
-            v-model="editedUser.role">
-          </v-text-field>
-        </v-flex>
-        <v-flex xs12 style="text-align: center; width: 100%">
-          <v-btn
-            dark
-            class="Btn"
-            color="rgb(56, 150, 29)"
-            @click="updateUser"><v-icon left>save</v-icon>{{ $t('index.saveBtn') }}
-          </v-btn>
-        </v-flex>
-        <v-flex xs12 style="text-align: center; width: 100%">
-          <v-btn
-            dark
-            class="Btn"
-            color="error"
-            @click="deleteUser"><v-icon left>delete</v-icon>{{ $t('index.deleteBtn') }}
-          </v-btn>
-        </v-flex>
-      </form>
+  <v-container fluid fill-height align-center justify-center class="main-container">
+    <v-layout justify-center justify-center column class="main-layout">
+      <v-layout class="alert-layout">
+        <v-scale-transition mode="out-in">
+          <v-alert
+            class="notification"
+            v-if="notification.is"
+            v-model="notification.is"
+            dismissible
+            :type="notification.level">
+            {{ notification.text }}
+          </v-alert>
+        </v-scale-transition>
+      </v-layout>
+      <v-layout align-center justify-center column class="input-layout">
+        <form data-vv-scope="userInfo" style="width: 100%">
+          <v-flex xs12 class="inputFlex">
+            <v-text-field
+              class="textField"
+              color="rgb(56, 150, 29)"
+              prepend-icon="person"
+              :label="$t('index.username')"
+              type="text"
+              v-validate="{ required: editedUser.email.length === 0 }"
+              data-vv-name="username"
+              :data-vv-as="$t('index.username')"
+              :error-messages="errors.collect('userInfo.username')"
+              v-model="editedUser.username"
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs12 class="inputFlex">
+            <v-text-field
+              class="textField"
+              color="rgb(56, 150, 29)"
+              prepend-icon="alternate_email"
+              :label="$t('index.email')"
+              type="text"
+              v-validate="'email'"
+              data-vv-name="email"
+              :data-vv-as="$t('index.email')"
+              :error-messages="errors.collect('userInfo.email')"
+              v-model="editedUser.email"
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs12 class="inputFlex">
+            <v-text-field
+              class="textField"
+              color="rgb(56, 150, 29)"
+              :label="$t('index.password')"
+              prepend-icon="lock"
+              type="password"
+              v-validate="'min:5|max:20'"
+              data-vv-name="passwordChange"
+              :data-vv-as="$t('index.password')"
+              :error-messages="errors.collect('userInfo.passwordChange')"
+              v-model="editedUser.passwordChange">
+            </v-text-field>
+          </v-flex>
+          <v-flex xs12 class="inputFlex">
+            <v-text-field
+              class="textField"
+              color="rgb(56, 150, 29)"
+              :label="$t('index.phone')"
+              prepend-icon="phone"
+              type="text"
+              v-validate="{ required: editedUser.email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
+              data-vv-name="phone"
+              :data-vv-as="$t('index.phone')"
+              :error-messages="errors.collect('userInfo.phone')"
+              v-model="editedUser.phone">
+            </v-text-field>
+          </v-flex>
+          <v-flex xs12 class="inputFlex">
+            <v-select
+              class="textField"
+              color="rgb(56, 150, 29)"
+              prepend-icon="language"
+              :items="languages"
+              v-model="editedUser.language"
+              :label="$t('index.lang')"
+              @change="changeLang()">
+            </v-select>
+          </v-flex>
+          <v-flex xs12 class="inputFlex">
+            <v-text-field
+              class="textField"
+              color="rgb(56, 150, 29)"
+              :label="$t('index.role')"
+              prepend-icon="assignment_ind"
+              type="text"
+              disabled
+              v-model="editedUser.role">
+            </v-text-field>
+          </v-flex>
+          <v-flex xs12 style="text-align: center; width: 100%">
+            <v-btn
+              dark
+              class="Btn"
+              color="rgb(56, 150, 29)"
+              @click="updateUser"><v-icon left>save</v-icon>{{ $t('index.saveBtn') }}
+            </v-btn>
+          </v-flex>
+          <v-flex xs12 style="text-align: center; width: 100%">
+            <v-btn
+              dark
+              class="Btn"
+              color="error"
+              @click="deleteUser"><v-icon left>delete</v-icon>{{ $t('index.deleteBtn') }}
+            </v-btn>
+          </v-flex>
+        </form>
+      </v-layout>
     </v-layout>
-    <!-- <form data-vv-scope="passwordForm"> -->
-    <v-form ref="passwordForm" v-model="passwordForm" lazy-validation>
+    <form data-vv-scope="passwordForm">
+    <!-- <v-form ref="passwordForm" v-model="passwordForm" lazy-validation> -->
       <v-dialog v-model="signupCompletion" persistent full-width max-width="400">
         <v-layout align-center justify-center column class="main-layout">
           <v-layout align-center justify-center class="card-layout">
@@ -117,20 +125,21 @@
               <v-card-title class="justify-center" style="margin-top: 10px; padding-right: 20px; padding-left: 20px">
                 <div>
                   <span style="font-weight: 400; font-size: 18pt; color: rgb(63, 28, 49)">
-                    {{ $t('signup_completion.completeRegistration') }}
+                    {{ $t('index.completeRegistration') }}
                   </span>
                 </div>
               </v-card-title>
               <v-card-text style="padding-left: 20px; padding-right: 20px;">
-                <!-- <v-text-field
+                <v-text-field
                   ref="password"
                   color="rgb(56, 150, 29)"
                   prepend-icon="lock_open"
-                  :label="$t('signup_completion.password')"
+                  :label="$t('index.password')"
                   type="password"
                   v-validate="'required|min:5|max:20'"
                   data-vv-name="password"
-                  :error-messages="errors.collect('password')"
+                  :data-vv-as="$t('index.password')"
+                  :error-messages="errors.collect('passwordForm.password')"
                   :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
                   @click:append="() => (isPasswordVisible = !isPasswordVisible)"
                   :type="isPasswordVisible ? 'text' : 'password'"
@@ -139,17 +148,18 @@
                 <v-text-field
                   color="rgb(56, 150, 29)"
                   prepend-icon="lock"
-                  :label="$t('signup_completion.confirm')"
+                  :label="$t('index.confirm')"
                   type="password"
                   v-validate="'required|confirmed:password'"
                   data-vv-name="confirmPassword"
-                  :error-messages="errors.collect('confirmPassword')"
+                  :data-vv-as="$t('index.confirm')"
+                  :error-messages="errors.collect('passwordForm.confirmPassword')"
                   :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
                   @click:append ="() => (isPasswordVisible = !isPasswordVisible)"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   v-model="confirmPassword">
-                </v-text-field> -->
-                <v-text-field
+                </v-text-field>
+                <!-- <v-text-field
                   color="rgb(56, 150, 29)"
                   prepend-icon="lock_open"
                   :label="$t('signup_completion.password')"
@@ -170,7 +180,7 @@
                   @click:append ="() => (isPasswordVisible = !isPasswordVisible)"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   v-model="confirmPassword">
-                </v-text-field>
+                </v-text-field> -->
               </v-card-text>
               <v-card-actions style="padding-left: 20px; padding-right: 20px;">
                 <v-layout wrap align-center justify-center>
@@ -179,7 +189,7 @@
                       @click="signup_completion()"
                       dark
                       class="continueBtn"
-                      color="rgb(56, 150, 29)">{{ $t('signup_completion.continueBtn') }}
+                      color="rgb(56, 150, 29)">{{ $t('index.continueBtn') }}
                     </v-btn>
                   </v-flex>
                 </v-layout>
@@ -188,19 +198,17 @@
           </v-layout>
         </v-layout>
       </v-dialog>
-    </v-form>
-    <!-- </form> -->
+    <!-- </v-form> -->
+    </form>
   </v-container>
 </template>
 
 <script>
-// import { mapState } from 'vuex'
 import axios from 'axios'
 import sha256 from 'sha256'
 import httpCfg from '../config/http'
 import languageCfg from '../config/language'
 import { Validator } from 'vee-validate'
-import ls from 'local-storage'
 import signout from '@/assets/scripts/signout'
 
 export default {
@@ -241,28 +249,28 @@ export default {
       role: {
         admin: this.$t('index.admin'),
         operator: this.$t('index.operator')
-      },
-      passwordRules: [
-        v => !!v || 'Password is required',
-        v => (v && v.length > 5) || 'Password must be more than 5 characters',
-        v => (v && v.length < 30) || 'Password must be less than 30 characters'
-      ],
-      confirmPasswordRules: [
-        v => !!v || 'Confirmation is required',
-        v => (v && v === this.password) || 'Must be identical to password'
-      ]
+      }
+      // passwordRules: [
+      //   v => !!v || 'Password is required',
+      //   v => (v && v.length > 5) || 'Password must be more than 5 characters',
+      //   v => (v && v.length < 30) || 'Password must be less than 30 characters'
+      // ],
+      // confirmPasswordRules: [
+      //   v => !!v || 'Confirmation is required',
+      //   v => (v && v === this.password) || 'Must be identical to password'
+      // ]
     }
   },
   methods: {
     async signup_completion () {
       try {
-        // if (!await this.$validator.validateAll('passwordForm')) {
-        //   return
-        // }
-        if (!this.$refs.passwordForm.validate()) {
-          console.log('INVALID')
+        if (!await this.$validator.validateAll('passwordForm')) {
           return
         }
+        // if (!this.$refs.passwordForm.validate()) {
+        //   console.log('INVALID')
+        //   return
+        // }
 
         let userResponse
         let setPasswordResponse = await axios({
@@ -311,7 +319,6 @@ export default {
           Validator.localize(all[i], languageCfg.veeValidateMessages[all[i]])
         }
       }
-      console.log(this.$i18n.locale)
     },
     async getUserInfo () {
       let userResponse = await axios({
@@ -331,9 +338,6 @@ export default {
         language: languageCfg.all[this.$i18n.locale]
       }
       this.editedUser = Object.assign({}, this.uneditedUser)
-      // this.username = userResponse.data.data.username
-      // this.email = userResponse.data.data.email
-      // this.phone = userResponse.data.data.phone
     },
     async updateUser () {
       try {
@@ -413,8 +417,8 @@ export default {
         })
 
         if (deleteUserResponse.status === 200) {
-          ls.clear()
           signout(this.$store, this.$router)
+          return
         }
 
         this.$nuxt.error({ statusCode: 500, responses: deleteUserResponse })
@@ -457,13 +461,31 @@ export default {
 </script>
 
 <style scoped>
+  .main-container {
+    height: 90vh;
+    /*padding-top: 50px;*/
+  }
+
   .main-layout {
     max-width: 400px;
   }
 
+  .alert-layout {
+    position: relative;
+    width: 100%;
+    max-height: 10vh; 
+  }
+
   .notification {
     width: 100%;
+    height: 100%;
     font-size: 12pt;
+  }
+
+  .input-layout {
+    position: relative;
+    width: 100%;
+    max-height: 550px;
   }
 
   .inputFlex {
@@ -472,6 +494,11 @@ export default {
 
   .Btn {
     width: 100%;
+  }
+
+  .v-btn {
+    margin-left: 0;
+    margin-bottom: 5px;
   }
 
   .card-layout {
@@ -505,16 +532,6 @@ export default {
       position: relative;
       width: 100%;
       max-height: 558px;
-    }
-  }
-
-  @media only screen and (max-width: 332px) { 
-    .switchBtn {
-      width: 100%;
-    }
-
-    .space {
-      display: none;
     }
   }
 </style>

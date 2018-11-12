@@ -34,7 +34,7 @@
                         type="text"
                         v-validate="'required'"
                         data-vv-name="Id"
-                        :error-messages="errors.collect('Id')"
+                        :error-messages="errors.collect('userInfo.Id')"
                         disabled
                         v-model="editedUser.id"
                       ></v-text-field>
@@ -48,7 +48,7 @@
                         type="text"
                         v-validate="{ required: editedUser.email.length === 0, min: 5, max: 30}"
                         data-vv-name="userName"
-                        :error-messages="errors.collect('userName')"
+                        :error-messages="errors.collect('userInfo.userName')"
                         v-model="editedUser.username"
                       ></v-text-field>
                     </v-flex>
@@ -61,7 +61,7 @@
                         type="text"
                         v-validate="'email'"
                         data-vv-name="email"
-                        :error-messages="errors.collect('email')"
+                        :error-messages="errors.collect('userInfo.email')"
                         v-model="editedUser.email"
                       ></v-text-field>
                     </v-flex>
@@ -74,7 +74,7 @@
                         type="text"
                         v-validate="{ required: editedUser.email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
                         data-vv-name="phone"
-                        :error-messages="errors.collect('phone')"
+                        :error-messages="errors.collect('userInfo.phone')"
                         v-model="editedUser.phone">
                       </v-text-field>
                     </v-flex>
