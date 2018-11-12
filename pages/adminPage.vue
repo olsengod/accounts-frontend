@@ -34,6 +34,7 @@
                         type="text"
                         v-validate="'required'"
                         data-vv-name="Id"
+                        data-vv-as="Id"
                         :error-messages="errors.collect('userInfo.Id')"
                         disabled
                         v-model="editedUser.id"
@@ -48,6 +49,7 @@
                         type="text"
                         v-validate="{ required: editedUser.email.length === 0, min: 5, max: 30}"
                         data-vv-name="userName"
+                        :data-vv-as="$t('adminPage.userName')"
                         :error-messages="errors.collect('userInfo.userName')"
                         v-model="editedUser.username"
                       ></v-text-field>
@@ -61,6 +63,7 @@
                         type="text"
                         v-validate="'email'"
                         data-vv-name="email"
+                        :data-vv-as="$t('adminPage.email')"
                         :error-messages="errors.collect('userInfo.email')"
                         v-model="editedUser.email"
                       ></v-text-field>
@@ -74,6 +77,7 @@
                         type="text"
                         v-validate="{ required: editedUser.email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
                         data-vv-name="phone"
+                        :data-vv-as="$t('adminPage.phone')"
                         :error-messages="errors.collect('userInfo.phone')"
                         v-model="editedUser.phone">
                       </v-text-field>
