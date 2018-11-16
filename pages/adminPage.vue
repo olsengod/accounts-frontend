@@ -91,7 +91,26 @@
                         :label="$t('adminPage.role')">
                       </v-select>
                     </v-flex>
-                    <v-flex xs12 sm6 md4>
+                    <v-flex v-if="editedUser.state === $t('adminPage.registered')" xs12 sm6 md4>
+                      <v-text-field
+                        class="textField"
+                        color="rgb(56, 150, 29)"
+                        prepend-icon="loop"
+                        :label="$t('adminPage.state')"
+                        type="text"
+                        disabled
+                        v-model="editedUser.state"
+                      ></v-text-field>
+                      <!-- <v-select
+                        color="rgb(56, 150, 29)"
+                        prepend-icon="loop"
+                        :items="Object.values(editState)"
+                        v-model="editedUser.state"
+                        :disabled="registered"
+                        :label="$t('adminPage.state')">
+                      </v-select> -->
+                    </v-flex>
+                    <v-flex v-else xs12 sm6 md4>
                       <v-select
                         color="rgb(56, 150, 29)"
                         prepend-icon="loop"
@@ -360,8 +379,14 @@ export default {
 
     editBtn (user) {
       this.setNotification('edit', false)
+      console.log(user)
+      // if (this.getKeyByValue(this.state, this.editedUser.state) === 'registered') {
+      //   console.log('REGISTERED')
+      //   this.registered = true
+      // }
       this.editedIndex = this.userList.indexOf(user)
       this.uneditedUser = user
+      console.log('Unedited ', user)
       this.editedUser = Object.assign({}, user)
       this.editDialog = true
     },
@@ -420,26 +445,45 @@ export default {
         if (!await this.$validator.validateAll('userInfo')) {
           return
         }
-
+        console.log('Edited ', this.editedUser)
         if (JSON.stringify(this.editedUser) === JSON.stringify(this.uneditedUser)) {
           this.setNotification('edit', true, this.$t('adminPage.uneditedUser'), 'error')
           return
         }
+        let editUserResponse
 
-        let editUserResponse = await axios({
-          method: 'patch',
-          url: httpCfg.backendURL + '/api/v1/users/' + this.editedUser.id,
-          headers: {'authorization': this.$store.getters['user/accessToken']},
-          data: {
-            email: this.editedUser.email,
-            username: this.editedUser.username,
-            phone: this.editedUser.phone,
-            isAdmin: this.editedUser.role === this.role.admin
-          },
-          validateStatus: function (status) {
-            return status === 200 || status === 400
-          }
-        })
+        if (this.editedUser.state !== this.$t('adminPage.registered')) {
+          editUserResponse = await axios({
+            method: 'patch',
+            url: httpCfg.backendURL + '/api/v1/users/' + this.editedUser.id,
+            headers: {'authorization': this.$store.getters['user/accessToken']},
+            data: {
+              email: this.editedUser.email,
+              username: this.editedUser.username,
+              phone: this.editedUser.phone,
+              isAdmin: this.editedUser.role === this.role.admin,
+              state: this.getKeyByValue(this.editState, this.editedUser.state)
+            },
+            validateStatus: function (status) {
+              return status === 200 || status === 400
+            }
+          })
+        } else {
+          editUserResponse = await axios({
+            method: 'patch',
+            url: httpCfg.backendURL + '/api/v1/users/' + this.editedUser.id,
+            headers: {'authorization': this.$store.getters['user/accessToken']},
+            data: {
+              email: this.editedUser.email,
+              username: this.editedUser.username,
+              phone: this.editedUser.phone,
+              isAdmin: this.editedUser.role === this.role.admin
+            },
+            validateStatus: function (status) {
+              return status === 200 || status === 400
+            }
+          })
+        }
 
         if (editUserResponse.status === 200) {
           Object.assign(this.userList[this.editedIndex], this.editedUser)
@@ -461,6 +505,10 @@ export default {
         this.editedUser = Object.assign({}, this.defaultUser)
         this.editedIndex = -1
       }, 300)
+    },
+
+    getKeyByValue (object, value) {
+      return Object.keys(object).find(key => object[key] === value)
     }
   },
 

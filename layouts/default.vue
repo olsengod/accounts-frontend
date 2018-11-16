@@ -27,7 +27,7 @@
             <v-list-tile-title>{{ navigation.account.title }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="navigate('users')">
+        <v-list-tile v-if="$store.getters['user/isAdmin']" @click="navigate('users')">
           <v-list-tile-action>
             <v-icon>people</v-icon>
           </v-list-tile-action>
@@ -59,7 +59,7 @@
     </v-toolbar>
     <v-content>
       <v-container fluid style="padding: 0">
-        <nuxt />
+        <nuxt v-cloak />
       </v-container>
     </v-content>
   </v-app>
@@ -97,7 +97,6 @@ export default {
       signout(this.$store, this.$router)
     },
     navigate (nav) {
-      console.log('Nav ', nav)
       this.title = this.navigation[nav].title
       // store.commit('user/Navigate', navigation[nav].title)
       this.$router.push(this.navigation[nav].path)
@@ -105,11 +104,25 @@ export default {
   },
   computed: {
   }
+
+  // created () {
+  //   if (this.$store.getters['user/isAdmin'])
+  // }
 }
 </script>
 
 <style scoped>
   .title {
     font-weight: 400;    
+  }
+
+  [v-cloak] > * { display:none; }
+
+  [v-cloak]::before { 
+    content: " ";
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-image: url('data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==');
   }
 </style>
