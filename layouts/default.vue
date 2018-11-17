@@ -37,7 +37,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar class="toolbar" app>
+    <v-toolbar class="toolbar" ref="toolbar" app>
       <v-toolbar-side-icon @click="switchNav()"></v-toolbar-side-icon>
       <img
         src="@/static/cereris-logo.png"
@@ -67,6 +67,7 @@
 
 <script>
 import signout from '@/assets/scripts/signout'
+import ls from 'local-storage'
 // import axios from 'axios'
 // import httpCfg from '@/config/http'
 
@@ -75,15 +76,15 @@ export default {
     return {
       drawer: false,
       // menuItem: this.$t('index.account'),
-      title: this.$t('index.account'),
+      title: this.$t('default.account'),
       navigation: {
         account: {
           path: '/',
-          title: this.$t('index.account')
+          title: this.$t('default.account')
         },
         users: {
           path: '/adminPage',
-          title: this.$t('index.users')
+          title: this.$t('default.users')
         }
       }
     }
@@ -100,8 +101,23 @@ export default {
       this.title = this.navigation[nav].title
       // store.commit('user/Navigate', navigation[nav].title)
       this.$router.push(this.navigation[nav].path)
+      // ls.set('lastPage', JSON.stringify(this.navigation[nav]))
+      ls.set('lastPage', this.navigation[nav])
     }
   },
+
+  mounted () {
+    this.$store.commit('toolbar/SET_HEIGHT', this.$refs.toolbar.clientHeight)
+    if (ls.get('lastPage')) {
+      let pageInfo = ls.get('lastPage')
+      this.title = pageInfo.title
+      this.$router.push(pageInfo.path)
+    }
+    this.$nextTick(() => {
+      console.log('HEIGHT ', this.$refs.toolbar.clientHeight)
+    })
+  },
+
   computed: {
   }
 
@@ -114,15 +130,5 @@ export default {
 <style scoped>
   .title {
     font-weight: 400;    
-  }
-
-  [v-cloak] > * { display:none; }
-
-  [v-cloak]::before { 
-    content: " ";
-    display: block;
-    width: 16px;
-    height: 16px;
-    background-image: url('data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==');
   }
 </style>

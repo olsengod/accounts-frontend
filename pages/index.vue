@@ -1,5 +1,8 @@
 <template>
-  <v-container fluid fill-height align-center justify-center class="main-container">
+  <v-container fluid fill-height align-center justify-center v-if="loading">
+    <Loader />
+  </v-container>
+  <v-container v-else fluid fill-height align-center justify-center class="main-container">
     <v-layout justify-center justify-center column class="main-layout">
       <v-layout class="alert-layout">
         <v-scale-transition mode="out-in">
@@ -106,12 +109,33 @@
               dark
               class="Btn"
               color="error"
-              @click="deleteUser"><v-icon left>delete</v-icon>{{ $t('index.deleteBtn') }}
+              @click="deleteBtn"><v-icon left>delete</v-icon>{{ $t('index.deleteBtn') }}
             </v-btn>
           </v-flex>
         </form>
       </v-layout>
     </v-layout>
+    <!-- <v-layout align-center justify-center column style="max-width: 400px"> -->
+      <v-dialog v-model="deleteDialog" persistent max-width="400">
+        <v-card>
+          <v-toolbar dark class="error">
+            <v-card-title class="deleteTitle">{{ this.$t('index.deleteTitle') }}</v-card-title>
+          </v-toolbar>
+          <v-card-text style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
+            {{ this.$t('index.deleteDialog') }}
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat @click="deleteDialog = false">
+              {{ this.$t('adminPage.deleteCancel') }}
+            </v-btn>
+            <v-btn color="green darken-1" flat @click="deleteUser">
+              {{ this.$t('adminPage.deleteOk') }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    <!-- </v-layout> -->
     <form data-vv-scope="passwordForm">
     <!-- <v-form ref="passwordForm" v-model="passwordForm" lazy-validation> -->
       <v-dialog v-model="signupCompletion" persistent full-width max-width="400">
@@ -199,7 +223,7 @@
         </v-layout>
       </v-dialog>
     <!-- </v-form> -->
-    </form>
+    </form>    
   </v-container>
 </template>
 
@@ -210,25 +234,22 @@ import httpCfg from '../config/http'
 import languageCfg from '../config/language'
 import { Validator } from 'vee-validate'
 import signout from '@/assets/scripts/signout'
+import Loader from '@/components/Loader'
 
 export default {
   layout: 'default',
   middleware: ['autologin', 'authenticated'],
+  components: { Loader },
   data () {
     return {
-      // username: '',
-      // email: '',
-      // passwordChange: '',
-      // phone: '',
-      // language: languageCfg.all[this.$i18n.locale],
+      loading: false,
       languages: Object.values(languageCfg.all),
-      // signupCompletion: false,
       password: '',
       confirmPassword: '',
       isPasswordVisible: false,
       passwordForm: true,
       uneditedUser: {},
-      // editedUser: {},
+      deleteDialog: false,
       editedUser: {
         email: '',
         username: '',
@@ -248,7 +269,7 @@ export default {
       ],
       role: {
         admin: this.$t('index.admin'),
-        operator: this.$t('index.operator')
+        guest: this.$t('index.guest')
       }
       // passwordRules: [
       //   v => !!v || 'Password is required',
@@ -334,7 +355,7 @@ export default {
         username: userResponse.data.data.username,
         passwordChange: '',
         phone: userResponse.data.data.phone,
-        role: userResponse.data.data.isAdmin ? this.role.admin : this.role.operator,
+        role: userResponse.data.data.isAdmin ? this.role.admin : this.role.guest,
         language: languageCfg.all[this.$i18n.locale]
       }
       this.editedUser = Object.assign({}, this.uneditedUser)
@@ -405,12 +426,24 @@ export default {
         this.$nuxt.error({ statusCode: 500, error })
       }
     },
+    deleteBtn () {
+      this.deleteDialog = true
+    },
     async deleteUser () {
       try {
         let deleteUserResponse = await axios({
-          method: 'delete',
+          // method: 'delete',
+          // url: httpCfg.backendURL + '/api/v1/users/current',
+          // headers: {'authorization': this.$store.getters['user/accessToken']},
+          // validateStatus: function (status) {
+          //   return status === 200
+          // }
+          method: 'patch',
           url: httpCfg.backendURL + '/api/v1/users/current',
           headers: {'authorization': this.$store.getters['user/accessToken']},
+          data: {
+            state: 'deleted'
+          },
           validateStatus: function (status) {
             return status === 200
           }
@@ -451,18 +484,19 @@ export default {
   //   }
   // },
 
-  mounted () {
+  async mounted () {
     this.setNotification(false)
     if (this.$store.getters['user/state'] === 'active') {
-      this.getUserInfo()
+      await this.getUserInfo()
     }
+    this.loading = false
   }
 }
 </script>
 
 <style scoped>
   .main-container {
-    height: 90vh;
+    height: 80vh;
     /*padding-top: 50px;*/
   }
 
@@ -485,7 +519,7 @@ export default {
   .input-layout {
     position: relative;
     width: 100%;
-    max-height: 550px;
+    max-height: 510px;
   }
 
   .inputFlex {
@@ -499,6 +533,10 @@ export default {
   .v-btn {
     margin-left: 0;
     margin-bottom: 5px;
+  }
+
+  .deleteTitle {
+    font-size: 15pt;
   }
 
   .card-layout {
@@ -533,5 +571,15 @@ export default {
       width: 100%;
       max-height: 558px;
     }
+  }
+
+  [v-cloak] > * { display:none; }
+
+  [v-cloak]::before { 
+    content: "loading...";
+    /*display: block;
+    width: 16px;
+    height: 16px;
+    background-image: url('data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==');*/
   }
 </style>

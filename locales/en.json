@@ -23,8 +23,6 @@
     "confirm": "Confirm password",
     "continueBtn": "Continue",
     "logout": "Logout",
-    "account": "Account",
-    "users": "Users",
     "saveBtn": "Save",
     "deleteBtn": "Delete account",
     "username": "Username",
@@ -34,9 +32,15 @@
     "lang": "Language",
     "save": "Information about account was saved.",
     "role": "Role",
-    "admin": "Admin",
-    "operator": "Operator",
-    "uneditedUser": "Nothing was changed!"
+    "admin": "Administrator",
+    "guest": "Guest",
+    "uneditedUser": "Nothing was changed!",
+    "deleteTitle": "Delete current account",
+    "deleteDialog": "Are you sure you want to delete currnet account?"
+  },
+  "default": {
+    "account": "Account",
+    "users": "Users"
   },
   "adminPage": {
     "userList": "User list",
@@ -47,8 +51,8 @@
     "role": "Role",
     "state": "State",
     "actions": "Actions",
-    "admin": "Admin",
-    "operator": "Operator",
+    "admin": "Administrator",
+    "guest": "Guest",
     "active": "Active",
     "registered": "Registered",
     "deleted": "Deleted",

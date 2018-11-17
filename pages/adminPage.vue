@@ -1,5 +1,8 @@
 <template>
-  <v-container fluid align-center >
+  <v-container fluid fill-height align-center justify-center v-if="loading">
+    <Loader />
+  </v-container>
+  <v-container v-else fluid align-center>
     <v-layout align-center justify-center column class="main-layout">
       <v-toolbar color="white">
         <v-toolbar-title>{{ $t('adminPage.userList') }}</v-toolbar-title>
@@ -228,7 +231,7 @@
       </v-data-table>
     </v-layout>
     <v-layout align-center justify-center column style="max-width: 400px">
-      <v-dialog v-model="deleteDialog" persistent max-width="350">
+      <v-dialog v-model="deleteDialog" persistent max-width="400">
         <v-scale-transition mode="out-in">
           <v-alert
             class="notification"
@@ -265,13 +268,16 @@
 // import { mapState } from 'vuex'
 import axios from 'axios'
 import httpCfg from '../config/http'
+import Loader from '@/components/Loader'
 // import { Validator } from 'vee-validate'
 
 export default {
   layout: 'default',
   middleware: ['autologin', 'authenticated'],
+  components: { Loader },
   data () {
     return {
+      loading: true,
       deleteDialog: false,
       userList: [],
       pageSize: 20,
@@ -330,7 +336,7 @@ export default {
       },
       role: {
         admin: this.$t('adminPage.admin'),
-        operator: this.$t('adminPage.operator')
+        guest: this.$t('adminPage.guest')
       },
       state: {
         active: this.$t('adminPage.active'),
@@ -364,7 +370,7 @@ export default {
               email: getUsersResponse.data.data[i].email,
               username: getUsersResponse.data.data[i].username,
               phone: getUsersResponse.data.data[i].phone,
-              role: getUsersResponse.data.data[i].isAdmin ? this.role.admin : this.role.operator,
+              role: getUsersResponse.data.data[i].isAdmin ? this.role.admin : this.role.guest,
               state: this.state[getUsersResponse.data.data[i].state]
             })
           }
@@ -420,9 +426,18 @@ export default {
           return
         }
         let deleteUserResponse = await axios({
-          method: 'delete',
-          url: httpCfg.backendURL + '/api/v1/users/' + this.deletedUser.id,
+          // method: 'delete',
+          // url: httpCfg.backendURL + '/api/v1/users/' + this.deletedUser.id,
+          // headers: {'authorization': this.$store.getters['user/accessToken']},
+          // validateStatus: function (status) {
+          //   return status === 200 || status === 400
+          // }
+          method: 'patch',
+          url: httpCfg.backendURL + '/api/v1/users/' + this.editedUser.id,
           headers: {'authorization': this.$store.getters['user/accessToken']},
+          data: {
+            state: 'deleted'
+          },
           validateStatus: function (status) {
             return status === 200 || status === 400
           }
@@ -512,8 +527,9 @@ export default {
     }
   },
 
-  mounted () {
-    this.getUsers()
+  async mounted () {
+    await this.getUsers()
+    this.loading = false
   }
 }
 </script>
