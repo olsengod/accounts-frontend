@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height align-center justify-center v-if="loading">
+  <v-container fluid fill-height align-center justify-center v-if="loading" class="main-container">
     <Loader />
   </v-container>
   <v-container v-else fluid fill-height align-center justify-center class="main-container">
@@ -496,8 +496,7 @@ export default {
 
 <style scoped>
   .main-container {
-    height: 80vh;
-    /*padding-top: 50px;*/
+    min-height: calc(100vh - 64px)
   }
 
   .main-layout {
@@ -505,9 +504,10 @@ export default {
   }
 
   .alert-layout {
-    position: relative;
-    width: 100%;
-    max-height: 10vh; 
+    top: 30px;
+    position: absolute;
+    width: 400px;
+    max-height: 10vh;
   }
 
   .notification {
@@ -571,15 +571,12 @@ export default {
       width: 100%;
       max-height: 558px;
     }
-  }
 
-  [v-cloak] > * { display:none; }
-
-  [v-cloak]::before { 
-    content: "loading...";
-    /*display: block;
-    width: 16px;
-    height: 16px;
-    background-image: url('data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==');*/
+    .alert-layout {
+      position: relative;
+      top: 0;
+      width: 100%;
+      max-height: 10vh;
+    }
   }
 </style>

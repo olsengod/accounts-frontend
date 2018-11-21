@@ -1,6 +1,6 @@
 <template>
 	<v-layout align-center justify-center>
-	  <img class="spinner" src="cereris-logo.png" height="70">
+	  <img class="spinner" src="cereris-logo.png" height="40">
 	</v-layout>
 </template>
 

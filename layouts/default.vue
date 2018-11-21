@@ -37,7 +37,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar class="toolbar" ref="toolbar" app>
+    <v-toolbar class="toolbar" id="toolbar" app>
       <v-toolbar-side-icon @click="switchNav()"></v-toolbar-side-icon>
       <img
         src="@/static/cereris-logo.png"
@@ -99,23 +99,20 @@ export default {
     },
     navigate (nav) {
       this.title = this.navigation[nav].title
-      // store.commit('user/Navigate', navigation[nav].title)
       this.$router.push(this.navigation[nav].path)
-      // ls.set('lastPage', JSON.stringify(this.navigation[nav]))
       ls.set('lastPage', this.navigation[nav])
     }
   },
 
   mounted () {
-    this.$store.commit('toolbar/SET_HEIGHT', this.$refs.toolbar.clientHeight)
+    let toolbar = document.querySelector('#toolbar')
+    let height = toolbar.offsetHeight
+    this.$store.commit('toolbar/SET_HEIGHT', height)
     if (ls.get('lastPage')) {
       let pageInfo = ls.get('lastPage')
       this.title = pageInfo.title
       this.$router.push(pageInfo.path)
     }
-    this.$nextTick(() => {
-      console.log('HEIGHT ', this.$refs.toolbar.clientHeight)
-    })
   },
 
   computed: {
@@ -130,5 +127,9 @@ export default {
 <style scoped>
   .title {
     font-weight: 400;    
+  }
+
+  .toolbar {
+    height: 64px;
   }
 </style>

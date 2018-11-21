@@ -1,8 +1,8 @@
 <template>
-  <v-container fluid fill-height align-center justify-center v-if="loading">
+  <v-container fluid fill-height align-center justify-center v-if="loading" class="main-container">
     <Loader />
   </v-container>
-  <v-container v-else fluid align-center>
+  <v-container v-else fluid align-center class="main-container">
     <v-layout align-center justify-center column class="main-layout">
       <v-toolbar color="white">
         <v-toolbar-title>{{ $t('adminPage.userList') }}</v-toolbar-title>
@@ -535,6 +535,10 @@ export default {
 </script>
 
 <style scoped>
+  .main-container {
+    height: calc(100vh - 64px)
+  }
+
   .main-layout {
     /*max-width: 400px;*/
   }
