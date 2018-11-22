@@ -368,7 +368,7 @@ export default {
         }
 
         if (JSON.stringify(this.editedUser) === JSON.stringify(this.uneditedUser)) {
-          this.setNotification(true, this.$t('index.uneditedUser'), 'error')
+          this.setNotification(true, this.$t('index.uneditedUser'), 'warning')
           return
         }
         let updateUserResponse

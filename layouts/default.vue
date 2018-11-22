@@ -45,7 +45,7 @@
         style="cursor: pointer">
       <v-toolbar-title
         class="title hidden-xs-only"
-        @click="$vuetify.goTo(0, {offset: 0})">{{ title }}</v-toolbar-title>
+        @click="$vuetify.goTo(0, {offset: 0})">{{ titleComp }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn
@@ -74,18 +74,19 @@ export default {
   data () {
     return {
       drawer: false,
+      title: this.$t('default.account')
       // menuItem: this.$t('index.account'),
-      title: this.$t('default.account'),
-      navigation: {
-        account: {
-          path: '/',
-          title: this.$t('default.account')
-        },
-        users: {
-          path: '/adminPage',
-          title: this.$t('default.users')
-        }
-      }
+      // title: this.$t('default.account'),
+      // navigation: {
+      //   account: {
+      //     path: '/',
+      //     title: this.$t('default.account')
+      //   },
+      //   users: {
+      //     path: '/adminPage',
+      //     title: this.$t('default.users')
+      //   }
+      // }
     }
   },
 
@@ -118,6 +119,19 @@ export default {
   },
 
   computed: {
+    titleComp () { return this.title },
+    navigation () {
+      return {
+        account: {
+          path: '/',
+          title: this.$t('default.account')
+        },
+        users: {
+          path: '/adminPage',
+          title: this.$t('default.users')
+        }
+      }
+    }
   }
 
   // created () {

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-container fluid fill-height align-center justify-center>
     <v-layout class="matrix">
       <canvas id="matr"></canvas>
     </v-layout>
@@ -50,7 +50,7 @@
         </v-layout>
       </v-layout>
     </v-container>
-  </v-app>
+  </v-container>
 </template>
 
 <script>
