@@ -2,7 +2,6 @@
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      fixed
       app>
       <v-toolbar flat class="transparent">
         <v-list class="pa-0">
@@ -105,6 +104,9 @@ export default {
   },
 
   mounted () {
+    if (window.innerWidth > 900) {
+      this.drawer = true
+    }
     let toolbar = document.querySelector('#toolbar')
     let height = toolbar.offsetHeight
     this.$store.commit('toolbar/SET_HEIGHT', height)

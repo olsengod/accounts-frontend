@@ -37,6 +37,7 @@
                   color="rgb(56, 150, 29)"
                   prepend-icon="alternate_email"
                   label="Email"
+                  id="email"
                   :label="$t('signin.email')"
                   type="text"
                   v-validate="'required|email'"
@@ -103,7 +104,7 @@
 
   export default {
     layout: 'empty',
-    data: function () {
+    data () {
       return {
         email: '',
         password: '',
@@ -182,6 +183,12 @@
           }
         }
       }
+    },
+
+    mounted () {
+      let email = document.getElementById('email')
+      console.log('ID', email.value)
+      console.log('Field', this.email)
     }
   }
 </script>

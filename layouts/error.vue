@@ -55,6 +55,7 @@
 
 <script>
 export default {
+  layout: 'empty',
   props: ['error', 'responses']
 }
 </script>

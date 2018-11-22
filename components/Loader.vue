@@ -1,6 +1,6 @@
 <template>
 	<v-layout align-center justify-center>
-	  <img class="spinner" src="cereris-logo.png" height="40">
+	  <img class="spinner" src="cereris-logo.png">
 	</v-layout>
 </template>
 
@@ -9,8 +9,7 @@
 		position: absolute;
     top: 50%;
     left: 50%;
-    width: 120px;
-    height: 120px;
+    height: 60px;
     margin:-60px 0 0 -60px;
     -webkit-animation: turn 3s infinite;
     animation: turn 3s infinite;

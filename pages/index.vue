@@ -242,7 +242,7 @@ export default {
   components: { Loader },
   data () {
     return {
-      loading: false,
+      loading: true,
       languages: Object.values(languageCfg.all),
       password: '',
       confirmPassword: '',
