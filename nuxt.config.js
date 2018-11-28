@@ -24,6 +24,14 @@ module.exports = {
   css: [
     '~/assets/style/app.styl'
   ],
+  transition: {
+    name: 'page',
+    mode: 'out-in'
+  },
+  layoutTransition: {
+    name: 'layout',
+    mode: 'out-in'
+  },
   // axios: {
   //   proxy: true // Can be also an object with default options
   // },

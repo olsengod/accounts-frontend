@@ -73,20 +73,7 @@ import ls from 'local-storage'
 export default {
   data () {
     return {
-      drawer: false,
-      title: this.$t('default.account')
-      // menuItem: this.$t('index.account'),
-      // title: this.$t('default.account'),
-      // navigation: {
-      //   account: {
-      //     path: '/',
-      //     title: this.$t('default.account')
-      //   },
-      //   users: {
-      //     path: '/adminPage',
-      //     title: this.$t('default.users')
-      //   }
-      // }
+      drawer: false
     }
   },
 
@@ -98,7 +85,6 @@ export default {
       signout(this.$store, this.$router)
     },
     navigate (nav) {
-      this.title = this.navigation[nav].title
       this.$router.push(this.navigation[nav].path)
       ls.set('lastPage', this.navigation[nav])
     }
@@ -119,7 +105,13 @@ export default {
   },
 
   computed: {
-    titleComp () { return this.title },
+    routes () {
+      return {
+        index: this.$t('default.account'),
+        adminPage: this.$t('default.users')
+      }
+    },
+    titleComp () { return this.routes[this.$nuxt.$route.name] },
     navigation () {
       return {
         account: {

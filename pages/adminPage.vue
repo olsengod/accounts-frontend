@@ -7,6 +7,13 @@
       <v-toolbar color="white">
         <v-toolbar-title>{{ $t('adminPage.userList') }}</v-toolbar-title>
         <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="search"
+          :label="$t('adminPage.search')"
+          hide-details
+          style="padding: 0"
+        ></v-text-field>
         <form data-vv-scope="userInfo">
           <v-dialog v-model="editDialog" persistent max-width="500px">
             <v-scale-transition mode="out-in">
@@ -199,9 +206,11 @@
       <v-data-table
         :headers="headers"
         :items="userList"
-        hide-actions
-        class="elevation-1"
+        class="elevation-1 table"
         style="width: 100%"
+        :search="search"
+        :rows-per-page-items="rowsPerPage"
+        pagination.sync="pagination"
       >
         <template slot="items" slot-scope="props">
           <td>{{ props.item.id }}</td>
@@ -243,7 +252,7 @@
           </v-alert>
         </v-scale-transition>
         <v-card>
-          <v-toolbar dark class="primary">
+          <v-toolbar dark class="error">
             <v-card-title class="headline">{{ this.$t('adminPage.deleteTitle') }}</v-card-title>
           </v-toolbar>
           <v-card-text style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
@@ -269,6 +278,7 @@
 import axios from 'axios'
 import httpCfg from '../config/http'
 import Loader from '@/components/Loader'
+import errors from '../config/errors'
 // import { Validator } from 'vee-validate'
 
 export default {
@@ -284,7 +294,12 @@ export default {
       editedIndex: -1,
       deletedUser: {},
       editDialog: false,
-      uneditedUser: {},
+      search: '',
+      loadingTable: true,
+      // pagination: {},
+      totalUsers: 0,
+      // pagination: { rowsPerPage: 20 },
+      rowsPerPage: [20],
       deleteNotification: {
         is: false,
         text: '',
@@ -349,13 +364,25 @@ export default {
       }
     }
   },
+  watch: {
+    // pagination: {
+    //   handler () {
+    //     this.getUsers()
+    //   },
+    //   deep: true
+    // }
+  },
+  computed: {
+  },
   methods: {
     async getUsers () {
       try {
         let getUsersResponse = await axios({
           method: 'get',
-          url: httpCfg.backendURL + '/api/v1/users?offset=' + this.userList.length +
-            '&limit=' + (this.userList.length + this.pageSize),
+          // url: httpCfg.backendURL + '/api/v1/users?offset=' + this.userList.length +
+          //   '&limit=' + (this.userList.length + this.pageSize),
+          url: httpCfg.backendURL + '/api/v1/users?offset=' + 0 +
+            '&limit=' + 100,
           headers: {'authorization': this.$store.getters['user/accessToken']},
           validateStatus: function (status) {
             return status === 200 || status === 400
@@ -363,7 +390,7 @@ export default {
         })
 
         if (getUsersResponse.status === 200) {
-          for (let i = 0; i < this.pageSize; i++) {
+          for (let i = 0; i < 100; i++) {
             if (i === getUsersResponse.data.data.length) break
             this.userList.push({
               id: getUsersResponse.data.data[i].id,
@@ -374,6 +401,17 @@ export default {
               state: this.state[getUsersResponse.data.data[i].state]
             })
           }
+          // for (let i = 0; i < 100; i++) {
+          //   // if (i === getUsersResponse.data.data.length) break
+          //   this.userList.push({
+          //     id: 'LOL',
+          //     email: 'LOL',
+          //     username: 'LOL',
+          //     phone: 'LOL',
+          //     role: 'LOL',
+          //     state: 'LOL'
+          //   })
+          // }
           return
         }
 
@@ -385,14 +423,7 @@ export default {
 
     editBtn (user) {
       this.setNotification('edit', false)
-      console.log(user)
-      // if (this.getKeyByValue(this.state, this.editedUser.state) === 'registered') {
-      //   console.log('REGISTERED')
-      //   this.registered = true
-      // }
       this.editedIndex = this.userList.indexOf(user)
-      this.uneditedUser = user
-      console.log('Unedited ', user)
       this.editedUser = Object.assign({}, user)
       this.editDialog = true
     },
@@ -422,9 +453,13 @@ export default {
       try {
         this.setNotification('delete', false)
         if (this.deletedUser.state === this.state.deleted) {
-          this.setNotification('delete', true, this.$t('adminPage.deleteWarning'), 'error')
+          this.setNotification('delete', true, this.$t('adminPage.deleteAlready'), 'info')
+          return
+        } else if (this.deletedUser.state === this.state.registered) {
+          this.setNotification('delete', true, this.$t('adminPage.deleteRegistered'), 'warning')
           return
         }
+        console.log('before')
         let deleteUserResponse = await axios({
           // method: 'delete',
           // url: httpCfg.backendURL + '/api/v1/users/' + this.deletedUser.id,
@@ -442,7 +477,7 @@ export default {
             return status === 200 || status === 400
           }
         })
-
+        console.log('resp ', deleteUserResponse)
         if (deleteUserResponse.status === 200) {
           this.deleteDialog = false
           return
@@ -458,11 +493,6 @@ export default {
       try {
         this.setNotification('edit', false)
         if (!await this.$validator.validateAll('userInfo')) {
-          return
-        }
-        console.log('Edited ', this.editedUser)
-        if (JSON.stringify(this.editedUser) === JSON.stringify(this.uneditedUser)) {
-          this.setNotification('edit', true, this.$t('adminPage.uneditedUser'), 'error')
           return
         }
         let editUserResponse
@@ -506,6 +536,13 @@ export default {
           return
         }
 
+        for (let i = 0; i < editUserResponse.data.data.length; i++) {
+          if ([errors.NOTHING_CHANGED].includes(editUserResponse.data.data[i])) {
+            this.setNotification('edit', true, this.$t('errors.error' + editUserResponse.data.data[i]), 'warning')
+            return
+          }
+        }
+
         this.$nuxt.error({ statusCode: 500, responses: editUserResponse })
       } catch (error) {
         this.$nuxt.error({ statusCode: 500, error })
@@ -545,5 +582,9 @@ export default {
 
   .notification {
     font-size: 12pt;
+  }
+
+  .table {
+    margin-bottom: 20px;
   }
 </style>

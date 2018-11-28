@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import languageCfg from '../config/language'
+import Vuetify from 'vuetify'
 
 Vue.use(VueI18n)
 
@@ -12,4 +13,15 @@ export default ({ app, store }) => {
       'ru': require('~/locales/ru.json')
     }
   })
+  Vue.use(Vuetify, {
+    lang: {
+      t: (key, ...params) => app.i18n.t(key, params)
+    }
+  })
 }
+
+// Vue.use(Vuetify, {
+//   lang: {
+//     t: (key, ...params) => i18n.t(key, params)
+//   }
+// })

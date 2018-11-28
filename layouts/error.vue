@@ -1,8 +1,8 @@
 <template>
-  <v-container fluid fill-height align-center justify-center>
-    <v-layout class="matrix">
+  <!-- <v-container fluid fill-height align-center justify-center> -->
+    <!-- <v-layout class="matrix">
       <canvas id="matr"></canvas>
-    </v-layout>
+    </v-layout> -->
     <!-- <div style="z-index: 1">
       <h1 v-if="error.statusCode === 404">Страница не найдена</h1>
       <h1 v-else>Внутренняя ошибка сервера</h1>
@@ -23,7 +23,7 @@
                   style="font-weight: 400; font-size: 18pt; color: rgb(255,255,255)"
                   v-if="error.statusCode === 404">{{ $t('errorPage.pageNotFound') }}
                 </span>
-                <span 
+                <span
                   style="font-weight: 400; 
                   font-size: 18pt; 
                   color: rgb(63, 28, 49)"
@@ -50,7 +50,7 @@
         </v-layout>
       </v-layout>
     </v-container>
-  </v-container>
+  <!-- </v-container> -->
 </template>
 
 <script>

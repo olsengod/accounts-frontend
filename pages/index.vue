@@ -342,23 +342,32 @@ export default {
       }
     },
     async getUserInfo () {
-      let userResponse = await axios({
-        method: 'get',
-        url: httpCfg.backendURL + '/api/v1/users/current',
-        headers: {'authorization': this.$store.getters['user/accessToken']},
-        validateStatus: function (status) {
-          return status === 200
+      try {
+        let userResponse = await axios({
+          method: 'get',
+          url: httpCfg.backendURL + '/api/v1/users/current',
+          headers: {'authorization': this.$store.getters['user/accessToken']},
+          validateStatus: function (status) {
+            return status === 200
+          }
+        })
+        if (userResponse.status === 200) {
+          this.uneditedUser = {
+            email: userResponse.data.data.email,
+            username: userResponse.data.data.username,
+            passwordChange: '',
+            phone: userResponse.data.data.phone,
+            role: userResponse.data.data.isAdmin ? this.role.admin : this.role.guest,
+            language: languageCfg.all[this.$i18n.locale]
+          }
+          this.editedUser = Object.assign({}, this.uneditedUser)
+          return
         }
-      })
-      this.uneditedUser = {
-        email: userResponse.data.data.email,
-        username: userResponse.data.data.username,
-        passwordChange: '',
-        phone: userResponse.data.data.phone,
-        role: userResponse.data.data.isAdmin ? this.role.admin : this.role.guest,
-        language: languageCfg.all[this.$i18n.locale]
+
+        this.$nuxt.error({ statusCode: 500, responses: userResponse })
+      } catch (error) {
+        this.$nuxt.error({ statusCode: 500, error })
       }
-      this.editedUser = Object.assign({}, this.uneditedUser)
     },
     async updateUser () {
       try {
