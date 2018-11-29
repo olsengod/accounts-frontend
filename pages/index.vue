@@ -338,6 +338,8 @@ export default {
         if (languageCfg.all[all[i]] === this.editedUser.language) {
           this.$i18n.locale = all[i]
           Validator.localize(all[i], languageCfg.veeValidateMessages[all[i]])
+          this.$vuetify.lang.current = all[i]
+          console.log('lang ', this.$vuetify)
         }
       }
     },

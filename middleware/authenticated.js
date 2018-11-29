@@ -9,7 +9,7 @@ export default async function ({ app, store, redirect }) {
     if (store.getters['user/isAuthenticated']) {
       return
     }
-    // console.log(app)
+    console.log('APP ', app)
     let accessToken = ls.get('cererisAccountAccessToken')
     let refreshToken = ls.get('cererisAccountRefreshToken')
     let expiresIn = ls.get('cererisExpiresIn')

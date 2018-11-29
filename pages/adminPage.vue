@@ -12,6 +12,7 @@
           append-icon="search"
           :label="$t('adminPage.search')"
           hide-details
+          color="rgb(56, 150, 29)"
           style="padding: 0"
         ></v-text-field>
         <form data-vv-scope="userInfo">
@@ -274,7 +275,6 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex'
 import axios from 'axios'
 import httpCfg from '../config/http'
 import Loader from '@/components/Loader'
@@ -363,16 +363,6 @@ export default {
         deleted: this.$t('adminPage.deleted')
       }
     }
-  },
-  watch: {
-    // pagination: {
-    //   handler () {
-    //     this.getUsers()
-    //   },
-    //   deep: true
-    // }
-  },
-  computed: {
   },
   methods: {
     async getUsers () {
@@ -566,6 +556,7 @@ export default {
 
   async mounted () {
     await this.getUsers()
+    this.$vuetify.lang.current = this.$i18n.locale
     this.loading = false
   }
 }
