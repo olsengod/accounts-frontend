@@ -4,7 +4,6 @@
   </v-container>
   <v-container v-else fluid fill-height align-center justify-center class="main-container">
     <v-layout justify-center justify-center column class="main-layout">
-      <v-layout class="alert-layout">
         <v-scale-transition mode="out-in">
           <v-alert
             class="notification"
@@ -15,7 +14,6 @@
             {{ notification.text }}
           </v-alert>
         </v-scale-transition>
-      </v-layout>
       <v-layout align-center justify-center column class="input-layout">
         <form data-vv-scope="userInfo" style="width: 100%">
           <v-flex xs12 class="inputFlex">
@@ -67,6 +65,8 @@
               :label="$t('index.phone')"
               prepend-icon="phone"
               type="text"
+              return-masked-value
+              mask="+7(###)###-##-##"
               v-validate="{ required: editedUser.email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
               data-vv-name="phone"
               :data-vv-as="$t('index.phone')"
@@ -288,11 +288,6 @@ export default {
         if (!await this.$validator.validateAll('passwordForm')) {
           return
         }
-        // if (!this.$refs.passwordForm.validate()) {
-        //   console.log('INVALID')
-        //   return
-        // }
-
         let userResponse
         let setPasswordResponse = await axios({
           method: 'patch',

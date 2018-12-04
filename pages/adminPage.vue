@@ -85,6 +85,8 @@
                         color="rgb(56, 150, 29)"
                         :label="$t('adminPage.phone')"
                         prepend-icon="phone"
+                        return-masked-value
+                        mask="+7(###)###-##-##"
                         type="text"
                         v-validate="{ required: editedUser.email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
                         data-vv-name="phone"
@@ -112,14 +114,6 @@
                         disabled
                         v-model="editedUser.state"
                       ></v-text-field>
-                      <!-- <v-select
-                        color="rgb(56, 150, 29)"
-                        prepend-icon="loop"
-                        :items="Object.values(editState)"
-                        v-model="editedUser.state"
-                        :disabled="registered"
-                        :label="$t('adminPage.state')">
-                      </v-select> -->
                     </v-flex>
                     <v-flex v-else xs12 sm6 md4>
                       <v-select
@@ -130,68 +124,6 @@
                         :label="$t('adminPage.state')">
                       </v-select>
                     </v-flex>
-                    <!-- <v-flex xs12 sm6 md4 class="inputFlex">
-                      <v-text-field
-                        class="textField"
-                        color="rgb(56, 150, 29)"
-                        prepend-icon="perm_identity"
-                        label="Id"
-                        type="text"
-                        disabled
-                        v-model="editedUser.id"
-                      ></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md4 class="inputFlex">
-                      <v-text-field
-                        class="textField"
-                        color="rgb(56, 150, 29)"
-                        prepend-icon="person"
-                        :label="$t('adminPage.userName')"
-                        type="text"
-                        :rules="usernameRules"
-                        v-model="editedUser.username"
-                      ></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md4 class="inputFlex">
-                      <v-text-field
-                        class="textField"
-                        color="rgb(56, 150, 29)"
-                        prepend-icon="alternate_email"
-                        :label="$t('adminPage.email')"
-                        type="text"
-                        :rules="emailRules"
-                        v-model="editedUser.email"
-                      ></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md4 class="inputFlex">
-                      <v-text-field
-                        class="textField"
-                        color="rgb(56, 150, 29)"
-                        :label="$t('adminPage.phone')"
-                        prepend-icon="phone"
-                        type="text"
-                        :rules="phoneRules"
-                        v-model="editedUser.phone">
-                      </v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm6 md4>
-                      <v-select
-                        color="rgb(56, 150, 29)"
-                        prepend-icon="assignment_ind"
-                        :items="Object.values(role)"
-                        v-model="editedUser.role"
-                        :label="$t('adminPage.role')">
-                      </v-select>
-                    </v-flex>
-                    <v-flex xs12 sm6 md4>
-                      <v-select
-                        color="rgb(56, 150, 29)"
-                        prepend-icon="loop"
-                        :items="Object.values(state)"
-                        v-model="editedUser.state"
-                        :label="$t('adminPage.state')">
-                      </v-select>
-                    </v-flex> -->
                   </v-layout>
                 </v-container>
               </v-card-text>
@@ -292,7 +224,7 @@ export default {
       userList: [],
       pageSize: 20,
       editedIndex: -1,
-      deletedUser: {},
+      deletedIndex: -1,
       editDialog: false,
       search: '',
       loadingTable: true,
@@ -411,6 +343,10 @@ export default {
       }
     },
 
+    // chooseUser (user) {
+
+    // }
+
     editBtn (user) {
       this.setNotification('edit', false)
       this.editedIndex = this.userList.indexOf(user)
@@ -420,8 +356,9 @@ export default {
 
     deleteBtn (user) {
       this.setNotification('delete', false)
-      this.deletedUser = user
+      this.deletedIndex = this.userList.indexOf(user)
       this.deleteDialog = true
+      console.log('Btn', this.userList[this.deletedIndex])
     },
 
     setNotification (notification, is, text, level) {
@@ -442,14 +379,14 @@ export default {
     async deleteUser () {
       try {
         this.setNotification('delete', false)
-        if (this.deletedUser.state === this.state.deleted) {
+        if (this.userList[this.deletedIndex].state === this.state.deleted) {
           this.setNotification('delete', true, this.$t('adminPage.deleteAlready'), 'info')
           return
-        } else if (this.deletedUser.state === this.state.registered) {
+        } else if (this.userList[this.deletedIndex].state === this.state.registered) {
           this.setNotification('delete', true, this.$t('adminPage.deleteRegistered'), 'warning')
           return
         }
-        console.log('before')
+        console.log('before', this.deletedUser)
         let deleteUserResponse = await axios({
           // method: 'delete',
           // url: httpCfg.backendURL + '/api/v1/users/' + this.deletedUser.id,
@@ -458,7 +395,7 @@ export default {
           //   return status === 200 || status === 400
           // }
           method: 'patch',
-          url: httpCfg.backendURL + '/api/v1/users/' + this.editedUser.id,
+          url: httpCfg.backendURL + '/api/v1/users/' + this.userList[this.deletedIndex].id,
           headers: {'authorization': this.$store.getters['user/accessToken']},
           data: {
             state: 'deleted'
@@ -467,8 +404,11 @@ export default {
             return status === 200 || status === 400
           }
         })
-        console.log('resp ', deleteUserResponse)
+        console.log('111111')
         if (deleteUserResponse.status === 200) {
+          console.log('222222', this.userList[this.deletedIndex])
+          // Object.assign(this.userList[this.editedIndex], this.editedUser)
+          this.userList[this.deletedIndex].state = this.state.deleted
           this.deleteDialog = false
           return
         }
@@ -486,16 +426,16 @@ export default {
           return
         }
         let editUserResponse
-
+        console.log('Edit', this.editedUser)
         if (this.editedUser.state !== this.$t('adminPage.registered')) {
           editUserResponse = await axios({
             method: 'patch',
             url: httpCfg.backendURL + '/api/v1/users/' + this.editedUser.id,
             headers: {'authorization': this.$store.getters['user/accessToken']},
             data: {
-              email: this.editedUser.email,
-              username: this.editedUser.username,
-              phone: this.editedUser.phone,
+              email: this.editedUser.email ? this.editedUser.email : null,
+              username: this.editedUser.username ? this.editedUser.username : null,
+              phone: this.editedUser.phone ? this.editedUser.phone : null,
               isAdmin: this.editedUser.role === this.role.admin,
               state: this.getKeyByValue(this.editState, this.editedUser.state)
             },

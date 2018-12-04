@@ -54,7 +54,7 @@
     "admin": "Administrator",
     "guest": "Guest",
     "active": "Active",
-    "registered": "Registered",
+    "registered": "Not confirmed",
     "deleted": "Deleted",
     "cancel": "Cancel",
     "save": "Save",
