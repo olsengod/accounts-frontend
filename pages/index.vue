@@ -209,6 +209,7 @@ import languageCfg from '../config/language'
 import { Validator } from 'vee-validate'
 import signout from '@/assets/scripts/signout'
 import Loader from '@/components/Loader'
+import errors from '../config/errors'
 
 export default {
   layout: 'default',
@@ -376,7 +377,6 @@ export default {
         }
 
         if (updateUserResponse.status === 200) {
-          this.uneditedUser = Object.assign({}, this.editedUser)
           userResponse = await axios({
             method: 'get',
             url: httpCfg.backendURL + '/api/v1/users/current',
@@ -389,6 +389,14 @@ export default {
           this.setNotification(true, this.$t('index.save'), 'success')
           return
         }
+
+        for (let i = 0; i < updateUserResponse.data.data.length; i++) {
+          if ([errors.NOTHING_CHANGED].includes(updateUserResponse.data.data[i])) {
+            this.setNotification(true, this.$t('errors.error' + updateUserResponse.data.data[i]), 'warning')
+            return
+          }
+        }
+
         this.$nuxt.error({ statusCode: 500, responses: [updateUserResponse, userResponse] })
       } catch (error) {
         this.$nuxt.error({ statusCode: 500, error })

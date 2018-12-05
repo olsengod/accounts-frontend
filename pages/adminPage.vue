@@ -298,7 +298,6 @@ export default {
   methods: {
     async getUsers () {
       try {
-        console.log('1111')
         let getUsersResponse = await axios({
           method: 'get',
           // url: httpCfg.backendURL + '/api/v1/users?offset=' + this.userList.length +
@@ -310,9 +309,7 @@ export default {
             return status === 200 || status === 400
           }
         })
-        console.log('2222')
         if (getUsersResponse.status === 200) {
-          console.log('3333')
           for (let i = 0; i < 100; i++) {
             if (i === getUsersResponse.data.data.length) break
             this.userList.push({
