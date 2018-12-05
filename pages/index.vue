@@ -222,7 +222,6 @@ export default {
       confirmPassword: '',
       isPasswordVisible: false,
       passwordForm: true,
-      uneditedUser: {},
       deleteDialog: false,
       editedUser: {
         email: '',
@@ -299,7 +298,6 @@ export default {
           this.$i18n.locale = all[i]
           Validator.localize(all[i], languageCfg.veeValidateMessages[all[i]])
           this.$vuetify.lang.current = all[i]
-          console.log('lang ', this.$vuetify)
         }
       }
     },
@@ -314,7 +312,7 @@ export default {
           }
         })
         if (userResponse.status === 200) {
-          this.uneditedUser = {
+          this.editedUser = {
             email: userResponse.data.data.email,
             username: userResponse.data.data.username,
             passwordChange: '',
@@ -322,7 +320,6 @@ export default {
             role: userResponse.data.data.isAdmin ? this.role.admin : this.role.guest,
             language: languageCfg.all[this.$i18n.locale]
           }
-          this.editedUser = Object.assign({}, this.uneditedUser)
           return
         }
 
@@ -351,9 +348,9 @@ export default {
             url: httpCfg.backendURL + '/api/v1/users/current',
             headers: {'authorization': this.$store.getters['user/accessToken']},
             data: {
-              email: this.editedUser.email,
-              username: this.editedUser.username,
-              phone: this.editedUser.phone,
+              email: this.editedUser.email ? this.editedUser.email : null,
+              username: this.editedUser.username ? this.editedUser.username : null,
+              phone: this.editedUser.phone ? this.editedUser.phone : null,
               data: { language: this.$i18n.locale }
             },
             validateStatus: function (status) {
@@ -366,10 +363,10 @@ export default {
             url: httpCfg.backendURL + '/api/v1/users/current',
             headers: {'authorization': this.$store.getters['user/accessToken']},
             data: {
-              email: this.editedUser.email,
-              username: this.editedUser.username,
+              email: this.editedUser.email ? this.editedUser.email : null,
+              username: this.editedUser.username ? this.editedUser.username : null,
               password: sha256(this.editedUser.passwordChange),
-              phone: this.editedUser.phone,
+              phone: this.editedUser.phone ? this.editedUser.phone : null,
               data: { language: this.$i18n.locale }
             },
             validateStatus: function (status) {
