@@ -44,7 +44,7 @@
   },
   "adminPage": {
     "userList": "User list",
-    "editUser": "Edit user",
+    "editTitle": "Edit account",
     "userName": "Username",
     "email": "Email",
     "phone": "Phone number",

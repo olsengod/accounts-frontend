@@ -10,7 +10,8 @@ const vuetifyMessages = {
       rowsPerPageText: 'Items per page:',
       pageText: '{0}-{1} of {2}',
       nextPage: 'Next page',
-      prevPage: 'Previous page'
+      prevPage: 'Previous page',
+      noResultsText: 'No matching records found'
     },
     noDataText: 'No data available.'
   },
@@ -19,7 +20,8 @@ const vuetifyMessages = {
       rowsPerPageText: 'Строк а странице:',
       pageText: '{0}-{1} из {2}',
       nextPage: 'Следующая страница',
-      prevPage: 'Предыдущая страница'
+      prevPage: 'Предыдущая страница',
+      noResultsText: 'Результатов не найдено'
     },
     noDataText: 'Нет данных.'
   }

@@ -5,8 +5,8 @@
   <v-container v-else fluid align-center class="main-container">
     <v-layout align-center justify-center column class="main-layout">
       <v-toolbar color="white">
-        <v-toolbar-title>{{ $t('adminPage.userList') }}</v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-toolbar-title class="hidden-xs-only">{{ $t('adminPage.userList') }}</v-toolbar-title>
+        <v-spacer class="hidden-xs-only"></v-spacer>
         <v-text-field
           v-model="search"
           append-icon="search"
@@ -30,7 +30,7 @@
             <v-card>
               <v-card-title  style="margin-top: 10px; padding-right: 20px; padding-left: 20px; padding-bottom: 0">
                 <span style="font-weight: 400; font-size: 18pt; color: rgb(63, 28, 49)">
-                  {{ $t('adminPage.editUser') }}
+                  {{ $t('adminPage.editTitle') }}
                 </span>
               </v-card-title>
               <v-card-text>
@@ -86,9 +86,9 @@
                         :label="$t('adminPage.phone')"
                         prepend-icon="phone"
                         return-masked-value
-                        mask="+7(###)###-##-##"
+                        mask="+#(###)###-##-##"
                         type="text"
-                        v-validate="{ required: editedUser.email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
+                        v-validate="{regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
                         data-vv-name="phone"
                         :data-vv-as="$t('adminPage.phone')"
                         :error-messages="errors.collect('userInfo.phone')"
@@ -129,7 +129,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="rgb(56, 150, 29)" flat @click="close">{{ this.$t('adminPage.cancel') }}</v-btn>
+                <v-btn color="rgb(56, 150, 29)" flat @click="closeEdit">{{ this.$t('adminPage.cancel') }}</v-btn>
                 <v-btn color="rgb(56, 150, 29)" flat @click="editUser">{{ this.$t('adminPage.save') }}</v-btn>
               </v-card-actions>
             </v-card>
@@ -152,22 +152,30 @@
           <td>{{ props.item.phone }}</td>
           <td>{{ props.item.role }}</td>
           <td>{{ props.item.state }}</td>
-          <td class="justify-center layout px-0">
-            <v-icon
-              small
-              class="mr-2"
-              @click="editBtn(props.item)"
-              color="primary"
-            >
-              edit
-            </v-icon>
-            <v-icon
-              small
-              @click="deleteBtn(props.item)"
-              color="error"
-            >
-              cancel
-            </v-icon>
+          <td>
+            <v-tooltip bottom>
+              <v-icon
+                small
+                class="mr-2"
+                @click="editBtn(props.item)"
+                color="primary"
+                slot="activator"
+              >
+                edit
+              </v-icon>
+              <span>{{ $t('adminPage.editTitle') }}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <v-icon
+                small
+                @click="deleteBtn(props.item)"
+                color="error"
+                slot="activator"
+              >
+                cancel
+              </v-icon>
+              <span>{{ $t('adminPage.deleteTitle') }}</span>
+            </v-tooltip>
           </td>
         </template>
       </v-data-table>
@@ -186,14 +194,14 @@
         </v-scale-transition>
         <v-card>
           <v-toolbar dark class="error">
-            <v-card-title class="headline">{{ this.$t('adminPage.deleteTitle') }}</v-card-title>
+            <v-card-title class="headline">{{ $t('adminPage.deleteTitle') }}</v-card-title>
           </v-toolbar>
           <v-card-text style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
             {{ this.$t('adminPage.deleteDialog') }}
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" flat @click="deleteDialog = false">
+            <v-btn color="green darken-1" flat @click="closeDelete">
               {{ this.$t('adminPage.deleteCancel') }}
             </v-btn>
             <v-btn color="green darken-1" flat @click="deleteUser">
@@ -242,15 +250,6 @@ export default {
         text: '',
         level: ''
       },
-      // emailRules: [
-      //   v => !!v || 'E-mail is required',
-      //   v => /.+@.+/.test(v) || 'E-mail must be valid'
-      // ],
-      // usernameRules: [
-      //   v => !!v || 'Username is required',
-      //   v => (v && v.length >= 5) || 'Username must be more than 5 characters',
-      //   v => (v && v.length < 30) || 'Username must be less than 30 characters'
-      // ],
       headers: [
         {
           text: 'Id',
@@ -299,6 +298,7 @@ export default {
   methods: {
     async getUsers () {
       try {
+        console.log('1111')
         let getUsersResponse = await axios({
           method: 'get',
           // url: httpCfg.backendURL + '/api/v1/users?offset=' + this.userList.length +
@@ -310,8 +310,9 @@ export default {
             return status === 200 || status === 400
           }
         })
-
+        console.log('2222')
         if (getUsersResponse.status === 200) {
+          console.log('3333')
           for (let i = 0; i < 100; i++) {
             if (i === getUsersResponse.data.data.length) break
             this.userList.push({
@@ -343,10 +344,6 @@ export default {
       }
     },
 
-    // chooseUser (user) {
-
-    // }
-
     editBtn (user) {
       this.setNotification('edit', false)
       this.editedIndex = this.userList.indexOf(user)
@@ -358,7 +355,6 @@ export default {
       this.setNotification('delete', false)
       this.deletedIndex = this.userList.indexOf(user)
       this.deleteDialog = true
-      console.log('Btn', this.userList[this.deletedIndex])
     },
 
     setNotification (notification, is, text, level) {
@@ -386,14 +382,7 @@ export default {
           this.setNotification('delete', true, this.$t('adminPage.deleteRegistered'), 'warning')
           return
         }
-        console.log('before', this.deletedUser)
         let deleteUserResponse = await axios({
-          // method: 'delete',
-          // url: httpCfg.backendURL + '/api/v1/users/' + this.deletedUser.id,
-          // headers: {'authorization': this.$store.getters['user/accessToken']},
-          // validateStatus: function (status) {
-          //   return status === 200 || status === 400
-          // }
           method: 'patch',
           url: httpCfg.backendURL + '/api/v1/users/' + this.userList[this.deletedIndex].id,
           headers: {'authorization': this.$store.getters['user/accessToken']},
@@ -404,12 +393,10 @@ export default {
             return status === 200 || status === 400
           }
         })
-        console.log('111111')
         if (deleteUserResponse.status === 200) {
-          console.log('222222', this.userList[this.deletedIndex])
           // Object.assign(this.userList[this.editedIndex], this.editedUser)
           this.userList[this.deletedIndex].state = this.state.deleted
-          this.deleteDialog = false
+          this.closeDelete()
           return
         }
 
@@ -426,7 +413,6 @@ export default {
           return
         }
         let editUserResponse
-        console.log('Edit', this.editedUser)
         if (this.editedUser.state !== this.$t('adminPage.registered')) {
           editUserResponse = await axios({
             method: 'patch',
@@ -462,7 +448,7 @@ export default {
 
         if (editUserResponse.status === 200) {
           Object.assign(this.userList[this.editedIndex], this.editedUser)
-          this.close()
+          this.closeEdit()
           return
         }
 
@@ -479,13 +465,20 @@ export default {
       }
     },
 
-    close () {
+    closeEdit () {
       this.setNotification('edit', false)
       this.editDialog = false
       setTimeout(() => {
-        this.uneditedUser = {}
         this.editedUser = Object.assign({}, this.defaultUser)
         this.editedIndex = -1
+      }, 300)
+    },
+
+    closeDelete () {
+      this.setNotification('delete', false)
+      this.deleteDialog = false
+      setTimeout(() => {
+        this.deletedIndex = -1
       }, 300)
     },
 
@@ -504,7 +497,7 @@ export default {
 
 <style scoped>
   .main-container {
-    height: calc(100vh - 64px)
+    height: calc(100vh - 60px)
   }
 
   .main-layout {

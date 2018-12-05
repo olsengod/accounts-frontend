@@ -3,7 +3,7 @@
     <v-navigation-drawer
       v-model="drawer"
       app>
-      <v-toolbar flat class="transparent">
+      <v-toolbar flat class="transparent" height="60" extension-height="60">
         <v-list class="pa-0">
           <v-list-tile avatar>
             <v-list-tile-avatar>
@@ -18,25 +18,25 @@
       </v-toolbar>
       <v-list class="pt-0" dense>
         <v-divider></v-divider>
-        <v-list-tile @click="navigate('account')">
+        <v-list-tile @click="navigate('/')">
           <v-list-tile-action>
             <v-icon>person</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>{{ navigation.account.title }}</v-list-tile-title>
+            <v-list-tile-title>{{ routes.index }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="$store.getters['user/isAdmin']" @click="navigate('users')">
+        <v-list-tile v-if="$store.getters['user/isAdmin']" @click="navigate('/adminPage')">
           <v-list-tile-action>
             <v-icon>people</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>{{ navigation.users.title }}</v-list-tile-title>
+            <v-list-tile-title>{{ routes.adminPage }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar class="toolbar" id="toolbar" app>
+    <v-toolbar height="60" extension-height="60" app>
       <v-toolbar-side-icon @click="switchNav()"></v-toolbar-side-icon>
       <img
         src="@/static/cereris-logo.png"
@@ -45,7 +45,7 @@
         style="cursor: pointer">
       <v-toolbar-title
         class="title hidden-xs-only"
-        @click="$vuetify.goTo(0, {offset: 0})">{{ titleComp }}</v-toolbar-title>
+        @click="$vuetify.goTo(0, {offset: 0})">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn
@@ -66,9 +66,6 @@
 
 <script>
 import signout from '@/assets/scripts/signout'
-import ls from 'local-storage'
-// import axios from 'axios'
-// import httpCfg from '@/config/http'
 
 export default {
   data () {
@@ -85,22 +82,13 @@ export default {
       signout(this.$store, this.$router)
     },
     navigate (nav) {
-      this.$router.push(this.navigation[nav].path)
-      ls.set('lastPage', this.navigation[nav])
+      this.$router.push(nav)
     }
   },
 
   mounted () {
     if (window.innerWidth > 900) {
       this.drawer = true
-    }
-    let toolbar = document.querySelector('#toolbar')
-    let height = toolbar.offsetHeight
-    this.$store.commit('toolbar/SET_HEIGHT', height)
-    if (ls.get('lastPage')) {
-      let pageInfo = ls.get('lastPage')
-      this.title = pageInfo.title
-      this.$router.push(pageInfo.path)
     }
   },
 
@@ -111,24 +99,8 @@ export default {
         adminPage: this.$t('default.users')
       }
     },
-    titleComp () { return this.routes[this.$nuxt.$route.name] },
-    navigation () {
-      return {
-        account: {
-          path: '/',
-          title: this.$t('default.account')
-        },
-        users: {
-          path: '/adminPage',
-          title: this.$t('default.users')
-        }
-      }
-    }
+    title () { return this.routes[this.$nuxt.$route.name] }
   }
-
-  // created () {
-  //   if (this.$store.getters['user/isAdmin'])
-  // }
 }
 </script>
 
@@ -138,6 +110,6 @@ export default {
   }
 
   .toolbar {
-    height: 64px;
+    /*height: 64px;*/
   }
 </style>

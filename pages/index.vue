@@ -66,7 +66,7 @@
               prepend-icon="phone"
               type="text"
               return-masked-value
-              mask="+7(###)###-##-##"
+              mask="+#(###)###-##-##"
               v-validate="{ required: editedUser.email.length === 0, regex: /^(\+7|7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/}"
               data-vv-name="phone"
               :data-vv-as="$t('index.phone')"
@@ -115,29 +115,26 @@
         </form>
       </v-layout>
     </v-layout>
-    <!-- <v-layout align-center justify-center column style="max-width: 400px"> -->
-      <v-dialog v-model="deleteDialog" persistent max-width="400">
-        <v-card>
-          <v-toolbar dark class="error">
-            <v-card-title class="deleteTitle">{{ this.$t('index.deleteTitle') }}</v-card-title>
-          </v-toolbar>
-          <v-card-text style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
-            {{ this.$t('index.deleteDialog') }}
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" flat @click="deleteDialog = false">
-              {{ this.$t('adminPage.deleteCancel') }}
-            </v-btn>
-            <v-btn color="green darken-1" flat @click="deleteUser">
-              {{ this.$t('adminPage.deleteOk') }}
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    <!-- </v-layout> -->
+    <v-dialog v-model="deleteDialog" persistent max-width="400">
+      <v-card>
+        <v-toolbar dark class="error">
+          <v-card-title class="deleteTitle">{{ this.$t('index.deleteTitle') }}</v-card-title>
+        </v-toolbar>
+        <v-card-text style="font-weight: 400; font-size: 12pt; color: rgb(63, 28, 49)">
+          {{ this.$t('index.deleteDialog') }}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat @click="deleteDialog = false">
+            {{ this.$t('adminPage.deleteCancel') }}
+          </v-btn>
+          <v-btn color="green darken-1" flat @click="deleteUser">
+            {{ this.$t('adminPage.deleteOk') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <form data-vv-scope="passwordForm">
-    <!-- <v-form ref="passwordForm" v-model="passwordForm" lazy-validation> -->
       <v-dialog v-model="signupCompletion" persistent full-width max-width="400">
         <v-layout align-center justify-center column class="main-layout">
           <v-layout align-center justify-center class="card-layout">
@@ -183,28 +180,6 @@
                   :type="isPasswordVisible ? 'text' : 'password'"
                   v-model="confirmPassword">
                 </v-text-field>
-                <!-- <v-text-field
-                  color="rgb(56, 150, 29)"
-                  prepend-icon="lock_open"
-                  :label="$t('signup_completion.password')"
-                  type="password"
-                  :rules="passwordRules"
-                  :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
-                  @click:append="() => (isPasswordVisible = !isPasswordVisible)"
-                  :type="isPasswordVisible ? 'text' : 'password'"
-                  v-model="password">
-                </v-text-field>
-                <v-text-field
-                  color="rgb(56, 150, 29)"
-                  prepend-icon="lock"
-                  :label="$t('signup_completion.confirm')"
-                  type="password"
-                  :rules="confirmPasswordRules"
-                  :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
-                  @click:append ="() => (isPasswordVisible = !isPasswordVisible)"
-                  :type="isPasswordVisible ? 'text' : 'password'"
-                  v-model="confirmPassword">
-                </v-text-field> -->
               </v-card-text>
               <v-card-actions style="padding-left: 20px; padding-right: 20px;">
                 <v-layout wrap align-center justify-center>
@@ -222,7 +197,6 @@
           </v-layout>
         </v-layout>
       </v-dialog>
-    <!-- </v-form> -->
     </form>    
   </v-container>
 </template>
@@ -271,15 +245,6 @@ export default {
         admin: this.$t('index.admin'),
         guest: this.$t('index.guest')
       }
-      // passwordRules: [
-      //   v => !!v || 'Password is required',
-      //   v => (v && v.length > 5) || 'Password must be more than 5 characters',
-      //   v => (v && v.length < 30) || 'Password must be less than 30 characters'
-      // ],
-      // confirmPasswordRules: [
-      //   v => !!v || 'Confirmation is required',
-      //   v => (v && v === this.password) || 'Must be identical to password'
-      // ]
     }
   },
   methods: {
@@ -438,12 +403,6 @@ export default {
     async deleteUser () {
       try {
         let deleteUserResponse = await axios({
-          // method: 'delete',
-          // url: httpCfg.backendURL + '/api/v1/users/current',
-          // headers: {'authorization': this.$store.getters['user/accessToken']},
-          // validateStatus: function (status) {
-          //   return status === 200
-          // }
           method: 'patch',
           url: httpCfg.backendURL + '/api/v1/users/current',
           headers: {'authorization': this.$store.getters['user/accessToken']},
@@ -473,23 +432,6 @@ export default {
     }
   },
 
-  // created () {
-  //   console.log('CREATED')
-  //   switch (this.$store.getters['user/state']) {
-  //     case 'active':
-  //       console.log('ACTIVE')
-  //       break
-  //     case 'registered':
-  //       console.log('REGISTERED')
-  //       this.signupCompletion = true
-  //       break
-  //     case 'deleted':
-  //       console.log('DELETED')
-  //       this.$router.push('/error.vue')
-  //       break
-  //   }
-  // },
-
   async mounted () {
     this.setNotification(false)
     if (this.$store.getters['user/state'] === 'active') {
@@ -502,7 +444,7 @@ export default {
 
 <style scoped>
   .main-container {
-    min-height: calc(100vh - 64px)
+    min-height: calc(100vh - 60px)
   }
 
   .main-layout {
