@@ -92,6 +92,9 @@ const actions = {
     ls.set('cererisAccountAccessToken', data.accessToken)
     ls.set('cererisAccountRefreshToken', data.refreshToken)
     ls.set('cererisExpiresIn', data.expiresIn)
+    let currentTime = Date.now()
+    console.log('cur', currentTime)
+    console.log('exp', data.expiresIn)
     setTimeout(function () {
       axios({
         method: 'post',
@@ -107,7 +110,7 @@ const actions = {
         data.redirect('/signin')
         console.log(err)
       })
-    }, 3540000)// (data.expiresIn - 60) * 1000)
+    }, data.expiresIn - currentTime) //  3540000)
   },
   setUser ({commit}, {data, i18n}) {
     // console.log('set user', i18n.locale)

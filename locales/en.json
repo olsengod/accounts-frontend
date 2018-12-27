@@ -76,6 +76,7 @@
     }
   },
   "errors": {
+    "error8": "Something went wrong on server side. Please contact us by email (contacts.cereris.org) to let us know which actions caused this error.",
     "error13": "Account not activated or was deleted. Please confirm your email or phone.",
     "error35": "Email already in use.",
     "error32": "Nothing was changed.",
@@ -84,7 +85,10 @@
   "errorPage": {
     "pageNotFound": "Page not found",
     "internalError": "Internal server error",
-    "returnHome": "Home"
+    "returnHome": "Home",
+    "default": "Something went wrong",
+    "status404": "Status 404",
+    "status500": "Status 500"
   },
   "informationMessages": {
     "completeRegistrationWithEmail": "To complete the registration, please click on the link in the email that was sent to {email}"

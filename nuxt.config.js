@@ -19,7 +19,8 @@ module.exports = {
   plugins: [
     '~/plugins/vuetify.js',
     '~/plugins/i18n.js',
-    '~/plugins/vee-validate.js'
+    '~/plugins/vee-validate.js',
+    '~/plugins/querystring.js'
   ],
   css: [
     '~/assets/style/app.styl'

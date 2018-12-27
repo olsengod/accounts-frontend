@@ -21,19 +21,24 @@
               <v-toolbar-title>
                 <span
                   style="font-weight: 400; font-size: 18pt; color: rgb(255,255,255)"
-                  v-if="error.statusCode === 404">{{ $t('errorPage.pageNotFound') }}
+                  v-if="error.statusCode === 404">{{ $t('errorPage.status404') }}
                 </span>
                 <span
                   style="font-weight: 400; 
                   font-size: 18pt; 
                   color: rgb(63, 28, 49)"
-                  v-else>{{ $t('errorPage.internalError') }}
+                  v-else>{{ $t('errorPage.status500') }}
                 </span>
               </v-toolbar-title>
             </v-toolbar>
             <v-card-text style="padding-left: 20px; padding-right: 20px; padding-top: 20px">
-              <div style="font-weight: 300; font-size: 12pt; color: rgb(63, 28, 49); width: 500px; height: auto">
-                {{error}}
+              <div v-if="error.statusCode === 404" 
+                style="font-weight: 300; font-size: 12pt; color: rgb(63, 28, 49); width: 500px; height: auto">
+                {{ $t('errorPage.pageNotFound') }}
+              </div>
+              <div v-else 
+                style="font-weight: 300; font-size: 12pt; color: rgb(63, 28, 49); width: 500px; height: auto">
+                {{ $t('errorPage.internalError') }}
               </div>
             </v-card-text>
             <v-card-actions style="padding-left: 20px; padding-right: 20px">
@@ -61,23 +66,6 @@ export default {
 </script>
 
 <style scoped>
-  .canvas#matr{
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    width: 100%;
-    margin: auto;
-  }
-
-  .matrix{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    z-index: 0;
-  }
-
   .card{
     max-width: 100%;
     /*height: auto*/

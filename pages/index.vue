@@ -278,13 +278,14 @@ export default {
           this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
           this.$router.push('/')
           this.getUserInfo()
-          console.log('Status 200 !!!')
           return
         }
 
-        this.$nuxt.error({ statusCode: 500, responses: [setPasswordResponse, userResponse] })
+        this.$router.push({ path: '/error', query: { statusCode: 500, responses: [setPasswordResponse, userResponse] } })
+        // this.$nuxt.error({ statusCode: 500, responses: [setPasswordResponse, userResponse] })
       } catch (error) {
-        this.$nuxt.error({ statusCode: 500, error })
+        this.$router.push({ path: '/error', query: { statusCode: 500, responses: [error] } })
+        // this.$nuxt.error({ statusCode: 500, error })
       }
     },
     setNotification (is, text, level) {
@@ -324,9 +325,11 @@ export default {
           return
         }
 
-        this.$nuxt.error({ statusCode: 500, responses: userResponse })
+        this.$router.push({ path: '/error', query: { statusCode: 500, responses: [userResponse] } })
+        // this.$nuxt.error({ statusCode: 500, responses: [userResponse] })
       } catch (error) {
-        this.$nuxt.error({ statusCode: 500, error })
+        this.$router.push({ path: '/error', query: { statusCode: 500, responses: [error] } })
+        // this.$nuxt.error({ statusCode: 500, error })
       }
     },
     async updateUser () {
@@ -391,15 +394,19 @@ export default {
         }
 
         for (let i = 0; i < updateUserResponse.data.data.length; i++) {
-          if ([errors.NOTHING_CHANGED].includes(updateUserResponse.data.data[i])) {
+          if ([errors.NOTHING_CHANGED,
+            errors.USERNAME_ALREADY_IN_USE,
+            errors.PHONE_ALREADY_IN_USE].includes(updateUserResponse.data.data[i])) {
             this.setNotification(true, this.$t('errors.error' + updateUserResponse.data.data[i]), 'warning')
             return
           }
         }
 
-        this.$nuxt.error({ statusCode: 500, responses: [updateUserResponse, userResponse] })
+        this.$router.push({ path: '/error', query: { data: [updateUserResponse.data.data, userResponse] } })
+        // this.$nuxt.error({ statusCode: 500, responses: [updateUserResponse, userResponse] })
       } catch (error) {
-        this.$nuxt.error({ statusCode: 500, error })
+        this.$router.push({ path: '/error', query: { statusCode: 500, responses: [error] } })
+        // this.$nuxt.error({ statusCode: 500, error })
       }
     },
     deleteBtn () {

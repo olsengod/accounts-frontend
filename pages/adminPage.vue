@@ -332,9 +332,11 @@ export default {
           //     state: 'LOL'
           //   })
           // }
+          console.log('LLLL', this.$route.query.debug)
           return
         }
 
+        // this.router.push({ path: '/error', query: { data: 'private' } })
         this.$nuxt.error({ statusCode: 500, responses: getUsersResponse })
       } catch (error) {
         this.$nuxt.error({ statusCode: 500, error })
@@ -450,7 +452,9 @@ export default {
         }
 
         for (let i = 0; i < editUserResponse.data.data.length; i++) {
-          if ([errors.NOTHING_CHANGED].includes(editUserResponse.data.data[i])) {
+          if ([errors.NOTHING_CHANGED,
+            errors.USERNAME_ALREADY_IN_USE,
+            errors.PHONE_ALREADY_IN_USE].includes(editUserResponse.data.data[i])) {
             this.setNotification('edit', true, this.$t('errors.error' + editUserResponse.data.data[i]), 'warning')
             return
           }

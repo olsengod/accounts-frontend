@@ -21,6 +21,7 @@
     "jsonwebtoken": "^8.3.0",
     "local-storage": "^1.4.2",
     "nuxt": "^1.4.2",
+    "query-string": "^6.2.0",
     "sha256": "^0.2.0",
     "vee-validate": "^2.1.2",
     "vue-i18n": "^8.1.0",
