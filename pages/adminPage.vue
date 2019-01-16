@@ -58,7 +58,7 @@
                         prepend-icon="person"
                         :label="$t('adminPage.userName')"
                         type="text"
-                        v-validate="{ required: editedUser.email.length === 0, min: 5, max: 30}"
+                        v-validate="{ required: editedUser.email === null, min: 5, max: 30}"
                         data-vv-name="userName"
                         :data-vv-as="$t('adminPage.userName')"
                         :error-messages="errors.collect('userInfo.userName')"
@@ -332,7 +332,6 @@ export default {
           //     state: 'LOL'
           //   })
           // }
-          console.log('LLLL', this.$route.query.debug)
           return
         }
 
