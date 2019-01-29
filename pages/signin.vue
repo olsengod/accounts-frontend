@@ -183,13 +183,13 @@
           }
         }
       }
-    },
-
-    mounted () {
-      let email = document.getElementById('email')
-      console.log('ID', email.value)
-      console.log('Field', this.email)
     }
+
+    // mounted () {
+    //   let email = document.getElementById('email')
+    //   console.log('ID', email.value)
+    //   console.log('Field', this.email)
+    // }
   }
 </script>
 

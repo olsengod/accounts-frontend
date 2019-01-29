@@ -1,4 +1,5 @@
-import ls from 'local-storage'
+// import ls from 'local-storage'
+import {storageHost, accountsStorage} from '@/plugins/local-storage'
 import axios from 'axios'
 import errors from '../config/errors'
 import httpCfg from '../config/http'
@@ -9,10 +10,17 @@ export default async function ({ app, store, redirect }) {
     if (store.getters['user/isAuthenticated']) {
       return
     }
-    let accessToken = ls.get('cererisAccountAccessToken')
-    let refreshToken = ls.get('cererisAccountRefreshToken')
-    let expiresIn = ls.get('cererisExpiresIn')
+    // let accessToken = ls.get('cererisAccountAccessToken')
+    // let refreshToken = ls.get('cererisAccountRefreshToken')
+    // let expiresIn = ls.get('cererisExpiresIn')
+    console.log('Host: ', storageHost)
+    console.log('account: ', accountsStorage)
+    let accessToken = accountsStorage.get('cererisAccountAccessToken', (error) => { console.log('err', error) })
+    let refreshToken = accountsStorage.get('cererisAccountRefreshToken', () => {})
+    let expiresIn = accountsStorage.get('cererisExpiresIn', () => {})
+    console.log('access: ', accessToken)
     if (!accessToken || !refreshToken || !expiresIn) {
+      console.log('access: ', accessToken)
       return redirect('/signin')
     }
 
@@ -80,6 +88,7 @@ export default async function ({ app, store, redirect }) {
 
     redirect('/signin')
   } catch (err) {
+    console.log('ERROR ', err)
     redirect('/signin')
   }
 }

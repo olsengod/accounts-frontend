@@ -17,12 +17,10 @@
                   v-for="error in errors"
                   :key="error"
                   style="margin-bottom: 10px">
-                  <!-- <v-list-tile-sub-title class="menu"> -->
                   <span>
                     {{ error }}
                   </span>
                   <br>
-                  <!-- </v-list-tile-sub-title> -->
                 </v-list-tile>
               </v-list>
             </div>
