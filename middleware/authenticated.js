@@ -16,11 +16,10 @@ export default async function ({ app, store, redirect }) {
     console.log('Host: ', storageHost)
     console.log('account: ', accountsStorage)
     let accessToken = accountsStorage.get('cererisAccountAccessToken', (error) => { console.log('err', error) })
-    let refreshToken = accountsStorage.get('cererisAccountRefreshToken', () => {})
-    let expiresIn = accountsStorage.get('cererisExpiresIn', () => {})
+    let refreshToken = accountsStorage.get('cererisAccountRefreshToken', (error) => { console.log('err', error) })
+    let expiresIn = accountsStorage.get('cererisExpiresIn', (error) => { console.log('err', error) })
     console.log('access: ', accessToken)
     if (!accessToken || !refreshToken || !expiresIn) {
-      console.log('access: ', accessToken)
       return redirect('/signin')
     }
 

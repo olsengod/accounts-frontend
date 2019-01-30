@@ -97,6 +97,8 @@ const actions = {
     accountsStorage.set('cererisAccountAccessToken', data.accessToken, (error) => { console.log('err', error) })
     accountsStorage.set('cererisAccountRefreshToken', data.refreshToken, () => {})
     accountsStorage.set('cererisExpiresIn', data.expiresIn, () => {})
+    let access = accountsStorage.get('cererisAccountAccessToken', (error) => { console.log('errorrrrr', error) })
+    console.log('STORE ACC ', access)
     let currentTime = Date.now()
     console.log('cur', currentTime)
     console.log('exp', data.expiresIn)

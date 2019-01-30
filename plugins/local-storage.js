@@ -6,9 +6,13 @@ import createGuest from 'cross-domain-storage/guest'
 
 const storageHost = createHost([
   // {
-  //   origin: 'https://localhost:3000',
+  //   origin: 'http://localhost:3000/',
   //   allowedMethods: ['get', 'set', 'remove']
-  // },
+  // }
+  {
+    origin: 'https://accounts-dev.cereris.org',
+    allowedMethods: ['get', 'set', 'remove']
+  },
   {
     origin: 'https://torlight-stage.cereris.org',
     allowedMethods: ['get', 'set', 'remove']
@@ -16,7 +20,7 @@ const storageHost = createHost([
 ])
 
 const accountsStorage = createGuest('https://accounts-dev.cereris.org')
-// const accountsStorage = createGuest('https://localhost:3000')
+// const accountsStorage = createGuest('http://localhost:3000')
 
 export {
   storageHost,
