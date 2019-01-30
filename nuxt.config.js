@@ -40,6 +40,16 @@ module.exports = {
   //   '/api/': 'http://api.example.com',
   //   '/api2/': 'http://api.another-website.com'
   // },
+  devServer: {
+    headers: {
+      'Access-Control-Allow-Origin':  '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+      'Access-Control-Allow-Headers': 'X-Requested-With',
+      'Content-Security-Policy':      "default-src 'unsafe-inline' *",
+      'X-Content-Security-Policy':    "default-src 'unsafe-inline' *",
+      'X-WebKit-CSP':                 "default-src 'unsafe-inline' *"
+    }
+  },
   /*
   ** Customize the progress bar color
   */
@@ -62,11 +72,12 @@ module.exports = {
     */
     extend (config, ctx) {
       if (ctx.isDev && ctx.isClient) {
+        config.d
         config.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
-          exclude: /(node_modules)/
+          exclude: /(node_modules)/          
         })
       }
     }
