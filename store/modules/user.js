@@ -1,5 +1,5 @@
-// import ls from 'local-storage'
-import {storageHost, accountsStorage} from '@/plugins/local-storage'
+import ls from 'local-storage'
+// import {storageHost, accountsStorage} from '@/plugins/local-storage'
 import languageCfg from '../../config/language'
 import axios from 'axios'
 import httpCfg from '@/config/http'
@@ -63,7 +63,7 @@ const mutations = {
     Validator.localize(data.value, languageCfg.veeValidateMessages[data.value])
   },
   RESET_USER (state) {
-    // ls.clear()
+    ls.clear()
     state.user = {
       accessToken: null,
       refreshToken: null,
@@ -87,65 +87,58 @@ const mutations = {
 
 const actions = {
   setTokens ({commit, dispatch}, {data}) {
-    console.log('HOST ', storageHost)
     commit('SET_ACCESS_TOKEN', data.accessToken)
     commit('SET_REFRESH_TOKEN', data.refreshToken)
     commit('SET_EXPIRES_IN', data.expiresIn)
-    // ls.set('cererisAccountAccessToken', data.accessToken)
-    // ls.set('cererisAccountRefreshToken', data.refreshToken)
-    // ls.set('cererisExpiresIn', data.expiresIn)
-    accountsStorage.set('cererisAccountAccessToken', data.accessToken, (error, data) => {
-      console.log('errSet1', error, 'data ', data)
-      accountsStorage.set('cererisAccountRefreshToken', data.refreshToken, (error, data) => {
-        console.log('errSet2', error, 'data ', data)
-        accountsStorage.set('cererisExpiresIn', data.expiresIn, (error, data) => {
-          console.log('errSet3', error, 'data ', data)
-          let currentTime = Date.now()
-          console.log('cur', currentTime)
-          console.log('exp', data.expiresIn)
-          setTimeout(function () {
-            axios({
-              method: 'post',
-              url: httpCfg.backendURL + '/api/v1/tokens/refresh',
-              data: { refreshToken: state.user.refreshToken },
-              validateStatus: function (status) {
-                return status === 200
-              }
-            }).then((tokenResponse) => {
-              tokenResponse.data.data.redirect = data.redirect
-              dispatch('setTokens', { data: tokenResponse.data.data })
-            }).catch((err) => {
-              data.redirect('/signin')
-              console.log(err)
-            })
-          }, data.expiresIn - currentTime) //  3540000)
-        })
-      })
-    })
-
-    // accountsStorage.set('cererisAccountRefreshToken', data.refreshToken, () => {})
-    // accountsStorage.set('cererisExpiresIn', data.expiresIn, () => {})
-    // let access = accountsStorage.get('cererisAccountAccessToken', (error, data) => { console.log('errorrrrr', error, 'data ', data) })
-    // console.log('STORE ACC ', access)
-    // let currentTime = Date.now()
-    // console.log('cur', currentTime)
-    // console.log('exp', data.expiresIn)
-    // setTimeout(function () {
-    //   axios({
-    //     method: 'post',
-    //     url: httpCfg.backendURL + '/api/v1/tokens/refresh',
-    //     data: { refreshToken: state.user.refreshToken },
-    //     validateStatus: function (status) {
-    //       return status === 200
-    //     }
-    //   }).then((tokenResponse) => {
-    //     tokenResponse.data.data.redirect = data.redirect
-    //     dispatch('setTokens', { data: tokenResponse.data.data })
-    //   }).catch((err) => {
-    //     data.redirect('/signin')
-    //     console.log(err)
+    ls.set('cererisAccountAccessToken', data.accessToken)
+    ls.set('cererisAccountRefreshToken', data.refreshToken)
+    ls.set('cererisExpiresIn', data.expiresIn)
+    // accountsStorage.set('cererisAccountAccessToken', data.accessToken, (error, data) => {
+    //   console.log('errSet1', error, 'data ', data)
+    //   accountsStorage.set('cererisAccountRefreshToken', data.refreshToken, (error, data) => {
+    //     console.log('errSet2', error, 'data ', data)
+    //     accountsStorage.set('cererisExpiresIn', data.expiresIn, (error, data) => {
+    //       console.log('errSet3', error, 'data ', data)
+    //       let currentTime = Date.now()
+    //       console.log('cur', currentTime)
+    //       console.log('exp', data.expiresIn)
+    //       setTimeout(function () {
+    //         axios({
+    //           method: 'post',
+    //           url: httpCfg.backendURL + '/api/v1/tokens/refresh',
+    //           data: { refreshToken: state.user.refreshToken },
+    //           validateStatus: function (status) {
+    //             return status === 200
+    //           }
+    //         }).then((tokenResponse) => {
+    //           tokenResponse.data.data.redirect = data.redirect
+    //           dispatch('setTokens', { data: tokenResponse.data.data })
+    //         }).catch((err) => {
+    //           data.redirect('/signin')
+    //           console.log(err)
+    //         })
+    //       }, data.expiresIn - currentTime) //  3540000)
+    //     })
     //   })
-    // }, data.expiresIn - currentTime) //  3540000)
+    // })
+
+    let currentTime = Date.now()
+    setTimeout(function () {
+      axios({
+        method: 'post',
+        url: httpCfg.backendURL + '/api/v1/tokens/refresh',
+        data: { refreshToken: state.user.refreshToken },
+        validateStatus: function (status) {
+          return status === 200
+        }
+      }).then((tokenResponse) => {
+        tokenResponse.data.data.redirect = data.redirect
+        dispatch('setTokens', { data: tokenResponse.data.data })
+      }).catch((err) => {
+        data.redirect('/signin')
+        console.log(err)
+      })
+    }, data.expiresIn - currentTime) //  3540000)
   },
   setUser ({commit}, {data, i18n}) {
     // console.log('set user', i18n.locale)

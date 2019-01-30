@@ -101,6 +101,7 @@
   import errors from '../config/errors'
   import languageCfg from '../config/language'
   import { Validator } from 'vee-validate'
+  // import ls from 'local-storage'
 
   export default {
     layout: 'empty',
@@ -186,9 +187,7 @@
     }
 
     // mounted () {
-    //   let email = document.getElementById('email')
-    //   console.log('ID', email.value)
-    //   console.log('Field', this.email)
+
     // }
   }
 </script>
