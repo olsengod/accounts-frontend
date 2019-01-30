@@ -5,6 +5,10 @@ import createGuest from 'cross-domain-storage/guest'
 // Vue.use(crossStorage)
 
 const storageHost = createHost([
+  // {
+  //   origin: 'https://localhost:3000',
+  //   allowedMethods: ['get', 'set', 'remove']
+  // },
   {
     origin: 'https://torlight-stage.cereris.org',
     allowedMethods: ['get', 'set', 'remove']
@@ -12,6 +16,7 @@ const storageHost = createHost([
 ])
 
 const accountsStorage = createGuest('https://accounts-dev.cereris.org')
+// const accountsStorage = createGuest('https://localhost:3000')
 
 export {
   storageHost,
