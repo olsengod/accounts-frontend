@@ -19,7 +19,7 @@ const storageHost = createHost([
   }
 ])
 
-const accountsStorage = createGuest('https://accounts-dev.cereris.org')
+const accountsStorage = createGuest('https://accounts-dev.cereris.org/guest')
 // const accountsStorage = createGuest('http://localhost:3000/guest')
 
 export {
