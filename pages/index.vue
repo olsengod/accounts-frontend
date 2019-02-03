@@ -445,6 +445,8 @@ export default {
   },
 
   async mounted () {
+    // console.log('redirectHistory ', this.$router)
+    console.log('redirectHistory ', document.referrer)
     this.setNotification(false)
     if (this.$store.getters['user/state'] === 'active') {
       await this.getUserInfo()

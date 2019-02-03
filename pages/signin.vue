@@ -101,7 +101,8 @@
   import errors from '../config/errors'
   import languageCfg from '../config/language'
   import { Validator } from 'vee-validate'
-  // import ls from 'local-storage'
+  // import checkTokens from '@/assets/scripts/checkTokens'
+  import ls from 'local-storage'
 
   export default {
     layout: 'empty',
@@ -115,7 +116,8 @@
           is: false,
           text: '',
           level: ''
-        }
+        },
+        prevURL: ''
       }
     },
     methods: {
@@ -153,8 +155,8 @@
             signinResponse.data.data.redirect = this.$router.push
             this.$store.dispatch('user/setTokens', { data: signinResponse.data.data })
             this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
-            this.$router.push('/')
-            console.log('Redirect')
+            // this.$router.push('/')
+            this.serviceRedirect(signinResponse.data.data.accessToken, signinResponse.data.data.refreshToken, signinResponse.data.data.expiresIn)
             return
           }
 
@@ -183,12 +185,32 @@
             Validator.localize(all[i], languageCfg.veeValidateMessages[all[i]])
           }
         }
+      },
+      async serviceRedirect (accessToken, refreshToken, expiresIn) {
+        //  token request
+        switch (this.prevURL) {
+          case 'https://torlight-stage.cereris.org':
+            this.$router.push(this.prevURL + '?accessToken=' + accessToken + '&refreshToken' + refreshToken + '&expiresIn' + expiresIn)
+            break
+          default:
+            this.$router.push('/')
+        }
       }
+    },
+
+    async created () {
+      console.log('redirectHistory ', document.referrer)
+
+      this.prevURL = document.referrer
+      let accessToken = ls.get('cererisAccountAccessToken')
+      let refreshToken = ls.get('cererisAccountRefreshToken')
+      let expiresIn = ls.get('cererisExpiresIn')
+
+      if (!accessToken || !refreshToken || !expiresIn) {
+        return
+      }
+      this.serviceRedirect(accessToken, refreshToken, expiresIn)
     }
-
-    // mounted () {
-
-    // }
   }
 </script>
 

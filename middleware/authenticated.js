@@ -4,15 +4,13 @@ import axios from 'axios'
 import errors from '../config/errors'
 import httpCfg from '../config/http'
 import userCfg from '../config/user'
+// import checkTokens from '@/assets/scripts/checkTokens'
 
 export default async function ({ app, store, redirect }) {
   try {
     if (store.getters['user/isAuthenticated']) {
       return
     }
-    let accessToken = ls.get('cererisAccountAccessToken')
-    let refreshToken = ls.get('cererisAccountRefreshToken')
-    let expiresIn = ls.get('cererisExpiresIn')
     // accountsStorage.get('cererisAccountAccessToken', (error, accessToken) => {
     //   console.log('errGet1 ', error, 'accessToken ', accessToken)
     //   accountsStorage.get('cererisAccountRefreshToken', (error, refreshToken) => {
@@ -89,6 +87,11 @@ export default async function ({ app, store, redirect }) {
     //     })
     //   })
     // })
+
+    let accessToken = ls.get('cererisAccountAccessToken')
+    let refreshToken = ls.get('cererisAccountRefreshToken')
+    let expiresIn = ls.get('cererisExpiresIn')
+
     if (!accessToken || !refreshToken || !expiresIn) {
       return redirect('/signin')
     }
@@ -115,9 +118,9 @@ export default async function ({ app, store, redirect }) {
         }
       })
       store.dispatch('user/setTokens', { data: {
-        accessToken,
-        refreshToken,
-        expiresIn: expiresIn,
+        accessToken, // : tokens.accessToken,
+        refreshToken, //  : tokens.refreshToken,
+        expiresIn, // : tokens.expiresIn,
         redirect
       }})
       store.dispatch('user/setUser', { data: userResponse.data.data, i18n: app.i18n })
