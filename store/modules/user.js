@@ -138,7 +138,7 @@ const actions = {
         data.redirect('/signin')
         console.log(err)
       })
-    }, data.expiresIn - currentTime) //  3540000)
+    }, data.expiresIn - currentTime)
   },
   setUser ({commit}, {data, i18n}) {
     // console.log('set user', i18n.locale)

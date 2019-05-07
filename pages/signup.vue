@@ -109,7 +109,7 @@
           if (!await this.$validator.validateAll()) {
             return
           }
-
+          console.log('Pre request')
           let signupResponse = await axios({
             method: 'post',
             url: httpCfg.backendURL + '/api/v1/users/signup/email',
@@ -121,7 +121,7 @@
               return status === 200 || status === 400
             }
           })
-
+          console.log('Post request')
           if (signupResponse.status === 200) {
             // TODO: здесь вместо уведомления нужно будет сделать redirect на страницу с просьбой проверить почту
             this.setNotification(true, this.$t('informationMessages.completeRegistrationWithEmail', { email: this.email }), 'info')
@@ -137,6 +137,7 @@
           }
           this.$nuxt.error({ statusCode: 500, responses: [signupResponse] })
         } catch (error) {
+          console.log('err', error)
           this.$nuxt.error({ statusCode: 500, error })
         }
       },

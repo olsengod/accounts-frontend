@@ -82,7 +82,7 @@
               :items="languages"
               v-model="editedUser.language"
               :label="$t('index.lang')"
-              @change="changeLang()">
+              @input="changeLang()">
             </v-select>
           </v-flex>
           <v-flex xs12 class="inputFlex">
@@ -213,7 +213,7 @@ import errors from '../config/errors'
 
 export default {
   layout: 'default',
-  middleware: ['autologin', 'authenticated'],
+  middleware: ['setQueryTokens', 'authenticated'],
   components: { Loader },
   data () {
     return {
@@ -320,7 +320,7 @@ export default {
             passwordChange: '',
             phone: userResponse.data.data.phone,
             role: userResponse.data.data.isAdmin ? this.role.admin : this.role.guest,
-            language: languageCfg.all[this.$i18n.locale]
+            language: languageCfg.all[userResponse.data.data.data.language] // languageCfg.all[this.$i18n.locale]
           }
           return
         }
@@ -431,9 +431,11 @@ export default {
           return
         }
 
+        this.$router.push({ path: '/error', query: { statusCode: 500, responses: [deleteUserResponse] } })
         this.$nuxt.error({ statusCode: 500, responses: deleteUserResponse })
       } catch (error) {
-        this.$nuxt.error({ statusCode: 500, error })
+        this.$router.push({ path: '/error', query: { statusCode: 500, responses: [error] } })
+        // this.$nuxt.error({ statusCode: 500, error })
       }
     }
   },
@@ -445,8 +447,6 @@ export default {
   },
 
   async mounted () {
-    // console.log('redirectHistory ', this.$router)
-    console.log('redirectHistory ', document.referrer)
     this.setNotification(false)
     if (this.$store.getters['user/state'] === 'active') {
       await this.getUserInfo()

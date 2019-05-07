@@ -30,7 +30,7 @@
                 :items="languages"
                 v-model="language"
                 :label="$t('signup.lang')"
-                @change="changeLang()">
+                @input="changeLang()">
               </v-select>
               <v-form>
                 <v-text-field
@@ -155,8 +155,7 @@
             signinResponse.data.data.redirect = this.$router.push
             this.$store.dispatch('user/setTokens', { data: signinResponse.data.data })
             this.$store.dispatch('user/setUser', { data: userResponse.data.data, i18n: this.$i18n })
-            // this.$router.push('/')
-            this.serviceRedirect(signinResponse.data.data.accessToken, signinResponse.data.data.refreshToken, signinResponse.data.data.expiresIn)
+            this.serviceRedirect(signinResponse.data.data.refreshToken)
             return
           }
 
@@ -186,21 +185,34 @@
           }
         }
       },
-      async serviceRedirect (accessToken, refreshToken, expiresIn) {
-        //  token request
-        switch (this.prevURL) {
-          case 'https://torlight-stage.cereris.org':
-            this.$router.push(this.prevURL + '?accessToken=' + accessToken + '&refreshToken' + refreshToken + '&expiresIn' + expiresIn)
-            break
-          default:
-            this.$router.push('/')
+      async serviceRedirect (refreshToken) {
+        try {
+          let generateResponse = await axios({
+            method: 'post',
+            url: httpCfg.backendURL + '/api/v1/tokens/generate',
+            data: { refreshToken },
+            validateStatus: function (status) {
+              return status === 200 || status === 400
+            }
+          })
+
+          if (generateResponse.status === 200) {
+            if (this.prevURL.search(/http:\/\/localhost:3000\//i) === 0) {
+              window.location.href = 'http://localhost:3000' + '?refreshToken=' + generateResponse.data.data.refreshToken
+            } else {
+              this.$router.push('/')
+            }
+            return
+          }
+
+          console.log('Generate error', generateResponse.data.data)
+        } catch (error) {
+          console.log(error)
         }
       }
     },
 
     async created () {
-      console.log('redirectHistory ', document.referrer)
-
       this.prevURL = document.referrer
       let accessToken = ls.get('cererisAccountAccessToken')
       let refreshToken = ls.get('cererisAccountRefreshToken')
@@ -209,7 +221,7 @@
       if (!accessToken || !refreshToken || !expiresIn) {
         return
       }
-      this.serviceRedirect(accessToken, refreshToken, expiresIn)
+      this.serviceRedirect(refreshToken)
     }
   }
 </script>
