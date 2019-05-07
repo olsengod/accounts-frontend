@@ -73,10 +73,6 @@ spec:
   - host: accounts-dev.cereris.org
     http:
       paths:
-      - path: /api
-        backend:
-          serviceName: accounts-dev
-          servicePort: 8080
       - path: /
         backend:
           serviceName: ${CI_PROJECT_NAME}-dev

@@ -70,10 +70,6 @@ spec:
   - host: accounts.cereris.org
     http:
       paths:
-      - path: /api
-        backend:
-          serviceName: accounts
-          servicePort: 8080
       - path: /
         backend:
           serviceName: ${CI_PROJECT_NAME}
