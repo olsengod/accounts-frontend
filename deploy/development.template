@@ -68,6 +68,7 @@ metadata:
   namespace: ${CI_PROJECT_NAME}
   annotations:
     kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/priority: 2
 spec:
   rules:
   - host: accounts-dev.cereris.org
