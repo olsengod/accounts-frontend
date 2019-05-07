@@ -68,12 +68,15 @@ metadata:
   namespace: ${CI_PROJECT_NAME}
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.frontend.priority: "2"
 spec:
   rules:
   - host: accounts-dev.cereris.org
     http:
       paths:
+      - path: /api
+        backend:
+          serviceName: accounts-dev
+          servicePort: 8080
       - path: /
         backend:
           serviceName: ${CI_PROJECT_NAME}-dev
