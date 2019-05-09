@@ -14,7 +14,7 @@ make docker image:
     - docker:dind
   script:
     - docker login --username gitlab-ci-token --password $CI_BUILD_TOKEN registry.gitlab.com
-    - (if [ "${CI_COMMIT_REF_NAME}" == "master" ]; then docker build --build-arg NODE_ENV=production -t $REGISTRY .; else docker build --build-arg NODE_ENV=development -t $REGISTRY .; fi);
+    - (if [ "${CI_COMMIT_REF_NAME}" == "master" ]; then docker build --build-arg IS_DEV=false -t $REGISTRY .; else docker build --build-arg IS_DEV=true -t $REGISTRY .; fi);
     - docker push $REGISTRY
     - echo "Build release success!!!"
   only:

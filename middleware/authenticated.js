@@ -2,9 +2,10 @@ import ls from 'local-storage'
 // import {storageHost, accountsStorage} from '@/plugins/local-storage'
 import axios from 'axios'
 import errors from '../config/errors'
-import httpCfg from '../config/http'
 import userCfg from '../config/user'
 // import checkTokens from '@/assets/scripts/checkTokens'
+
+const httpCfg = require('../config/http')[process.env.IS_DEV ? 'is_dev' : 'is_prod']
 
 export default async function ({ app, store, redirect }) {
   try {

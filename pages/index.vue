@@ -204,12 +204,13 @@
 <script>
 import axios from 'axios'
 import sha256 from 'sha256'
-import httpCfg from '../config/http'
 import languageCfg from '../config/language'
 import { Validator } from 'vee-validate'
 import signout from '@/assets/scripts/signout'
 import Loader from '@/components/Loader'
 import errors from '../config/errors'
+
+const httpCfg = require('../config/http')[process.env.IS_DEV ? 'is_dev' : 'is_prod']
 
 export default {
   layout: 'default',

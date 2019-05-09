@@ -50,7 +50,7 @@ spec:
         revision: ${CI_COMMIT_SHA}
     spec:
       nodeSelector:
-        zone: dev
+        zone: prod
       containers:
         - name: ${CI_PROJECT_NAME}
           image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:master

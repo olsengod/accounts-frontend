@@ -2,8 +2,9 @@ import ls from 'local-storage'
 // import {storageHost, accountsStorage} from '@/plugins/local-storage'
 import languageCfg from '../../config/language'
 import axios from 'axios'
-import httpCfg from '@/config/http'
 import { Validator } from 'vee-validate'
+
+const httpCfg = require('@/config/http')[process.env.IS_DEV ? 'is_dev' : 'is_prod']
 
 const state = {
   user: {

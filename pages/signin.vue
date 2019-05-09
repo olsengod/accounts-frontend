@@ -97,12 +97,13 @@
 <script>
   import axios from 'axios'
   import sha256 from 'sha256'
-  import httpCfg from '../config/http'
   import errors from '../config/errors'
   import languageCfg from '../config/language'
   import { Validator } from 'vee-validate'
   // import checkTokens from '@/assets/scripts/checkTokens'
   import ls from 'local-storage'
+
+  const httpCfg = require('../config/http')[process.env.IS_DEV ? 'is_dev' : 'is_prod']
 
   export default {
     layout: 'empty',
