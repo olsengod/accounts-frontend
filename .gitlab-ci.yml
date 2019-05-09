@@ -5,43 +5,17 @@ stages:
   - release
   - deploy
 
-# build production bundle:
-#   stage: build
-#   image: node:9-alpine
-#   variables:
-#     NODE_ENV: "production"
-#   script:
-#     - npm install
-#     - npm run build
-#   artifacts:
-#     paths:
-#       - .nuxt/dist/
-#   only:
-#     - master
-#
-# build development bundle:
-#   stage: build
-#   image: node:alpine
-#   variables:
-#     NODE_ENV: "test"
-#   script:
-#     - npm install
-#     - npm run build
-#   artifacts:
-#     paths:
-#       - .nuxt/dist/
-#   only:
-#     - develop
-
 make docker image:
   stage: release
   image: docker:latest
+  variables:
+    REGISTRY: registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME
   services:
     - docker:dind
   script:
     - docker login --username gitlab-ci-token --password $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME .
-    - docker push registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME
+    - (if [ "${CI_COMMIT_REF_NAME}" == "master" ]; then docker build --build-arg NODE_ENV=production -t $REGISTRY .; else docker build --build-arg NODE_ENV=development -t $REGISTRY .; fi);
+    - docker push $REGISTRY
     - echo "Build release success!!!"
   only:
     - master

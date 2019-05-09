@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ${CI_PROJECT_NAME}
+  name: accounts
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: gitlabregistry
-  namespace: ${CI_PROJECT_NAME}
+  namespace: accounts
 data:
   .dockerconfigjson: ew0KCSJhdXRocyI6IHsNCgkJInJlZ2lzdHJ5LmdpdGxhYi5jb20iOiB7DQoJCQkiYXV0aCI6ICJaMmwwYkdGaUxXTnBMWFJ2YTJWdU9qRlhXRXRyT0ZOVU5qVmtVMnAyZFVVNGRHZG0iDQoJCX0NCgl9DQp9
 type: kubernetes.io/dockerconfigjson
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ${CI_PROJECT_NAME}-dev
-  namespace: ${CI_PROJECT_NAME}
+  namespace: accounts
   labels:
     application: ${CI_PROJECT_NAME}-dev
 spec:
@@ -30,7 +30,7 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: ${CI_PROJECT_NAME}-dev-deployment
-  namespace: ${CI_PROJECT_NAME}
+  namespace: accounts
 spec:
   replicas: 1
   revisionHistoryLimit: 2
@@ -56,25 +56,7 @@ spec:
           image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:develop
           imagePullPolicy: Always
           env:
-          - name: IS_DEV
-            value: "true"
+          - name: NODE_ENV
+            value: "development"
       imagePullSecrets:
         - name: gitlabregistry
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: ${CI_PROJECT_NAME}-dev-ingress
-  namespace: ${CI_PROJECT_NAME}
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.frontend.priority: "1"
-spec:
-  rules:
-  - host: accounts-dev.cereris.org
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: ${CI_PROJECT_NAME}-dev
-          servicePort: 3000
