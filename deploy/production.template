@@ -56,7 +56,7 @@ spec:
           image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:master
           imagePullPolicy: Always
           env:
-          - name: NODE_ENV
-            value: "production"
+          - name: IS_DEV
+            value: "false"
       imagePullSecrets:
         - name: gitlabregistry
