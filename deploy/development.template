@@ -55,8 +55,5 @@ spec:
         - name: ${CI_PROJECT_NAME}-dev
           image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:develop
           imagePullPolicy: Always
-          env:
-          - name: IS_DEV
-            value: "true"
       imagePullSecrets:
         - name: gitlabregistry
