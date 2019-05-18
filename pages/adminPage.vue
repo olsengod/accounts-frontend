@@ -224,7 +224,7 @@ const httpCfg = require('../config/http')[process.env.IS_DEV ? 'is_dev' : 'is_pr
 
 export default {
   layout: 'default',
-  middleware: ['autologin', 'authenticated'],
+  middleware: ['setQueryTokens', 'authenticated'],
   components: { Loader },
   data () {
     return {
