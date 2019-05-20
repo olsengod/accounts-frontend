@@ -36,7 +36,7 @@
     "guest": "Guest",
     "uneditedUser": "Nothing was changed!",
     "deleteTitle": "Delete current account",
-    "deleteDialog": "Are you sure you want to delete currnet account?"
+    "deleteDialog": "Are you sure you want to delete current account?"
   },
   "default": {
     "account": "Account",
