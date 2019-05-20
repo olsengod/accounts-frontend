@@ -198,6 +198,7 @@
           })
 
           if (generateResponse.status === 200) {
+            console.log('httpCfg', httpCfg)
             if (this.prevURL.search(httpCfg.regexTorlightFrontendURL) === 0) {
               window.location.href = httpCfg.torlightFrontendURL + '?refreshToken=' + generateResponse.data.data.refreshToken
             } else {
