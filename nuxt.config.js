@@ -83,5 +83,6 @@ module.exports = {
   },
   env: {
     IS_DEV: (process.env.IS_DEV === 'false') ? '' : true
+    IS_LOCAL: (process.env.IS_LOCAL === 'false') ? '' : true
   }
 }
