@@ -198,8 +198,8 @@
           })
 
           if (generateResponse.status === 200) {
-            if (this.prevURL.search(httpCfg.regexTorlightBackendURL) === 0) {
-              window.location.href = httpCfg.torlightBackendURL + '?refreshToken=' + generateResponse.data.data.refreshToken
+            if (this.prevURL.search(httpCfg.regexTorlightFrontendURL) === 0) {
+              window.location.href = httpCfg.torlightFrontendURL + '?refreshToken=' + generateResponse.data.data.refreshToken
             } else {
               this.$router.push('/')
             }
