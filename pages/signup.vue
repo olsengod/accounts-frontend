@@ -81,10 +81,11 @@
 
 <script>
   import axios from 'axios'
-  import httpCfg from '../config/http'
   import languageCfg from '../config/language'
   import errors from '../config/errors'
   import { Validator } from 'vee-validate'
+
+  const httpCfg = require('../config/http')[process.env.IS_DEV ? 'is_dev' : 'is_prod']
 
   export default {
     layout: 'empty',

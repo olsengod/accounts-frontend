@@ -97,12 +97,13 @@
 <script>
   import axios from 'axios'
   import sha256 from 'sha256'
-  import httpCfg from '../config/http'
   import errors from '../config/errors'
   import languageCfg from '../config/language'
   import { Validator } from 'vee-validate'
   // import checkTokens from '@/assets/scripts/checkTokens'
   import ls from 'local-storage'
+
+  const httpCfg = require('../config/http')[process.env.IS_DEV ? 'is_dev' : 'is_prod']
 
   export default {
     layout: 'empty',
@@ -197,8 +198,8 @@
           })
 
           if (generateResponse.status === 200) {
-            if (this.prevURL.search(/http:\/\/localhost:3000\//i) === 0) {
-              window.location.href = 'http://localhost:3000' + '?refreshToken=' + generateResponse.data.data.refreshToken
+            if (this.prevURL.search(httpCfg.regexTorlightFrontendURL) === 0) {
+              window.location.href = httpCfg.torlightFrontendURL + '?refreshToken=' + generateResponse.data.data.refreshToken
             } else {
               this.$router.push('/')
             }

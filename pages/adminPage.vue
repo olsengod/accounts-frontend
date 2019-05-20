@@ -216,14 +216,15 @@
 
 <script>
 import axios from 'axios'
-import httpCfg from '../config/http'
 import Loader from '@/components/Loader'
 import errors from '../config/errors'
 // import { Validator } from 'vee-validate'
 
+const httpCfg = require('../config/http')[process.env.IS_DEV ? 'is_dev' : 'is_prod']
+
 export default {
   layout: 'default',
-  middleware: ['autologin', 'authenticated'],
+  middleware: ['setQueryTokens', 'authenticated'],
   components: { Loader },
   data () {
     return {

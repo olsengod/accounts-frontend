@@ -1,11 +1,12 @@
 import axios from 'axios'
-import httpCfg from '@/config/http'
+
+const httpCfg = require('@/config/http')[process.env.IS_DEV ? 'is_dev' : 'is_prod']
 
 export default async function (store, router) {
   try {
     let signoutResponse = await axios({
       method: 'post',
-      url: httpCfg.backendURL + '/api/v1/users/signout',
+      url: httpCfg.backendURL + '/api/v1/users/signout-all',
       headers: {'authorization': store.getters['user/accessToken']},
       validateStatus: function (status) {
         return status === 200

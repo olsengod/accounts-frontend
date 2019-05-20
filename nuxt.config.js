@@ -1,4 +1,3 @@
-
 module.exports = {
   /*
   ** Headers of the page
@@ -77,9 +76,13 @@ module.exports = {
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
-          exclude: /(node_modules)/          
+          exclude: /(node_modules)/
         })
       }
     }
+  },
+  env: {
+    IS_DEV: (process.env.IS_DEV === 'false') ? '' : true,
+    IS_LOCAL: (process.env.IS_LOCAL === 'false') ? '' : true
   }
 }
