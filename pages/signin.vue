@@ -216,14 +216,11 @@
 
     async created () {
       this.prevURL = document.referrer
-      let accessToken = ls.get('cererisAccountAccessToken')
-      let refreshToken = ls.get('cererisAccountRefreshToken')
-      let expiresIn = ls.get('cererisExpiresIn')
 
-      if (!accessToken || !refreshToken || !expiresIn) {
-        return
-      }
-      this.serviceRedirect(refreshToken)
+      if (this.$store.getters['user/isAuthenticated']) {
+        let refreshToken = ls.get('cererisAccountRefreshToken')
+        this.serviceRedirect(refreshToken)
+      }      
     }
   }
 </script>
