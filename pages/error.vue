@@ -52,16 +52,19 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.query) {
+    if (this.$route.query.hasOwnProperty('data')) {
       if (Array.isArray(this.$route.query.data)) {
+        console.log('ERR 1')
         for (let i = 0; i < this.$route.query.data.length; i++) {
           this.errors.push(this.$t('errors.error' + this.$route.query.data[i]))
         }
       } else {
+        console.log('ERR 2')
         this.errors.push(this.$t('errors.error' + this.$route.query.data))
       }
     } else {
-      this.errors.push(this.$t('errorPage.default'))
+      console.log('ERR DEFAULT')
+      this.errors.push(this.$t('errors.error8'))
     }
   }
 }

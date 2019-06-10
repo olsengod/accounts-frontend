@@ -220,7 +220,7 @@
       if (this.$store.getters['user/isAuthenticated']) {
         let refreshToken = ls.get('cererisAccountRefreshToken')
         this.serviceRedirect(refreshToken)
-      }      
+      }
     }
   }
 </script>
