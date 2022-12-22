@@ -19,7 +19,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "cross-domain-storage": "^1.0.7",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "local-storage": "^1.4.2",
     "nuxt": "^1.4.5",
     "query-string": "^6.5.0",
