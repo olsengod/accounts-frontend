@@ -21,7 +21,7 @@
     "cross-domain-storage": "^1.0.7",
     "jsonwebtoken": "^8.5.1",
     "local-storage": "^1.4.2",
-    "nuxt": "^1.4.5",
+    "nuxt": "^3.0.0",
     "query-string": "^6.5.0",
     "sha256": "^0.2.0",
     "stylus": "^0.54.5",
